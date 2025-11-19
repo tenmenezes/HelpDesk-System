@@ -22,14 +22,14 @@ export default function Home() {
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-between">
               <CardTitle className="text-xl sm:text-2xl select-none">
-                Total de chamados
+                Total de tickets
               </CardTitle>
-              <Ticket className="ml-auto w-6 h-6" />
+              <Ticket className="w-6 h-6" />
             </div>
 
-            <CardDescription>Total de chamados em 24h</CardDescription>
+            <CardDescription>Total de tickets em 24h</CardDescription>
 
             <CardContent>
               <p className="text-base sm:text-lg font-bold">200</p>
@@ -39,11 +39,11 @@ export default function Home() {
 
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-between">
               <CardTitle className="text-xl sm:text-2xl select-none">
                 Novos usuários
               </CardTitle>
-              <Users className="ml-auto w-6 h-6" />
+              <Users className="w-6 h-6" />
             </div>
 
             <CardDescription>Novos usuários em 24h</CardDescription>
@@ -56,14 +56,14 @@ export default function Home() {
 
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-between">
               <CardTitle className="text-xl sm:text-2xl select-none">
-                Chamados hoje
+                Tickets hoje
               </CardTitle>
-              <TagIcon className="ml-auto w-6 h-6" />
+              <TagIcon className="w-6 h-6" />
             </div>
 
-            <CardDescription>Total de chamados hoje</CardDescription>
+            <CardDescription>Total de tickets hoje</CardDescription>
 
             <CardContent>
               <p className="text-base sm:text-lg font-bold">5</p>
@@ -73,14 +73,14 @@ export default function Home() {
 
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-between">
               <CardTitle className="text-xl sm:text-2xl select-none">
-                Chamados resolvidos
+                Tickets resolvidos
               </CardTitle>
-              <Percent className="ml-auto w-6 h-6" />
+              <Percent className="w-6 h-6" />
             </div>
 
-            <CardDescription>Total de chamados resolvidos</CardDescription>
+            <CardDescription>Total de tickets resolvidos</CardDescription>
 
             <CardContent className="w-full flex items-center gap-2 text-green-700">
               <ArrowBigUpDash className="h-4 w-4" />

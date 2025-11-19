@@ -99,10 +99,10 @@ export default function Sidebar() {
                   href="/summons"
                 >
                   <TicketsIcon className="h-5 w-5" />
-                  <span className="sr-only">Chamados</span>
+                  <span className="sr-only">Tickets</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Chamados</TooltipContent>
+              <TooltipContent side="right">Tickets</TooltipContent>
             </Tooltip>
 
             <Tooltip>
@@ -112,10 +112,10 @@ export default function Sidebar() {
                   href="/problems"
                 >
                   <AlertTriangle className="h-5 w-5" />
-                  <span className="sr-only">Problemas</span>
+                  <span className="sr-only">Incidentes</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Problemas</TooltipContent>
+              <TooltipContent side="right">Incidentes</TooltipContent>
             </Tooltip>
 
             <Tooltip>
