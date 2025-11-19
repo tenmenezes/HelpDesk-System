@@ -109,7 +109,7 @@ export default function Sidebar() {
               <TooltipTrigger asChild>
                 <Link
                   className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
-                  href="#"
+                  href="/problems"
                 >
                   <AlertTriangle className="h-5 w-5" />
                   <span className="sr-only">Problemas</span>
@@ -122,7 +122,7 @@ export default function Sidebar() {
               <TooltipTrigger asChild>
                 <Link
                   className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
-                  href="#"
+                  href="/users"
                 >
                   <Users className="h-5 w-5" />
                   <span className="sr-only">Usuários</span>
@@ -135,7 +135,7 @@ export default function Sidebar() {
               <TooltipTrigger asChild>
                 <Link
                   className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
-                  href="#"
+                  href="/faq"
                 >
                   <HelpCircle className="h-5 w-5" />
                   <span className="sr-only">Ajuda</span>

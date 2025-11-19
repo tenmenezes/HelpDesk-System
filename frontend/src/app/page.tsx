@@ -1,6 +1,6 @@
 import Chart from "@/components/chart";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import Sales from "@/components/sales";
+import View from "@/components/view";
 import {
   Card,
   CardContent,
@@ -26,7 +26,7 @@ export default function Home() {
               <CardTitle className="text-xl sm:text-2xl select-none">
                 Total de chamados
               </CardTitle>
-              <Ticket className="ml-auto w-8 h-8" />
+              <Ticket className="ml-auto w-6 h-6" />
             </div>
 
             <CardDescription>Total de chamados em 24h</CardDescription>
@@ -43,7 +43,7 @@ export default function Home() {
               <CardTitle className="text-xl sm:text-2xl select-none">
                 Novos usuários
               </CardTitle>
-              <Users className="ml-auto w-8 h-8" />
+              <Users className="ml-auto w-6 h-6" />
             </div>
 
             <CardDescription>Novos usuários em 24h</CardDescription>
@@ -60,7 +60,7 @@ export default function Home() {
               <CardTitle className="text-xl sm:text-2xl select-none">
                 Chamados hoje
               </CardTitle>
-              <TagIcon className="ml-auto w-8 h-8" />
+              <TagIcon className="ml-auto w-6 h-6" />
             </div>
 
             <CardDescription>Total de chamados hoje</CardDescription>
@@ -77,7 +77,7 @@ export default function Home() {
               <CardTitle className="text-xl sm:text-2xl select-none">
                 Chamados resolvidos
               </CardTitle>
-              <Percent className="ml-auto w-8 h-8" />
+              <Percent className="ml-auto w-6 h-6" />
             </div>
 
             <CardDescription>Total de chamados resolvidos</CardDescription>
@@ -96,7 +96,7 @@ export default function Home() {
 
       <section className="mt-4 flex flex-col md:flex-row gap-4">
         <Chart />
-        <Sales />
+        <View />
       </section>
     </main>
   );
