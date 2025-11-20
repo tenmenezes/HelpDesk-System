@@ -13,18 +13,18 @@ import Link from "next/link";
 import {
   AlertTriangle,
   HelpCircle,
+  HelpCircleIcon,
   Home,
-  LayoutDashboard,
   LogOut,
   MoonIcon,
-  Package,
   PanelLeft,
   Rabbit,
   Settings,
   Settings2,
-  ShoppingBag,
   SunIcon,
+  Tickets,
   TicketsIcon,
+  TriangleAlert,
   Users,
 } from "lucide-react";
 import {
@@ -222,13 +222,11 @@ export default function Sidebar() {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <div className="w-full flex items-center justify-between">
-                  <AlertDialogCancel>
-                    <Button variant="outline" className="cursor-pointer">
-                      Cancelar
-                    </Button>
+                  <AlertDialogCancel className="cursor-pointer p-2 rounded-lg bg-transparent border flex items-center justify-center">
+                    Cancelar
                   </AlertDialogCancel>
-                  <AlertDialogAction>
-                    <Button className="cursor-pointer">Continuar</Button>
+                  <AlertDialogAction className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center">
+                    Continuar
                   </AlertDialogAction>
                 </div>
               </AlertDialogFooter>
@@ -238,7 +236,7 @@ export default function Sidebar() {
       </aside>
 
       {/* Menu Mobile */}
-      <div className="sm:hidden flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+      <div className="sm:hidden flex flex-col sm:gap-4 sm:py-4 sm:pl-14 ">
         <header className="sticky top-0 z-30 flex h-14 items-center px-4 border-b bg-background gap-4 sm:static sm:auto sm:border-0 sm:bg-transparent sm:px-6">
           <Sheet>
             <SheetTrigger asChild>
@@ -256,16 +254,16 @@ export default function Sidebar() {
               </SheetDescription>
               <nav className="grid gap-6 text-lg font-medium p-2">
                 <Link
-                  href="#"
+                  href="/"
                   className="flex h-10 w-10 bg-primary rounded-full text-lg items-center justify-center text-primary-foreground md:text-base gap-5"
                   prefetch={false}
                 >
-                  <LayoutDashboard className="h-5 w-5 transition-all" />
-                  <span className="sr-only">Logo do projeto</span>
+                  <Rabbit className="h-5 w-5 transition-all" />
+                  <span className="sr-only">HelpDesk - Corp Logo</span>
                 </Link>
 
                 <Link
-                  href="#"
+                  href="/"
                   className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
                   prefetch={false}
                 >
@@ -273,40 +271,123 @@ export default function Sidebar() {
                   Início
                 </Link>
                 <Link
-                  href="#"
+                  href="/summons"
                   className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
                   prefetch={false}
                 >
-                  <ShoppingBag className="h-5 w-5 transition-all" />
-                  Pedidos
+                  <Tickets className="h-5 w-5 transition-all" />
+                  Tickets
                 </Link>
                 <Link
-                  href="#"
+                  href="/problems"
                   className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
                   prefetch={false}
                 >
-                  <Package className="h-5 w-5 transition-all" />
-                  Produtos
+                  <TriangleAlert className="h-5 w-5 transition-all" />
+                  Incidentes
                 </Link>
                 <Link
-                  href="#"
+                  href="/users"
                   className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
                   prefetch={false}
                 >
                   <Users className="h-5 w-5 transition-all" />
-                  Clientes
+                  Usuários
+                </Link>
+                <Link
+                  href="/faq"
+                  className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
+                  prefetch={false}
+                >
+                  <HelpCircleIcon className="h-5 w-5 transition-all" />
+                  FAQ
                 </Link>
               </nav>
 
               <nav className="mt-auto flex flex-col items-start gap-4 px-2 py-5">
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
-                  prefetch={false}
-                >
-                  <Settings className="h-5 w-5 transition-all" />
-                  Configurações
-                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className=" cursor-pointer flex h-auto w-auto shrink-0 items-center justify-center rounded-lg bg-transparent border hover:bg-gray-100 hover:text-gray-600"
+                    >
+                      <Settings className="h-5 w-5" />
+                      Configurações
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="start">
+                    <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem className="cursor-pointer">
+                        Perfil
+                        <DropdownMenuShortcut>⇧ + P</DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel>Acessibilidade</DropdownMenuLabel>
+                    <DropdownMenuGroup>
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger className="cursor-pointer">
+                          Alterar tema
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuPortal>
+                          <DropdownMenuSubContent>
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => setTheme("light")}
+                            >
+                              <SunIcon className="h-4 w-4" /> Claro
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => setTheme("dark")}
+                            >
+                              <MoonIcon className="h-4 w-4" /> Escuro
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => setTheme("system")}
+                            >
+                              <Settings2 className="h-4 w-4" /> Sistema
+                            </DropdownMenuItem>
+                          </DropdownMenuSubContent>
+                        </DropdownMenuPortal>
+                      </DropdownMenuSub>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <AlertDialog>
+                  <AlertDialogTrigger className="cursor-pointer pl-1">
+                    <div className="w-auto flex gap-2 items-center">
+                      <LogOut className="h-4 w-4 text-red-700 hover:text-red-500" />{" "}
+                      Sair
+                    </div>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Você tem certeza disso?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Esta ação não poderá ser desfeita, você terá que{" "}
+                        <span className="font-bold text-red-700">
+                          logar novamente nesta conta
+                        </span>{" "}
+                        após o logout.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <div className="w-full flex items-center justify-between">
+                        <AlertDialogCancel className="cursor-pointer p-2 rounded-lg bg-transparent border flex items-center justify-center">
+                          Cancelar
+                        </AlertDialogCancel>
+                        <AlertDialogAction className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center">
+                          Continuar
+                        </AlertDialogAction>
+                      </div>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </nav>
             </SheetContent>
           </Sheet>
