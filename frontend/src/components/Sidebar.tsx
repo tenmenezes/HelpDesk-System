@@ -12,13 +12,13 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import {
   AlertTriangle,
+  CpuIcon,
   HelpCircle,
   HelpCircleIcon,
   Home,
   LogOut,
   MoonIcon,
   PanelLeft,
-  Rabbit,
   Settings,
   Settings2,
   SunIcon,
@@ -75,7 +75,7 @@ export default function Sidebar() {
               className="flex h-9 w-9 shrink-0 items-center justify-center bg-primary text-primary-foreground rounded-full"
               href="/"
             >
-              <Rabbit className="h-6 w-6" />
+              <CpuIcon className="h-6 w-6" />
               <span className="sr-only">HelpDesk - Corp logo</span>
             </Link>
 
@@ -258,7 +258,7 @@ export default function Sidebar() {
                   className="flex h-10 w-10 bg-primary rounded-full text-lg items-center justify-center text-primary-foreground md:text-base gap-5"
                   prefetch={false}
                 >
-                  <Rabbit className="h-5 w-5 transition-all" />
+                  <CpuIcon className="h-5 w-5 transition-all" />
                   <span className="sr-only">HelpDesk - Corp Logo</span>
                 </Link>
 
@@ -391,6 +391,7 @@ export default function Sidebar() {
               </nav>
             </SheetContent>
           </Sheet>
+          <div className="w-[2px] h-6 bg-primary/20"></div>
           <h2>Menu</h2>
         </header>
       </div>

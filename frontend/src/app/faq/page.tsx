@@ -1,7 +1,9 @@
-import Ajuda from "@/components/faq";
+import Ajuda from "@/components/faqComponents/faqCards";
 
 export default function Faq() {
-    return (
+  return (
+    <main>
       <Ajuda />
-    );
+    </main>
+  );
 }

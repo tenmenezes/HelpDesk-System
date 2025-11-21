@@ -1,7 +1,11 @@
-import Users from "@/components/users";
+import Users from "@/components/usersComponents/usersCards";
+import UsersTable from "@/components/usersComponents/userstable";
 
 export default function Usuarios() {
-    return (
+  return (
+    <main>
       <Users />
-    );
+      <UsersTable />
+    </main>
+  );
 }

@@ -35,15 +35,15 @@ export default function View() {
 
         <article className="flex items-center gap-2 border-b py-2">
           <Avatar className="w-8 h-8">
-            <AvatarImage src="https://github.com/devfraga.png" />
+            <AvatarImage src="https://github.com/JoaoBoscarino.png" />
             <AvatarFallback>IMG</AvatarFallback>
           </Avatar>
           <div>
             <p className="text-sm sm:text-base font-semibold">
-              Sujeito Programador
+              João Pedro
             </p>
             <span className="text-[12px] sm:text-sm text-gray-400">
-              devfraga@email.com
+              joao@email.com
             </span>
           </div>
         </article>

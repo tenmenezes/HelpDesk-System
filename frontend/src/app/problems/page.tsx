@@ -1,7 +1,11 @@
-import Issues from "@/components/problems";
+import Issues from "@/components/IssuesComponents/issuesCards";
+import UsersTable from "@/components/IssuesComponents/userstable";
 
 export default function Problemas() {
-    return (
+  return (
+    <main>
       <Issues />
-    );
+      <UsersTable />
+    </main>
+  );
 }

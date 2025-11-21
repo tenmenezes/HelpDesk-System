@@ -1,7 +1,11 @@
-import Summons from "../../components/summons";
+import UsersTable from "@/components/usersComponents/userstable";
+import Summons from "../../components/summonsComponents/summonsCards";
 
 export default function Chamados() {
   return (
-    <Summons />
+    <main>
+      <Summons />
+      <UsersTable />
+    </main>
   );
 }
