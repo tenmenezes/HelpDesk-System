@@ -23,17 +23,15 @@ import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
-    data,
+    data: [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -96,7 +94,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Nenhum registro encontrado.
                 </TableCell>
               </TableRow>
             )}

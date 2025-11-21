@@ -1,42 +1,40 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, CircleCheck, CircleDollarSignIcon, MoreVerticalIcon } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import {
+  ArrowUpDown,
+  CircleCheck,
+  CircleDollarSignIcon,
+  Delete,
+  DeleteIcon,
+  MoreVerticalIcon,
+  PenLine,
+  TrashIcon,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 
-export type Payment = {
+export type Char = {
   id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
+  name: string;
+  gender: string;
+  image: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Char>[] = [
   {
-    accessorKey: "status",
-    header: () => (
-      <div className="w-auto flex gap-2 items-center">
-        <CircleCheck className="h-3 w-3 text-gray-600" /> Status
-      </div>
-    ),
-    cell: ({ row }) => {
-      const status = row.original.status;
-      const statusColors: Record<string, string> = {
-        pending: "text-orange-600",
-        processing: "text-blue-600",
-        success: "text-green-600",
-        failed: "text-red-600",
-      };
-      return (
-        <span className={statusColors[status] || "text-gray-500"}>
-          {status}
-        </span>
-      );
-    },
+    accessorKey: "image",
+    header: () => "Avatar",
   },
   {
-    accessorKey: "email",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
@@ -44,19 +42,15 @@ export const columns: ColumnDef<Payment>[] = [
           className="cursor-pointer"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Nome
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "amount",
-    header: () => (
-      <div className="w-auto flex gap-2 items-center">
-        <CircleDollarSignIcon className="h-3 w-3 text-gray-600" /> Amount
-      </div>
-    ),
+    accessorKey: "gender",
+    header: () => "Gênero",
   },
   {
     accessorKey: "actions",
@@ -78,14 +72,43 @@ export const columns: ColumnDef<Payment>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
-              Copy payment ID
+              <PenLine className="h-4 w-4 text-blue-500" /> Editar
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>
+              {" "}
+              <span className="text-red-500 w-auto flex gap-2 cursor-pointer items-center">
+                <TrashIcon className="h-4 w-4 text-red-500 hover:text-red-700" />{" "}
+                Excluir
+              </span>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
     },
   },
 ];
+
+// pra uma proxima ocasião
+
+//{
+// accessorKey: "status",
+// header: () => (
+// <div className="w-auto flex gap-2 items-center">
+//   <CircleCheck className="h-3 w-3 text-gray-600" /> Status
+//   </div>
+//   ),
+// cell: ({ row }) => {
+//     const status = row.original.status;
+// const statusColors: Record<string, string> = {
+//     pending: "text-orange-600",
+//       processing: "text-blue-600",
+// success: "text-green-600",
+//   failed: "text-red-600",
+//   };
+//     return (
+//       <span className={statusColors[status] || "text-gray-500"}>/
+//         {status}
+//        </span>
+//     );
+//   },
+// },
