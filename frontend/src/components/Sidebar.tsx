@@ -147,10 +147,10 @@ export default function Sidebar() {
         </nav>
 
         <nav className="mt-auto flex flex-col items-center gap-4 px-2 py-5">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <DropdownMenu>
+          <DropdownMenu>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="outline"
@@ -160,55 +160,67 @@ export default function Sidebar() {
                       <span className="sr-only">Configurações</span>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="start">
-                    <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem className="cursor-pointer">
-                        Perfil
-                        <DropdownMenuShortcut>⇧ + P</DropdownMenuShortcut>
+                </TooltipTrigger>
+                <TooltipContent side="right">Configurações</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <DropdownMenuContent className="w-56" align="start">
+              <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
+              <DropdownMenuGroup>
+                <DropdownMenuItem className="cursor-pointer">
+                  Perfil
+                  <DropdownMenuShortcut>⇧ + P</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel>Acessibilidade</DropdownMenuLabel>
+              <DropdownMenuGroup>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="cursor-pointer">
+                    Alterar tema
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={() => setTheme("light")}
+                      >
+                        <SunIcon className="h-4 w-4" /> Claro
                       </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuLabel>Acessibilidade</DropdownMenuLabel>
-                    <DropdownMenuGroup>
-                      <DropdownMenuSub>
-                        <DropdownMenuSubTrigger className="cursor-pointer">
-                          Alterar tema
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuPortal>
-                          <DropdownMenuSubContent>
-                            <DropdownMenuItem
-                              className="cursor-pointer"
-                              onClick={() => setTheme("light")}
-                            >
-                              <SunIcon className="h-4 w-4" /> Claro
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="cursor-pointer"
-                              onClick={() => setTheme("dark")}
-                            >
-                              <MoonIcon className="h-4 w-4" /> Escuro
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="cursor-pointer"
-                              onClick={() => setTheme("system")}
-                            >
-                              <Settings2 className="h-4 w-4" /> Sistema
-                            </DropdownMenuItem>
-                          </DropdownMenuSubContent>
-                        </DropdownMenuPortal>
-                      </DropdownMenuSub>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TooltipTrigger>
-              <TooltipContent side="right">Configurações</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={() => setTheme("dark")}
+                      >
+                        <MoonIcon className="h-4 w-4" /> Escuro
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={() => setTheme("system")}
+                      >
+                        <Settings2 className="h-4 w-4" /> Sistema
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Botão de log out */}
+
           <AlertDialog>
-            <AlertDialogTrigger className="cursor-pointer">
-              <LogOut className="h-4 w-4 text-red-700 hover:text-red-500" />
-            </AlertDialogTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <AlertDialogTrigger className="cursor-pointer">
+                    <LogOut className="h-4 w-4 text-red-700 hover:text-red-500" />
+                  </AlertDialogTrigger>
+                </TooltipTrigger>
+                <TooltipContent side="right">Sair da conta</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Você tem certeza disso?</AlertDialogTitle>
