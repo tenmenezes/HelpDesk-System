@@ -1,7 +1,7 @@
 <?php
 require "../../config/conn.php";
 
-header("Content-Type: apliccation/json");
+header("Content-Type: application/json");
 
 $data = json_decode(file_get_contents("php://input"), true);
 

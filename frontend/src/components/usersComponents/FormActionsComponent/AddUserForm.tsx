@@ -39,9 +39,9 @@ const formSchema = z.object({
   phone: z
     .string()
     .min(14, "O celular é obrigatório.")
-    .regex(/^\(d{2}\)\s\d{4,5}-\d{4}$/, "Formato inválido."),
+    .regex(/^\(\d{2}\)\s\d{4,5}-\d{4}$/, "Formato inválido."),
   sector: z.string().min(1, "Selecione um setor."),
-  type: z.string().min(1, "Selecione o tipo de funcionário.")
+  type: z.string().min(1, "Selecione o tipo de funcionário."),
 });
 
 export default function ProfileForm() {
@@ -57,9 +57,25 @@ export default function ProfileForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    toast.success("Funcionário criado com sucesso!");
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const res = await fetch(
+      "https://localhost/backend/routes/usuarios/insert.php",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.success) {
+      toast.success("Funcionário criado com sucesso!");
+    } else {
+      toast.error("Erro ao criar funcionário.");
+    }
   }
 
   return (
