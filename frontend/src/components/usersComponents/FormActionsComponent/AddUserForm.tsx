@@ -58,7 +58,7 @@ export default function ProfileForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    toast.success("Funcionário criaod com sucesso!");
+    toast.success("Funcionário criado com sucesso!");
     console.log(values);
   }
 
@@ -116,6 +116,7 @@ export default function ProfileForm() {
               <FormControl>
                 <PatternFormat
                   format="(##) #####-####"
+                  placeholder="(21) 99999-9999"
                   mask="_"
                   customInput={Input}
                   value={field.value}

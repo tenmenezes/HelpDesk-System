@@ -161,7 +161,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="flex w-auto gap-2">
+        <div className="flex w-auto gap-4">
           <Button
             variant="outline"
             size="sm"
@@ -183,7 +183,7 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
         <span className="mr-4">Página {pagination.pageIndex + 1}</span>
-        <div className="w-auto flex gap-2">
+        <div className="w-auto flex gap-4">
           <Button
             variant="outline"
             size="sm"
