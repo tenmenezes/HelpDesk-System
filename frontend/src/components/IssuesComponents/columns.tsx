@@ -1,8 +1,20 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, CircleCheck, CircleDollarSignIcon, MoreVerticalIcon } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import {
+  ArrowUpDown,
+  CircleCheck,
+  CircleDollarSignIcon,
+  MoreVerticalIcon,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 
 export type Payment = {

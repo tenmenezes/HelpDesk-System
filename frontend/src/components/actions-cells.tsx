@@ -53,10 +53,10 @@ export function ActionsCell({ row }: { row: Row<Char>}) {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Editar {char.name}</DialogTitle>
+                <DialogTitle>{char.name}</DialogTitle>
               </DialogHeader>
 
-              <div>Formulário de edição aqui...</div>
+              <div>Formulário de edição...</div>
             </DialogContent>
           </Dialog>
 
@@ -77,10 +77,10 @@ export function ActionsCell({ row }: { row: Row<Char>}) {
               <DialogHeader>
                 <DialogTitle>Confirmar exclusão</DialogTitle>
               </DialogHeader>
-              Tem certeza que deseja excluir {char.name}? Esta ação
-              <span className="font-bold text-red-600">
-                não poderá ser desfeita.
-              </span>
+              <p>
+                Tem certeza que deseja excluir <b>{char.name}</b>?{" "}
+                <b className="text-red-600">Esta ação não poderá ser desfeita.</b>
+              </p>
               <div className="flex justify-between gap-2 mt-4">
                 <Button
                   className="cursor-pointer"
@@ -89,9 +89,7 @@ export function ActionsCell({ row }: { row: Row<Char>}) {
                 >
                   Cancelar
                 </Button>
-                <Button className="cursor-pointer">
-                  Excluir
-                </Button>
+                <Button variant="destructive" className="cursor-pointer">Excluir</Button>
               </div>
             </DialogContent>
           </Dialog>

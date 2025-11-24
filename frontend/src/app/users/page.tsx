@@ -1,5 +1,5 @@
 import Users from "@/components/usersComponents/usersCards";
-import UsersTable from "@/components/usersComponents/userstable";
+import UsersTable from "@/components/usersComponents/usersTable";
 
 export default function Usuarios() {
   return (

@@ -1,4 +1,4 @@
-import UsersTable from "@/components/summonsComponents/userstable";
+import UsersTable from "@/components/summonsComponents/summonstable";
 import Summons from "../../components/summonsComponents/summonsCards";
 
 export default function Chamados() {

@@ -3,6 +3,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Sidebar from "@/components/Sidebar";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "sonner";
 
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt" suppressHydrationWarning>
+    <html lang="pt-br" suppressHydrationWarning>
       <body className={cn("min-h-screen bg-background font-sans antialiased")}>
         <ThemeProvider
           attribute="class"
@@ -26,6 +27,7 @@ export default function RootLayout({
         >
           <Sidebar />
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
