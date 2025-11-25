@@ -164,8 +164,8 @@ export default function ComponentProfileCrop() {
 
       // ---------- UPLOAD para o backend ----------
       const userId =
-        /* <- coloque o id do usuário aqui, ex: 42 */ (window as any)
-          .CURRENT_USER_ID || null;
+        typeof window !== "undefined" ? window.CURRENT_USER_ID ?? null : null;
+
       if (!userId) {
         console.warn("userId não definido. Substitua pelo ID real do usuário.");
         return;

@@ -166,7 +166,7 @@ export default function Sidebar() {
                           src={
                             /* caminho pro avatar do usuário */ typeof window !==
                             "undefined"
-                              ? (window as any).CURRENT_USER_AVATAR
+                              ? window.CURRENT_USER_AVATAR ?? ""
                               : ""
                           }
                           alt="Avatar"
