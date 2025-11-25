@@ -15,7 +15,7 @@ export function DeleteUser({ id, nome, onClose }: DeleteUserProps) {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/routes/usuarios/delete.php`,
       {
-        method: "POST",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },

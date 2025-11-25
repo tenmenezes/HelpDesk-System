@@ -1,6 +1,10 @@
 <?php
+require "../../config/conn.php";
+
 header("Content-Type: application/json");
-require_once "../../conn.php";
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST, OPTIONS, DELETE, PUT");
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -17,7 +21,7 @@ $sector   = intval($data["sector"]);
 $type     = $data["type"];
 
 $sql = "
-    UPDATE usuarios 
+    UPDATE usuario 
     SET nome = ?, email = ?, telefone = ?, id_setor = ?, tipo = ?
     WHERE id_usuario = ?
 ";

@@ -53,11 +53,11 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
   const form = useForm<EditUserFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: user.id,
+      id: user.id_usuario,
       username: user.nome,
       email: user.email,
       phone: user.telefone,
-      sector: user.setor,
+      sector: user.id_setor,
       type: user.tipo,
     },
   });

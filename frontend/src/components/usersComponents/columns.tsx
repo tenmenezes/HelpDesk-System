@@ -7,11 +7,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ActionsCell } from "../actions-cells";
 
 export type Usuario = {
-  id: number;
+  id_usuario: number;
   nome: string;
   email: string;
   telefone: string;
-  setor: string;
+  id_setor: string;
   tipo: "comum" | "suporte" | "admin";
   foto_url: string | null;
 };

@@ -20,7 +20,7 @@ export default function UsersPage() {
           <CardTitle>Usuários</CardTitle>
           <UsersRoundIcon className="h-6 w-6" />
         </div>
-        <CardDescription>Página de usuários</CardDescription>
+        <CardDescription>Aba com todos os usuários cadastrados no sistema, podendo ser feito a adição, edição ou deleção de algum usuário.</CardDescription>
       </CardHeader>
 
       <CardContent className="m-2">
