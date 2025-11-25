@@ -25,7 +25,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { PasswordInput } from "./PasswordInput";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { mutate } from "swr";
 
 const formSchema = z.object({
@@ -71,11 +70,10 @@ export default function ProfileForm() {
       }
     );
 
-    mutate("usuarios");
-
     const data = await res.json();
 
     if (data.success) {
+       mutate("usuarios");
       toast.success("Funcionário criado com sucesso!");
     } else {
       toast.error("Erro ao criar funcionário.");
@@ -209,7 +207,7 @@ export default function ProfileForm() {
           </FormDescription>
 
           <div className="w-full flex justify-between items-center">
-            <Button type="reset" variant="outline" className="cursor-pointer">
+            <Button type="button" variant="outline" className="cursor-pointer" onClick={() => form.reset}>
               Resetar
             </Button>
 

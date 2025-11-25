@@ -170,7 +170,7 @@ export default function Sidebar() {
               <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
               <DropdownMenuGroup>
                 <DropdownMenuItem className="cursor-pointer">
-                  Perfil
+                  <Link href="/profile">Perfil</Link>
                   <DropdownMenuShortcut>⇧ + P</DropdownMenuShortcut>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -188,18 +188,23 @@ export default function Sidebar() {
                         onClick={() => setTheme("light")}
                       >
                         <SunIcon className="h-4 w-4" /> Claro
+                        <DropdownMenuShortcut>⇧ + L</DropdownMenuShortcut>
                       </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() => setTheme("dark")}
                       >
                         <MoonIcon className="h-4 w-4" /> Escuro
+                        <DropdownMenuShortcut>⇧ + D</DropdownMenuShortcut>
                       </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={() => setTheme("system")}
                       >
                         <Settings2 className="h-4 w-4" /> Sistema
+                        <DropdownMenuShortcut>⇧ + S</DropdownMenuShortcut>
                       </DropdownMenuItem>
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>

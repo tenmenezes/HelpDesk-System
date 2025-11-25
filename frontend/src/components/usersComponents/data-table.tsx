@@ -7,6 +7,7 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
+  getFilteredRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -21,7 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 
 import { Loader, SearchXIcon, UserPlusIcon } from "lucide-react";
 
@@ -37,33 +38,23 @@ export function DataTable<TData, TValue>({
   columns,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [globalFilter, setglobalFilter] = useState("");
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const fetcher = async () => {
-    const res = await fetch(
-      "http://localhost:8000/routes/usuarios/read.php"
-    );
+    const res = await fetch("http://localhost:8000/routes/usuarios/read.php");
     return res.json();
   };
 
   const { data, isLoading } = useSWR("usuarios", fetcher);
 
-  const filteredData = data
-    ? data.filter((u: any) =>
-        Object.values(u)
-          .join(" ")
-          .toLowerCase()
-          .includes(globalFilter.toLowerCase())
-      )
-    : [];
-
   const table = useReactTable({
-    data: filteredData || [],
+    data: data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
-    onGlobalFilterChange: setglobalFilter,
+    onGlobalFilterChange: setGlobalFilter,
     state: {
       sorting,
       globalFilter,
@@ -76,7 +67,7 @@ export function DataTable<TData, TValue>({
         <Input
           placeholder="Buscar..."
           value={globalFilter}
-          onChange={(e) => setglobalFilter(e.target.value)}
+          onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
 
@@ -128,7 +119,7 @@ export function DataTable<TData, TValue>({
                   </div>
                 </TableCell>
               </TableRow>
-            ) : table.getRowModel().rows.length ? (
+            ) : table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
@@ -148,7 +139,7 @@ export function DataTable<TData, TValue>({
                   className="h-24 text-center"
                 >
                   <div className="w-auto flex items-center justify-center gap-2">
-                    <SearchXIcon className="h-6 w-6 text-red-600" />{" "}
+                    <SearchXIcon className="h-6 w-6 text-red-600" />
                     <span className="text-red-600 font-bold">
                       Nenhum registro encontrado.
                     </span>
