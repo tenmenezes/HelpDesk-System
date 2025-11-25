@@ -58,7 +58,7 @@ Este projeto utiliza as seguintes tecnologias:
   - TypeScript (caso esteja usando)  
 - **Outros**  
   - Axios ou fetch para chamadas HTTP  
-  - CSS / SCSS / algum framework de estilo (opcional)  
+  - TailwindCSS
 
 ---
 
