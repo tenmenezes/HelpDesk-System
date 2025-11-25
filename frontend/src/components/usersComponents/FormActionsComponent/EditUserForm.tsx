@@ -63,6 +63,7 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
   });
 
   const onSubmit: SubmitHandler<EditUserFormData> = async (values) => {
+    console.log("submit chamado", values);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/routes/usuarios/edit.php`,
       {
@@ -77,10 +78,12 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
     const data = await response.json();
 
     if (data.success) {
+      console.log(data);
       mutate("usuarios");
-      toast.success("Funcionário atualizado!");
+      toast.success("Usuário atualizado!");
       onClose();
     } else {
+      console.log(data);
       toast.error("Erro ao atualizar.");
     }
   };

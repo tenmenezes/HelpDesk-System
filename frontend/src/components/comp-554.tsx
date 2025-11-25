@@ -26,6 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
+import { mutate } from "swr";
 
 // Define type for pixel crop area
 type Area = { x: number; y: number; width: number; height: number };
@@ -175,7 +176,6 @@ export default function ComponentProfileCrop() {
 
       if (uploadResp && uploadResp.success && uploadResp.url) {
         // Atualiza finalImageUrl para apontar para a url do servidor (opcional)
-        // se tua API servir o path como /uploads/..., substitui:
         const serverUrl = `${process.env.NEXT_PUBLIC_API_URL}${uploadResp.url}`;
         // liberar url local e usar a do servidor
         if (finalImageUrl) URL.revokeObjectURL(finalImageUrl);
@@ -183,10 +183,9 @@ export default function ComponentProfileCrop() {
 
         // Notifica / atualiza SWR caso tua lista use mutate("usuarios")
         try {
-          // Se você usa SWR com key "usuarios", força refetch
-          // mutate("usuarios"); // descomente se estiver importado
+          mutate("usuarios");
         } catch (e) {
-          // ignore
+          throw new Error("Nao foi possivel atualizar.")
         }
       } else {
         console.error("Upload falhou", uploadResp);
@@ -286,7 +285,7 @@ export default function ComponentProfileCrop() {
               <div className="flex items-center gap-2">
                 <Button
                   aria-label="Cancel"
-                  className="-my-1 opacity-60"
+                  className="-my-1 opacity-60 cursor-pointer"
                   onClick={() => setIsDialogOpen(false)}
                   size="icon"
                   type="button"
@@ -298,7 +297,7 @@ export default function ComponentProfileCrop() {
               </div>
               <Button
                 autoFocus
-                className="-my-1"
+                className="-my-1 cursor-pointer"
                 disabled={!previewUrl}
                 onClick={handleApply}
               >

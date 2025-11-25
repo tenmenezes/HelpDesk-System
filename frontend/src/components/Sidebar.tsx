@@ -75,13 +75,18 @@ export default function Sidebar() {
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 border-r bg-background sm:flex flex-col">
         <nav className="flex flex-col items-center gap-4 px-2 py-5">
           <TooltipProvider>
-            <Link
-              className="flex h-9 w-9 shrink-0 items-center justify-center bg-primary text-primary-foreground rounded-full"
-              href="/"
-            >
-              <CpuIcon className="h-6 w-6" />
-              <span className="sr-only">HelpDesk - Corp logo</span>
-            </Link>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  className="flex h-9 w-9 shrink-0 items-center justify-center bg-primary text-primary-foreground rounded-full"
+                  href="/"
+                >
+                  <CpuIcon className="h-6 w-6 text-red-700" />
+                  <span className="sr-only">HelpDesk - Corp logo</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">HelpDesk Corp</TooltipContent>
+            </Tooltip>
 
             <Tooltip>
               <TooltipTrigger asChild>
@@ -134,7 +139,7 @@ export default function Sidebar() {
               </TooltipTrigger>
               <TooltipContent side="right">Usuários</TooltipContent>
             </Tooltip>
-            <Separator />
+            {/* <Separator />
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
@@ -146,7 +151,7 @@ export default function Sidebar() {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">FAQ</TooltipContent>
-            </Tooltip>
+            </Tooltip> */}
           </TooltipProvider>
         </nav>
 
@@ -184,7 +189,8 @@ export default function Sidebar() {
 
             <DropdownMenuContent className="w-56" align="start">
               <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
-              <DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              {/* <DropdownMenuGroup>
                 <Link href="/profile">
                   <DropdownMenuItem className="cursor-pointer">
                     Perfil
@@ -192,7 +198,7 @@ export default function Sidebar() {
                   </DropdownMenuItem>
                 </Link>
               </DropdownMenuGroup>
-              <DropdownMenuSeparator />
+                 */}
               <DropdownMenuLabel>Acessibilidade</DropdownMenuLabel>
               <DropdownMenuGroup>
                 <DropdownMenuSub>
@@ -291,15 +297,18 @@ export default function Sidebar() {
                 Aqui estão disponíveis os links de navegação entre páginas
               </SheetDescription>
               <nav className="grid gap-6 text-lg font-medium p-2">
-                <Link
-                  href="/"
-                  className="flex h-10 w-10 bg-primary rounded-full text-lg items-center justify-center text-primary-foreground md:text-base gap-5"
-                  prefetch={false}
-                >
-                  <CpuIcon className="h-5 w-5 transition-all" />
-                  <span className="sr-only">HelpDesk - Corp Logo</span>
-                </Link>
+                <div className="w-auto h-auto flex gap-2 items-center">
+                  <Link
+                    href="/"
+                    className="flex h-10 w-10 bg-primary rounded-full text-lg items-center justify-center text-primary-foreground md:text-base gap-5"
+                    prefetch={false}
+                  >
+                    <CpuIcon className="h-5 w-5 transition-all" />
+                    <span className="sr-only">HelpDesk - Corp Logo</span>
+                  </Link>
 
+                  <span>HelpDesk Corp</span>
+                </div>
                 <Link
                   href="/"
                   className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
@@ -345,59 +354,8 @@ export default function Sidebar() {
                   FAQ
                 </Link>
               </nav>
-
               <nav className="mt-auto flex flex-col items-start gap-4 px-2 py-5">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className=" cursor-pointer flex h-auto w-auto shrink-0 items-center justify-center rounded-lg bg-transparent border hover:bg-gray-100 hover:text-gray-600"
-                    >
-                      <Settings className="h-5 w-5" />
-                      Configurações
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="start">
-                    <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem className="cursor-pointer">
-                        Perfil
-                        <DropdownMenuShortcut>⇧ + P</DropdownMenuShortcut>
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuLabel>Acessibilidade</DropdownMenuLabel>
-                    <DropdownMenuGroup>
-                      <DropdownMenuSub>
-                        <DropdownMenuSubTrigger className="cursor-pointer">
-                          Alterar tema
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuPortal>
-                          <DropdownMenuSubContent>
-                            <DropdownMenuItem
-                              className="cursor-pointer"
-                              onClick={() => setTheme("light")}
-                            >
-                              <SunIcon className="h-4 w-4" /> Claro
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="cursor-pointer"
-                              onClick={() => setTheme("dark")}
-                            >
-                              <MoonIcon className="h-4 w-4" /> Escuro
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="cursor-pointer"
-                              onClick={() => setTheme("system")}
-                            >
-                              <Settings2 className="h-4 w-4" /> Sistema
-                            </DropdownMenuItem>
-                          </DropdownMenuSubContent>
-                        </DropdownMenuPortal>
-                      </DropdownMenuSub>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Separator />
                 <AlertDialog>
                   <AlertDialogTrigger className="cursor-pointer pl-1">
                     <div className="w-auto flex gap-2 items-center">
@@ -434,7 +392,73 @@ export default function Sidebar() {
             </SheetContent>
           </Sheet>
           <Separator orientation="vertical" />
-          <h2>Menu</h2>
+          <div className="w-full flex items-center justify-between gap-2">
+            <div>
+              <h2>Menu</h2>
+            </div>
+            <div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className=" cursor-pointer flex h-auto w-auto shrink-0 items-center justify-center bg-transparent border hover:bg-gray-100 hover:text-gray-600 rounded-full">
+                    <Avatar className="w-9 h-9">
+                      <AvatarImage
+                        src={
+                          /* caminho pro avatar do usuário */ typeof window !==
+                          "undefined"
+                            ? window.CURRENT_USER_AVATAR ?? ""
+                            : ""
+                        }
+                        alt="Avatar"
+                      />
+                      <AvatarFallback>
+                        <UserIcon className="h-5 w-5" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="start">
+                  <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
+                  {/* <DropdownMenuGroup>
+                     <DropdownMenuItem className="cursor-pointer">
+                      Perfil
+                      <DropdownMenuShortcut>⇧ + P</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup> */}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel>Acessibilidade</DropdownMenuLabel>
+                  <DropdownMenuGroup>
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger className="cursor-pointer">
+                        Alterar tema
+                      </DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => setTheme("light")}
+                          >
+                            <SunIcon className="h-4 w-4" /> Claro
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => setTheme("dark")}
+                          >
+                            <MoonIcon className="h-4 w-4" /> Escuro
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => setTheme("system")}
+                          >
+                            <Settings2 className="h-4 w-4" /> Sistema
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
         </header>
       </div>
     </div>

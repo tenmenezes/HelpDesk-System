@@ -80,8 +80,8 @@ export function DataTable<TData, TValue>({
 
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Novo Funcionário</DialogTitle>
-              <DialogDescription>Formulário para adicionar noovos funcionários da empresa</DialogDescription>
+              <DialogTitle>Novo Usuário</DialogTitle>
+              <DialogDescription>Formulário para adicionar novos usuários da empresa</DialogDescription>
             </DialogHeader>
 
             <ProfileForm />
@@ -115,7 +115,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  <div className="w-full flex justify-center items-center">
+                  <div className="w-auto h-auto flex justify-center items-center">
                     <Loader className="h-8 w-8 animate-spin transition" />
                   </div>
                 </TableCell>

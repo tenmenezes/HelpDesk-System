@@ -19,7 +19,7 @@ $type     = $data["type"];
 $sql = "
     UPDATE usuarios 
     SET nome = ?, email = ?, telefone = ?, id_setor = ?, tipo = ?
-    WHERE id = ?
+    WHERE id_usuario = ?
 ";
 
 $stmt = $conn->prepare($sql);

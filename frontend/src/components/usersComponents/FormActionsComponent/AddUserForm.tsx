@@ -52,7 +52,7 @@ const formSchema = z.object({
     .regex(/^\(\d{2}\)\s\d{4,5}-\d{4}$/, "Formato inválido."),
   
   sector: z.string().min(1, "Selecione um setor."),
-  type: z.string().min(1, "Selecione o tipo de funcionário."),
+  type: z.string().min(1, "Selecione o tipo de usuário."),
 });
 
 export default function ProfileForm() {
@@ -84,9 +84,9 @@ export default function ProfileForm() {
 
     if (data.success) {
        mutate("usuarios");
-      toast.success("Funcionário criado com sucesso!");
+      toast.success("Usuário criado com sucesso!");
     } else {
-      toast.error("Erro ao criar funcionário.");
+      toast.error("Erro ao criar usuário.");
     }
   }
 
@@ -101,7 +101,7 @@ export default function ProfileForm() {
               <FormItem>
                 <FormLabel>Nome</FormLabel>
                 <FormControl>
-                  <Input placeholder="Nome do funcionário" {...field} />
+                  <Input placeholder="Nome do usuário" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -198,10 +198,10 @@ export default function ProfileForm() {
                       defaultValue={field.value}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecione o tipo de funcionário" />
+                        <SelectValue placeholder="Selecione o tipo de suário" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="comum">Funcionário comum</SelectItem>
+                        <SelectItem value="comum">Usuário comum</SelectItem>
                         <SelectItem value="suporte">Suporte técnico</SelectItem>
                       </SelectContent>
                     </Select>
