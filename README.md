@@ -48,14 +48,16 @@ Este projeto está sendo desenvolvido no âmbito acadêmico como parte do curso 
 Este projeto utiliza as seguintes tecnologias:
 
 - **Backend**  
-  - PHP (versão compatível com seu ambiente)  
+  - PHP  
   - MySQL  
 - **Frontend**  
   - Next.js 16+  
-  - React  
-  - TanStack Table (para tabelas)  
+  - React
+  - Shadcn/ui (componentes prontos)
+  - TanStack Table (para tabelas)
+  - React Hook Form (para formulários)
   - SWR (para fetch e mutação de dados)  
-  - TypeScript (caso esteja usando)  
+  - TypeScript
 - **Outros**  
   - Axios ou fetch para chamadas HTTP  
   - TailwindCSS
@@ -64,12 +66,12 @@ Este projeto utiliza as seguintes tecnologias:
 
 ## Pré-requisitos
 
-Antes de rodar o projeto localmente, certifique-se de ter instalado:
+> Antes de rodar o projeto localmente, certifique-se de ter instalado:
 
 - PHP (versão compatível)  
 - MySQL (ou MariaDB)  
 - Node.js + npm/yarn (para o frontend)  
-- (Opcional) Composer, se existir dependências PHP externas  
+- (Opcional) Composer
 
 ---
 
