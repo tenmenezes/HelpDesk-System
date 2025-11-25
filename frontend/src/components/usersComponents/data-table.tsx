@@ -5,7 +5,6 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  PaginationState,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -18,24 +17,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import useSWR from "swr";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-  Loader,
-  SearchXIcon,
-  UserPlusIcon,
-} from "lucide-react";
-import { getCharService } from "./service";
-import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
+import useSWR, { mutate } from "swr";
+
+import { Loader, SearchXIcon, UserPlusIcon } from "lucide-react";
+
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { DialogTitle, DialogTrigger } from "@radix-ui/react-dialog";
 import ProfileForm from "./FormActionsComponent/AddUserForm";
-import { toast } from "sonner";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -45,32 +37,35 @@ export function DataTable<TData, TValue>({
   columns,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [globalFilter, setglobalFilter] = useState<string>("");
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 20,
-  });
+  const [globalFilter, setglobalFilter] = useState("");
 
-  const { data, isValidating } = useSWR(
-    [pagination.pageIndex, globalFilter],
-    () => {
-      return getCharService(pagination.pageIndex, globalFilter);
-    }
-  );
+  const fetcher = async () => {
+    const res = await fetch(
+      "http://localhost:8000/routes/usuarios/read.php"
+    );
+    return res.json();
+  };
+
+  const { data, isLoading } = useSWR("usuarios", fetcher);
+
+  const filteredData = data
+    ? data.filter((u: any) =>
+        Object.values(u)
+          .join(" ")
+          .toLowerCase()
+          .includes(globalFilter.toLowerCase())
+      )
+    : [];
 
   const table = useReactTable({
-    data: data?.results || [],
+    data: filteredData || [],
     columns,
-    manualPagination: true,
-    rowCount: data?.info?.count || 0,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
     onGlobalFilterChange: setglobalFilter,
-    onPaginationChange: setPagination,
     state: {
       sorting,
-      pagination,
       globalFilter,
     },
   });
@@ -81,50 +76,61 @@ export function DataTable<TData, TValue>({
         <Input
           placeholder="Buscar..."
           value={globalFilter}
-          onChange={(event) => table.setGlobalFilter(event.target.value)}
+          onChange={(e) => setglobalFilter(e.target.value)}
           className="max-w-sm"
         />
+
         <Dialog>
           <DialogTrigger asChild>
             <Button className="h-8 w-8 cursor-pointer">
-              <UserPlusIcon className="h-8 w-8" />
+              <UserPlusIcon className="h-8 w-8 text-green-600" />
             </Button>
           </DialogTrigger>
+
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Novo funcionário</DialogTitle>
+              <DialogTitle>Novo Funcionário</DialogTitle>
             </DialogHeader>
+
             <ProfileForm />
           </DialogContent>
         </Dialog>
       </div>
+
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
                 >
+                  <div className="w-full flex justify-center items-center">
+                    <Loader className="h-8 w-8 animate-spin transition" />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
@@ -141,69 +147,17 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {isValidating ? (
-                    <div className="w-full flex justify-center items-center">
-                      {" "}
-                      <Loader className="h-8 w-8 animate-spin transition" />
-                    </div>
-                  ) : (
-                    <div className="w-auto flex items-center justify-center gap-2">
-                      <SearchXIcon className="h-6 w-6 text-red-600" />{" "}
-                      <span className=" text-red-600 font-bold">
-                        Nenhum registro encontrado.
-                      </span>
-                    </div>
-                  )}
+                  <div className="w-auto flex items-center justify-center gap-2">
+                    <SearchXIcon className="h-6 w-6 text-red-600" />{" "}
+                    <span className="text-red-600 font-bold">
+                      Nenhum registro encontrado.
+                    </span>
+                  </div>
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
-      </div>
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="flex w-auto gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            className="cursor-pointer"
-            onClick={() => table.setPageIndex(table.getPageCount() - 42)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <ChevronsLeft className="h-6 w-6" />
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            className="cursor-pointer"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </Button>
-        </div>
-        <span className="mr-4">Página {pagination.pageIndex + 1}</span>
-        <div className="w-auto flex gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            className="cursor-pointer"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            className="cursor-pointer"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            <ChevronsRight className="h-4 w-4" />
-          </Button>
-        </div>
       </div>
     </>
   );

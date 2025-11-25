@@ -1,87 +1,73 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
-
-import { Button } from "../ui/button";
-import Image from "next/image";
+import { ArrowUpDown, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ActionsCell } from "../actions-cells";
 
-
-export type Char = {
+export type Usuario = {
   id: string;
-  name: string;
-  gender: string;
-  image: string;
+  nome: string;
+  email: string;
+  telefone: string;
+  setor: string;
+  tipo: string;
+  foto_url: string | null;
 };
 
-export const columns: ColumnDef<Char>[] = [
+export const columns: ColumnDef<Usuario>[] = [
   {
-    accessorKey: "image",
-    header: () => "Avatar",
+    accessorKey: "foto_url",
+    header: () => "Perfil",
     cell: ({ row }) => {
-      const imageURL = row.original.image;
+      const foto = row.original.foto_url;
 
       return (
-        <Image
-          src={imageURL}
-          alt={row.original.name}
-          quality={100}
-          width={60}
-          height={60}
-          className="rounded-full object-cover"
-        />
+        <Avatar className="w-12 h-12">
+          {foto ? (
+            <AvatarImage src={foto} alt={row.original.nome} />
+          ) : (
+            <AvatarFallback>
+              <User className="w-6 h-6" />
+            </AvatarFallback>
+          )}
+        </Avatar>
       );
     },
   },
   {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="cursor-pointer"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Nome
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: "nome",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        className="cursor-pointer"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Nome
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
   },
   {
-    accessorKey: "gender",
-    header: () => "Gênero",
+    accessorKey: "email",
+    header: () => "E-mail",
   },
   {
-    accessorKey: "actions",
-    header: "Ações",
+    accessorKey: "telefone",
+    header: () => "Telefone",
+  },
+  {
+    accessorKey: "setor",
+    header: () => "Setor",
+  },
+  {
+    accessorKey: "tipo",
+    header: () => "Tipo",
+  },
+  {
     id: "actions",
+    header: "Ações",
     cell: ({ row }) => <ActionsCell row={row} />,
   },
 ];
-
-// pra uma proxima ocasião
-
-//{
-// accessorKey: "status",
-// header: () => (
-// <div className="w-auto flex gap-2 items-center">
-//   <CircleCheck className="h-3 w-3 text-gray-600" /> Status
-//   </div>
-//   ),
-// cell: ({ row }) => {
-//     const status = row.original.status;
-// const statusColors: Record<string, string> = {
-//     pending: "text-orange-600",
-//       processing: "text-blue-600",
-// success: "text-green-600",
-//   failed: "text-red-600",
-//   };
-//     return (
-//       <span className={statusColors[status] || "text-gray-500"}>/
-//         {status}
-//        </span>
-//     );
-//   },
-// },

@@ -25,6 +25,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { PasswordInput } from "./PasswordInput";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { mutate } from "swr";
 
 const formSchema = z.object({
   username: z.string().min(2, { message: "Min 2 caracteres." }).max(50),
@@ -38,7 +40,7 @@ const formSchema = z.object({
     .regex(/[^A-Za-z0-9]/, "A senha deve conter um caractere especial."),
   phone: z
     .string()
-    .min(14, "O celular é obrigatório.")
+    .min(15, "O celular é obrigatório.")
     .regex(/^\(\d{2}\)\s\d{4,5}-\d{4}$/, "Formato inválido."),
   sector: z.string().min(1, "Selecione um setor."),
   type: z.string().min(1, "Selecione o tipo de funcionário."),
@@ -59,7 +61,7 @@ export default function ProfileForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const res = await fetch(
-      "https://localhost/backend/routes/usuarios/insert.php",
+      `${process.env.NEXT_PUBLIC_API_URL}/routes/usuarios/insert.php`,
       {
         method: "POST",
         headers: {
@@ -68,6 +70,8 @@ export default function ProfileForm() {
         body: JSON.stringify(values),
       }
     );
+
+    mutate("usuarios");
 
     const data = await res.json();
 
@@ -79,98 +83,17 @@ export default function ProfileForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome</FormLabel>
-              <FormControl>
-                <Input placeholder="Nome do funcionário" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>E-mail</FormLabel>
-              <FormControl>
-                <Input placeholder="email@exemplo.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Senha</FormLabel>
-              <FormControl>
-                <PasswordInput field={field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Celular</FormLabel>
-              <FormControl>
-                <PatternFormat
-                  format="(##) #####-####"
-                  placeholder="(21) 99999-9999"
-                  mask="_"
-                  customInput={Input}
-                  value={field.value}
-                  onValueChange={(v) => field.onChange(v.value)}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="w-auto flex items-center justify-between gap-2">
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="sector"
+            name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Setor</FormLabel>
+                <FormLabel>Nome</FormLabel>
                 <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione um setor" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="arquitetura">Arquitetura</SelectItem>
-                      <SelectItem value="contabilidade">
-                        Contabilidade
-                      </SelectItem>
-                      <SelectItem value="engenharia">Engenharia</SelectItem>
-                      <SelectItem value="empreendedorismo">
-                        Empreendedorismo
-                      </SelectItem>
-                      <SelectItem value="tecnologia">Tecnologia</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input placeholder="Nome do funcionário" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -179,46 +102,123 @@ export default function ProfileForm() {
 
           <FormField
             control={form.control}
-            name="type"
+            name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Setor</FormLabel>
+                <FormLabel>E-mail</FormLabel>
                 <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione o tipo de funcionário" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="comum">Funcionário comum</SelectItem>
-                      <SelectItem value="suporte">
-                        Suporte técnico
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input placeholder="email@exemplo.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        </div>
 
-        <FormDescription>
-          Este é o formulário de criação de cadastro de funcionário.
-        </FormDescription>
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Senha</FormLabel>
+                <FormControl>
+                  <PasswordInput field={field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <div className="w-full flex justify-between items-center">
-          <Button type="reset" variant="outline" className="cursor-pointer">
-            Resetar
-          </Button>
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Celular</FormLabel>
+                <FormControl>
+                  <PatternFormat
+                    format="(##) #####-####"
+                    placeholder="(21) 99999-9999"
+                    mask="_"
+                    customInput={Input}
+                    value={field.value}
+                    onValueChange={(v) => field.onChange(v.formattedValue)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <Button type="submit" className="cursor-pointer">
-            Enviar
-          </Button>
-        </div>
-      </form>
-    </Form>
+          <div className="w-auto flex items-center justify-between gap-2">
+            <FormField
+              control={form.control}
+              name="sector"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Setor</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione um setor" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">Arquitetura</SelectItem>
+                        <SelectItem value="2">Contabilidade</SelectItem>
+                        <SelectItem value="3">Engenharia</SelectItem>
+                        <SelectItem value="4">Empreendedorismo</SelectItem>
+                        <SelectItem value="5">Tecnologia</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Setor</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o tipo de funcionário" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="comum">Funcionário comum</SelectItem>
+                        <SelectItem value="suporte">Suporte técnico</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <FormDescription>
+            Este é o formulário de criação de cadastro de funcionário.
+          </FormDescription>
+
+          <div className="w-full flex justify-between items-center">
+            <Button type="reset" variant="outline" className="cursor-pointer">
+              Resetar
+            </Button>
+
+            <Button type="submit" className="cursor-pointer">
+              Enviar
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </>
   );
 }

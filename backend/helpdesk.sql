@@ -56,3 +56,11 @@ CREATE TABLE historico_chamado (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_chamado) REFERENCES chamado(id_chamado)
 );
+
+INSERT INTO setor (id_setor, nome) VALUES
+(1, 'Arquitetura'),
+(2, 'Contabilidade'),
+(3, 'Engenharia'),
+(4, 'Empreendedorismo'),
+(5, 'Tecnologia');
+

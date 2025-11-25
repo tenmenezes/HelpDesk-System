@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { Settings2, UserRoundPen, UserRoundX } from "lucide-react";
 import type { Row } from "@tanstack/react-table";
-import { Char } from "./summonsComponents/columns";
+import { Char } from "./usersComponents/columns";
 
 export function ActionsCell({ row }: { row: Row<Char>}) {
   const [openEdit, setOpenEdit] = useState(false);

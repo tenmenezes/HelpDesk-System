@@ -61,6 +61,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@radix-ui/react-alert-dialog";
+import { Separator } from "./ui/separator";
 
 export default function Sidebar() {
   const { setTheme } = useTheme();
@@ -91,7 +92,7 @@ export default function Sidebar() {
               </TooltipTrigger>
               <TooltipContent side="right">Início</TooltipContent>
             </Tooltip>
-
+            <Separator />
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
@@ -104,7 +105,7 @@ export default function Sidebar() {
               </TooltipTrigger>
               <TooltipContent side="right">Tickets</TooltipContent>
             </Tooltip>
-
+            <Separator />
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
@@ -117,7 +118,7 @@ export default function Sidebar() {
               </TooltipTrigger>
               <TooltipContent side="right">Incidentes</TooltipContent>
             </Tooltip>
-
+            <Separator />
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
@@ -130,7 +131,7 @@ export default function Sidebar() {
               </TooltipTrigger>
               <TooltipContent side="right">Usuários</TooltipContent>
             </Tooltip>
-
+            <Separator />
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
@@ -153,7 +154,7 @@ export default function Sidebar() {
                 <TooltipTrigger asChild>
                   <DropdownMenuTrigger asChild>
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       className=" cursor-pointer flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-transparent border text-gray-500 hover:bg-gray-100 hover:text-gray-600"
                     >
                       <Settings className="h-5 w-5" />
@@ -206,6 +207,8 @@ export default function Sidebar() {
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <Separator />
 
           {/* Botão de log out */}
 
@@ -282,6 +285,7 @@ export default function Sidebar() {
                   <Home className="h-5 w-5 transition-all" />
                   Início
                 </Link>
+                <Separator orientation="horizontal" />
                 <Link
                   href="/summons"
                   className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
@@ -290,6 +294,7 @@ export default function Sidebar() {
                   <Tickets className="h-5 w-5 transition-all" />
                   Tickets
                 </Link>
+                <Separator orientation="horizontal" />
                 <Link
                   href="/problems"
                   className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
@@ -298,6 +303,7 @@ export default function Sidebar() {
                   <TriangleAlert className="h-5 w-5 transition-all" />
                   Incidentes
                 </Link>
+                <Separator orientation="horizontal" />
                 <Link
                   href="/users"
                   className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
@@ -306,6 +312,7 @@ export default function Sidebar() {
                   <Users className="h-5 w-5 transition-all" />
                   Usuários
                 </Link>
+                <Separator orientation="horizontal" />
                 <Link
                   href="/faq"
                   className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
@@ -403,7 +410,7 @@ export default function Sidebar() {
               </nav>
             </SheetContent>
           </Sheet>
-          <div className="w-[2px] h-6 bg-primary/20"></div>
+          <Separator orientation="vertical" />
           <h2>Menu</h2>
         </header>
       </div>
