@@ -26,7 +26,7 @@ import useSWR from "swr";
 
 import { Loader, SearchXIcon, UserPlusIcon } from "lucide-react";
 
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader } from "@/components/ui/dialog";
 import { DialogTitle, DialogTrigger } from "@radix-ui/react-dialog";
 import ProfileForm from "./FormActionsComponent/AddUserForm";
 
@@ -81,6 +81,7 @@ export function DataTable<TData, TValue>({
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Novo Funcionário</DialogTitle>
+              <DialogDescription>Formulário para adicionar noovos funcionários da empresa</DialogDescription>
             </DialogHeader>
 
             <ProfileForm />

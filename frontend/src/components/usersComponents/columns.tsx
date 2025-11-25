@@ -7,12 +7,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ActionsCell } from "../actions-cells";
 
 export type Usuario = {
-  id: string;
+  id: number;
   nome: string;
   email: string;
   telefone: string;
   setor: string;
-  tipo: string;
+  tipo: "comum" | "suporte" | "admin";
   foto_url: string | null;
 };
 
@@ -64,6 +64,15 @@ export const columns: ColumnDef<Usuario>[] = [
   {
     accessorKey: "tipo",
     header: () => "Tipo",
+    cell: ({ row }) => {
+      const tipo = row.original.tipo;
+      const CorTipo: Record<string, string> = {
+        comum: "text-green-600",
+        suporte: "text-blue-600",
+        admin: "text-red-800",
+      };
+      return <span className={CorTipo[tipo] || "text-gray-500"}>{tipo}</span>;
+    },
   },
   {
     id: "actions",

@@ -25,6 +25,8 @@ import {
   Tickets,
   TicketsIcon,
   TriangleAlert,
+  User2Icon,
+  UserIcon,
   Users,
 } from "lucide-react";
 import {
@@ -62,6 +64,7 @@ import {
   AlertDialogCancel,
 } from "@radix-ui/react-alert-dialog";
 import { Separator } from "./ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export default function Sidebar() {
   const { setTheme } = useTheme();
@@ -153,26 +156,41 @@ export default function Sidebar() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className=" cursor-pointer flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-transparent border text-gray-500 hover:bg-gray-100 hover:text-gray-600"
+                    {/* Avatar clicável */}
+                    <button
+                      className="flex h-9 w-9 items-center justify-center rounded-full cursor-pointer"
+                      aria-label="Preferências"
                     >
-                      <Settings className="h-5 w-5" />
-                      <span className="sr-only">Configurações</span>
-                    </Button>
+                      <Avatar className="w-9 h-9">
+                        <AvatarImage
+                          src={
+                            /* caminho pro avatar do usuário */ typeof window !==
+                            "undefined"
+                              ? (window as any).CURRENT_USER_AVATAR
+                              : ""
+                          }
+                          alt="Avatar"
+                        />
+                        <AvatarFallback>
+                          <UserIcon className="h-5 w-5" />
+                        </AvatarFallback>
+                      </Avatar>
+                    </button>
                   </DropdownMenuTrigger>
                 </TooltipTrigger>
-                <TooltipContent side="right">Configurações</TooltipContent>
+                <TooltipContent side="right">Preferências</TooltipContent>
               </Tooltip>
             </TooltipProvider>
 
             <DropdownMenuContent className="w-56" align="start">
               <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
               <DropdownMenuGroup>
-                <DropdownMenuItem className="cursor-pointer">
-                  <Link href="/profile">Perfil</Link>
-                  <DropdownMenuShortcut>⇧ + P</DropdownMenuShortcut>
-                </DropdownMenuItem>
+                <Link href="/profile">
+                  <DropdownMenuItem className="cursor-pointer">
+                    Perfil
+                    <DropdownMenuShortcut>⇧ + P</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </Link>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuLabel>Acessibilidade</DropdownMenuLabel>

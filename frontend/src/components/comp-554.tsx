@@ -2,7 +2,7 @@
 
 import {
   ArrowLeftIcon,
-  CircleUserRoundIcon,
+  UserIcon,
   XIcon,
   ZoomInIcon,
   ZoomOutIcon,
@@ -84,7 +84,24 @@ async function getCroppedImg(
   }
 }
 
-export default function Component() {
+async function uploadAvatarToServer(blob: Blob, userId: number) {
+  const form = new FormData();
+  // nome de arquivo para o servidor
+  form.append("avatar", blob, "avatar.jpg");
+  form.append("userId", String(userId));
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/routes/usuarios/upload_photo.php`,
+    {
+      method: "POST",
+      body: form,
+    }
+  );
+
+  return res.json();
+}
+
+export default function ComponentProfileCrop() {
   const [
     { files, isDragging },
     {
@@ -121,14 +138,12 @@ export default function Component() {
   }, []);
 
   const handleApply = async () => {
-    // Check if we have the necessary data
     if (!previewUrl || !fileId || !croppedAreaPixels) {
       console.error("Missing data for apply:", {
         croppedAreaPixels,
         fileId,
         previewUrl,
       });
-      // Remove file if apply is clicked without crop data?
       if (fileId) {
         removeFile(fileId);
         setCroppedAreaPixels(null);
@@ -137,29 +152,47 @@ export default function Component() {
     }
 
     try {
-      // 1. Get the cropped image blob using the helper
       const croppedBlob = await getCroppedImg(previewUrl, croppedAreaPixels);
-
-      if (!croppedBlob) {
+      if (!croppedBlob)
         throw new Error("Failed to generate cropped image blob.");
-      }
 
-      // 2. Create a NEW object URL from the cropped blob
+      // opcional: mostrar preview local
       const newFinalUrl = URL.createObjectURL(croppedBlob);
+      if (finalImageUrl) URL.revokeObjectURL(finalImageUrl);
+      setFinalImageUrl(newFinalUrl);
+      setIsDialogOpen(false);
 
-      // 3. Revoke the OLD finalImageUrl if it exists
-      if (finalImageUrl) {
-        URL.revokeObjectURL(finalImageUrl);
+      // ---------- UPLOAD para o backend ----------
+      const userId =
+        /* <- coloque o id do usuário aqui, ex: 42 */ (window as any)
+          .CURRENT_USER_ID || null;
+      if (!userId) {
+        console.warn("userId não definido. Substitua pelo ID real do usuário.");
+        return;
       }
 
-      // 4. Set the final avatar state to the NEW URL
-      setFinalImageUrl(newFinalUrl);
+      const uploadResp = await uploadAvatarToServer(croppedBlob, userId);
 
-      // 5. Close the dialog (don't remove the file yet)
-      setIsDialogOpen(false);
+      if (uploadResp && uploadResp.success && uploadResp.url) {
+        // Atualiza finalImageUrl para apontar para a url do servidor (opcional)
+        // se tua API servir o path como /uploads/..., substitui:
+        const serverUrl = `${process.env.NEXT_PUBLIC_API_URL}${uploadResp.url}`;
+        // liberar url local e usar a do servidor
+        if (finalImageUrl) URL.revokeObjectURL(finalImageUrl);
+        setFinalImageUrl(serverUrl);
+
+        // Notifica / atualiza SWR caso tua lista use mutate("usuarios")
+        try {
+          // Se você usa SWR com key "usuarios", força refetch
+          // mutate("usuarios"); // descomente se estiver importado
+        } catch (e) {
+          // ignore
+        }
+      } else {
+        console.error("Upload falhou", uploadResp);
+      }
     } catch (error) {
       console.error("Error during apply:", error);
-      // Close the dialog even if cropping fails
       setIsDialogOpen(false);
     }
   };
@@ -199,7 +232,7 @@ export default function Component() {
         {/* Drop area - uses finalImageUrl */}
         <button
           aria-label={finalImageUrl ? "Change image" : "Upload image"}
-          className="relative flex size-16 items-center justify-center overflow-hidden rounded-full border border-input border-dashed outline-none transition-colors hover:bg-accent/50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-disabled:pointer-events-none has-[img]:border-none has-disabled:opacity-50 data-[dragging=true]:bg-accent/50"
+          className="cursor-pointer relative flex size-16 items-center justify-center overflow-hidden rounded-full border border-input border-dashed outline-none transition-colors hover:bg-accent/50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-disabled:pointer-events-none has-[img]:border-none has-disabled:opacity-50 data-[dragging=true]:bg-accent/50"
           data-dragging={isDragging || undefined}
           onClick={openFileDialog}
           onDragEnter={handleDragEnter}
@@ -212,14 +245,14 @@ export default function Component() {
             <img
               alt="User avatar"
               className="size-full object-cover"
-              height={64}
+              height={100}
               src={finalImageUrl}
               style={{ objectFit: "cover" }}
-              width={64}
+              width={100}
             />
           ) : (
             <div aria-hidden="true">
-              <CircleUserRoundIcon className="size-4 opacity-60" />
+              <UserIcon className="size-10 opacity-60" />
             </div>
           )}
         </button>
@@ -227,7 +260,7 @@ export default function Component() {
         {finalImageUrl && (
           <Button
             aria-label="Remove image"
-            className="-top-1 -right-1 absolute size-6 rounded-full border-2 border-background shadow-none focus-visible:border-background"
+            className="cursor-pointer -top-1 -right-1 absolute size-6 rounded-full border-2 border-background shadow-none focus-visible:border-background"
             onClick={handleRemoveFinalImage}
             size="icon"
           >
@@ -317,24 +350,7 @@ export default function Component() {
         className="mt-2 text-muted-foreground text-xs"
         role="region"
       >
-        Avatar{" "}
-        <a
-          className="underline hover:text-foreground"
-          href="https://github.com/cosscom/coss/blob/main/apps/origin/docs/use-file-upload.md"
-          rel="noreferrer"
-          target="_blank"
-        >
-          uploader
-        </a>{" "}
-        with{" "}
-        <a
-          className="underline hover:text-foreground"
-          href="https://github.com/origin-space/image-cropper"
-          rel="noreferrer"
-          target="_blank"
-        >
-          cropper
-        </a>
+        Realizar Upload de foto de perfil
       </p>
     </div>
   );

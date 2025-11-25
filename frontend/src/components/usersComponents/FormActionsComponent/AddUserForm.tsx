@@ -29,7 +29,15 @@ import { mutate } from "swr";
 
 const formSchema = z.object({
   username: z.string().min(2, { message: "Min 2 caracteres." }).max(50),
-  email: z.string().email("E-mail inválido."),
+// validando email
+  email: z
+  .string()
+  .min(1, "O e-mail é obrigatório.")
+  .regex(
+    /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
+    "Digite um e-mail válido (ex: nome@dominio.com)."
+  ),
+// validando senha
   password: z
     .string()
     .min(6, "Erro: Mínimo de 6 caracteres.")
@@ -37,10 +45,12 @@ const formSchema = z.object({
     .regex(/[a-z]/, "A senha deve conter uma letra minúscula.")
     .regex(/[0-9]/, "A senha deve conter um número.")
     .regex(/[^A-Za-z0-9]/, "A senha deve conter um caractere especial."),
+  // validando telefone
   phone: z
     .string()
     .min(15, "O celular é obrigatório.")
     .regex(/^\(\d{2}\)\s\d{4,5}-\d{4}$/, "Formato inválido."),
+  
   sector: z.string().min(1, "Selecione um setor."),
   type: z.string().min(1, "Selecione o tipo de funcionário."),
 });
@@ -202,12 +212,13 @@ export default function ProfileForm() {
             />
           </div>
 
-          <FormDescription>
-            Este é o formulário de criação de cadastro de funcionário.
-          </FormDescription>
-
           <div className="w-full flex justify-between items-center">
-            <Button type="button" variant="outline" className="cursor-pointer" onClick={() => form.reset}>
+            <Button
+              type="button"
+              variant="outline"
+              className="cursor-pointer"
+              onClick={() => form.reset()}
+            >
               Resetar
             </Button>
 

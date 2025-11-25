@@ -19,13 +19,15 @@ import {
 } from "@/components/ui/dialog";
 import { Settings2, UserRoundPen, UserRoundX } from "lucide-react";
 import type { Row } from "@tanstack/react-table";
-import { Char } from "./usersComponents/columns";
+import { Usuario } from "./usersComponents/columns";
+import { EditUserForm } from "./usersComponents/FormActionsComponent/EditUserForm";
+import { DeleteUser } from "./usersComponents/FormActionsComponent/DeleteUserModal";
 
-export function ActionsCell({ row }: { row: Row<Char>}) {
+export function ActionsCell({ row }: { row: Row<Usuario> }) {
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
-  const char = row.original;
+  const user = row.original;
 
   return (
     <div className="flex items-center">
@@ -39,7 +41,7 @@ export function ActionsCell({ row }: { row: Row<Char>}) {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-          <hr className="mb-1" />
+          <DropdownMenuSeparator />
 
           <Dialog open={openEdit} onOpenChange={setOpenEdit}>
             <DialogTrigger asChild>
@@ -53,10 +55,10 @@ export function ActionsCell({ row }: { row: Row<Char>}) {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{char.name}</DialogTitle>
+                <DialogTitle>{user.nome}</DialogTitle>
               </DialogHeader>
 
-              <div>Formulário de edição...</div>
+              <EditUserForm user={user} onClose={() => setOpenEdit(false)} />
             </DialogContent>
           </Dialog>
 
@@ -77,20 +79,12 @@ export function ActionsCell({ row }: { row: Row<Char>}) {
               <DialogHeader>
                 <DialogTitle>Confirmar exclusão</DialogTitle>
               </DialogHeader>
-              <p>
-                Tem certeza que deseja excluir <b>{char.name}</b>?{" "}
-                <b className="text-red-600">Esta ação não poderá ser desfeita.</b>
-              </p>
-              <div className="flex justify-between gap-2 mt-4">
-                <Button
-                  className="cursor-pointer"
-                  variant="outline"
-                  onClick={() => setOpenDelete(false)}
-                >
-                  Cancelar
-                </Button>
-                <Button variant="destructive" className="cursor-pointer">Excluir</Button>
-              </div>
+
+              <DeleteUser
+                id={user.id}
+                nome={user.nome}
+                onClose={() => setOpenDelete(false)}
+              />
             </DialogContent>
           </Dialog>
         </DropdownMenuContent>
