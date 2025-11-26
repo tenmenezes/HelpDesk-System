@@ -1,11 +1,14 @@
 import SummonsPage from "@/components/summonsComponents/summonsPage";
 import Sidebar from "@/components/Sidebar";
+import ProtectedRoute from "@/components/ProtectedRoutes";
 
 export default function Chamados() {
   return (
     <>
-      <Sidebar />
-      <SummonsPage />
+      <ProtectedRoute roles={["admin"]}>
+        <Sidebar />
+        <SummonsPage />
+      </ProtectedRoute>
     </>
   );
 }

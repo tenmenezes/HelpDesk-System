@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import Sidebar from "@/components/Sidebar";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
-
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   title: "HelpDeskp - Corp",
@@ -25,7 +25,7 @@ export default function RootLayout({
           enableSystem
           enableColorScheme
         >
-          {children}
+          <AuthProvider>{children}</AuthProvider>
           <Toaster />
         </ThemeProvider>
       </body>
