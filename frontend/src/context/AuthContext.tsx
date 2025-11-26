@@ -1,83 +1,55 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-interface User {
-  id_usuario: number;
+type User = {
+  id: number;
   nome: string;
+  tipo: string;
   email: string;
-  tipo: "comum" | "suporte" | "admin";
-  foto_perfil: string;
-  id_setor: number;
-}
+  foto_perfil?: string;
+};
 
-interface AuthContextType {
+type AuthContextType = {
   user: User | null;
-  login: (email: string, senha: string) => Promise<boolean>;
+  loading: boolean;
+  login: (user: User) => void;
   logout: () => void;
-}
+};
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  // Recupera login ao recarregar página
+  // carrega user salvo NO INÍCIO
   useEffect(() => {
-    const saved = localStorage.getItem("user");
-    if (saved) setUser(JSON.parse(saved));
+    const stored = localStorage.getItem("user");
+    if (stored) {
+      setUser(JSON.parse(stored));
+    }
+    setLoading(false);
   }, []);
 
-  async function login(email: string, senha: string) {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/routes/auth/login.php`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, senha }),
-        }
-      );
+  const login = (userData: User) => {
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  };
 
-      const data = await res.json();
-
-      if (!data.success) {
-        return false;
-      }
-
-      setUser(data.user);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      return true;
-    } catch (err) {
-      console.error("Erro no login:", err);
-      return false;
-    }
-  }
-
-  function logout() {
-    localStorage.removeItem("user");
+  const logout = () => {
     setUser(null);
-    window.location.href = "/";
-  }
+    localStorage.removeItem("user");
+    router.push("/");
+  };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
-  return ctx;
-}
+export const useAuth = () => useContext(AuthContext);

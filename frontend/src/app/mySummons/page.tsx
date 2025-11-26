@@ -1,0 +1,14 @@
+import ProtectedRoute from "@/components/ProtectedRoutes";
+import Sidebar from "@/components/Sidebar";
+import MySummonsPage from "@/components/summonsComponents/mySummonsPage";
+
+export default function MySummons() {
+  return (
+    <>
+      <ProtectedRoute roles={["comum"]}>
+        <Sidebar />
+        <MySummonsPage />
+      </ProtectedRoute>
+    </>
+  );
+}

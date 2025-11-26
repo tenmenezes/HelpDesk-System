@@ -57,7 +57,7 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
       username: user.nome,
       email: user.email,
       phone: user.telefone,
-      sector: user.id_setor,
+      sector: String(user.id_setor ?? ""),
       type: user.tipo,
     },
   });

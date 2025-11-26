@@ -1,3 +1,5 @@
+"use client";
+
 import Chart from "@/components/chart";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import View from "@/components/view";
@@ -8,19 +10,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  ArrowBigUpDash,
-  Percent,
-  TagIcon,
-  Ticket,
-  Users,
-} from "lucide-react";
+import { ArrowBigUpDash, Percent, TagIcon, Ticket, Users } from "lucide-react";
 import ProtectedRoute from "@/components/ProtectedRoutes";
+import Sidebar from "@/components/Sidebar";
 
 export default function Dashboard() {
   return (
     <>
-      <ProtectedRoute roles={["suporte", "admin"]}>
+      <ProtectedRoute roles={["suporte", "admin", "comum"]}>
+        <Sidebar />
         <main className="sm:ml-14 p-4">
           <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>

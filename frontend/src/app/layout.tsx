@@ -25,8 +25,8 @@ export default function RootLayout({
           enableSystem
           enableColorScheme
         >
-          <AuthProvider>{children}</AuthProvider>
           <Toaster />
+          <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
       </body>
     </html>

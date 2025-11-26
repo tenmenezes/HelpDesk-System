@@ -13,20 +13,15 @@ import Link from "next/link";
 import {
   AlertTriangle,
   CpuIcon,
-  HelpCircle,
-  HelpCircleIcon,
   Home,
   LogOut,
   MoonIcon,
   PanelLeft,
-  Settings,
   Settings2,
   SunIcon,
   Tickets,
   TicketsIcon,
   TriangleAlert,
-  User2Icon,
-  UserIcon,
   Users,
 } from "lucide-react";
 import {
@@ -43,7 +38,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -65,9 +59,12 @@ import {
 } from "@radix-ui/react-alert-dialog";
 import { Separator } from "./ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Sidebar() {
   const { setTheme } = useTheme();
+
+  const { user, logout } = useAuth();
 
   return (
     <div className="flex flex-col w-full bg-muted/40">
@@ -79,7 +76,7 @@ export default function Sidebar() {
               <TooltipTrigger asChild>
                 <Link
                   className="flex h-9 w-9 shrink-0 items-center justify-center bg-primary text-primary-foreground rounded-full"
-                  href="/"
+                  href="/dashboard"
                 >
                   <CpuIcon className="h-6 w-6 text-red-700" />
                   <span className="sr-only">HelpDesk - Corp logo</span>
@@ -88,57 +85,132 @@ export default function Sidebar() {
               <TooltipContent side="right">HelpDesk Corp</TooltipContent>
             </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
-                  href="/"
-                >
-                  <Home className="h-5 w-5" />
-                  <span className="sr-only">Início</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Início</TooltipContent>
-            </Tooltip>
-            <Separator />
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
-                  href="/summons"
-                >
-                  <TicketsIcon className="h-5 w-5" />
-                  <span className="sr-only">Tickets</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Tickets</TooltipContent>
-            </Tooltip>
-            <Separator />
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
-                  href="/problems"
-                >
-                  <AlertTriangle className="h-5 w-5" />
-                  <span className="sr-only">Incidentes</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Incidentes</TooltipContent>
-            </Tooltip>
-            <Separator />
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
-                  href="/users"
-                >
-                  <Users className="h-5 w-5" />
-                  <span className="sr-only">Usuários</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Usuários</TooltipContent>
-            </Tooltip>
+            {user?.tipo === "comum" && (
+              <>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
+                      href="/dashboard"
+                    >
+                      <Home className="h-5 w-5" />
+                      <span className="sr-only">Início</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Início</TooltipContent>
+                </Tooltip>
+
+                <Separator />
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
+                      href="/mySummons"
+                    >
+                      <TicketsIcon className="h-5 w-5" />
+                      <span className="sr-only">Tickets</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Meus Tickets</TooltipContent>
+                </Tooltip>
+              </>
+            )}
+
+            {user?.tipo === "suporte" && (
+              <>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
+                      href="/dashboard"
+                    >
+                      <Home className="h-5 w-5" />
+                      <span className="sr-only">Início</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Início</TooltipContent>
+                </Tooltip>
+
+                <Separator />
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
+                      href="/problems"
+                    >
+                      <AlertTriangle className="h-5 w-5" />
+                      <span className="sr-only">Incidentes</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Incidentes</TooltipContent>
+                </Tooltip>
+              </>
+            )}
+
+            {user?.tipo === "admin" && (
+              <>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
+                      href="/dashboard"
+                    >
+                      <Home className="h-5 w-5" />
+                      <span className="sr-only">Início</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Início</TooltipContent>
+                </Tooltip>
+
+                <Separator />
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
+                      href="/summons"
+                    >
+                      <TicketsIcon className="h-5 w-5" />
+                      <span className="sr-only">Tickets</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Tickets</TooltipContent>
+                </Tooltip>
+
+                <Separator />
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
+                      href="/problems"
+                    >
+                      <AlertTriangle className="h-5 w-5" />
+                      <span className="sr-only">Incidentes</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Incidentes</TooltipContent>
+                </Tooltip>
+
+                <Separator />
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
+                      href="/users"
+                    >
+                      <Users className="h-5 w-5" />
+                      <span className="sr-only">Usuários</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Usuários</TooltipContent>
+                </Tooltip>
+              </>
+            )}
+
             {/* <Separator />
             <Tooltip>
               <TooltipTrigger asChild>
@@ -161,18 +233,21 @@ export default function Sidebar() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <DropdownMenuTrigger asChild>
-                    {/* Avatar clicável */}
                     <button
                       className="flex h-9 w-9 items-center justify-center rounded-full cursor-pointer"
                       aria-label="Preferências"
                     >
                       <Avatar className="w-9 h-9">
                         <AvatarImage
-                          src={"https://github.com/tenmenezes.png"}
-                          alt="Avatar"
+                          src={
+                            user?.foto_perfil
+                              ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/usuarios/${user.foto_perfil}`
+                              : undefined
+                          }
+                          alt={user?.nome ?? "U"}
                         />
                         <AvatarFallback>
-                          <UserIcon className="h-5 w-5" />
+                          {user?.nome?.[0] ?? "U"}
                         </AvatarFallback>
                       </Avatar>
                     </button>
@@ -207,7 +282,7 @@ export default function Sidebar() {
                         onClick={() => setTheme("light")}
                       >
                         <SunIcon className="h-4 w-4" /> Claro
-                        <DropdownMenuShortcut>⇧ + L</DropdownMenuShortcut>
+                        {/* <DropdownMenuShortcut>⇧ + L</DropdownMenuShortcut> */}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
@@ -215,7 +290,7 @@ export default function Sidebar() {
                         onClick={() => setTheme("dark")}
                       >
                         <MoonIcon className="h-4 w-4" /> Escuro
-                        <DropdownMenuShortcut>⇧ + D</DropdownMenuShortcut>
+                        {/* <DropdownMenuShortcut>⇧ + D</DropdownMenuShortcut> */}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
@@ -223,7 +298,7 @@ export default function Sidebar() {
                         onClick={() => setTheme("system")}
                       >
                         <Settings2 className="h-4 w-4" /> Sistema
-                        <DropdownMenuShortcut>⇧ + S</DropdownMenuShortcut>
+                        {/* <DropdownMenuShortcut>⇧ + S</DropdownMenuShortcut> */}
                       </DropdownMenuItem>
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
@@ -264,7 +339,9 @@ export default function Sidebar() {
                   <AlertDialogCancel className="cursor-pointer p-2 rounded-lg bg-transparent border flex items-center justify-center">
                     Cancelar
                   </AlertDialogCancel>
-                  <AlertDialogAction className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center">
+                  <AlertDialogAction className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center"
+                  onClick={logout}
+                  >
                     Continuar
                   </AlertDialogAction>
                 </div>
@@ -294,7 +371,7 @@ export default function Sidebar() {
               <nav className="grid gap-6 text-lg font-medium p-2">
                 <div className="w-auto h-auto flex gap-2 items-center">
                   <Link
-                    href="/"
+                    href="/dashboard"
                     className="flex h-10 w-10 bg-primary rounded-full text-lg items-center justify-center text-primary-foreground md:text-base gap-5"
                     prefetch={false}
                   >
@@ -304,42 +381,96 @@ export default function Sidebar() {
 
                   <span>HelpDesk Corp</span>
                 </div>
-                <Link
-                  href="/"
-                  className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
-                  prefetch={false}
-                >
-                  <Home className="h-5 w-5 transition-all" />
-                  Início
-                </Link>
-                <Separator orientation="horizontal" />
-                <Link
-                  href="/summons"
-                  className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
-                  prefetch={false}
-                >
-                  <Tickets className="h-5 w-5 transition-all" />
-                  Tickets
-                </Link>
-                <Separator orientation="horizontal" />
-                <Link
-                  href="/problems"
-                  className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
-                  prefetch={false}
-                >
-                  <TriangleAlert className="h-5 w-5 transition-all" />
-                  Incidentes
-                </Link>
-                <Separator orientation="horizontal" />
-                <Link
-                  href="/users"
-                  className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
-                  prefetch={false}
-                >
-                  <Users className="h-5 w-5 transition-all" />
-                  Usuários
-                </Link>
-                <Separator orientation="horizontal" />
+
+                {user?.tipo === "comum" && (
+                  <>
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
+                      prefetch={false}
+                    >
+                      <Home className="h-5 w-5 transition-all" />
+                      Início
+                    </Link>
+
+                    <Separator />
+
+                    <Link
+                      href="/mySummons"
+                      className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
+                      prefetch={false}
+                    >
+                      <Tickets className="h-5 w-5 transition-all" />
+                      My Tickets
+                    </Link>
+                  </>
+                )}
+
+                {user?.tipo === "suporte" && (
+                  <>
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
+                      prefetch={false}
+                    >
+                      <Home className="h-5 w-5 transition-all" />
+                      Início
+                    </Link>
+
+                    <Separator />
+
+                    <Link
+                      href="/issues"
+                      className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
+                      prefetch={false}
+                    >
+                      <TriangleAlert className="h-5 w-5 transition-all" />
+                      Incidentes
+                    </Link>
+                  </>
+                )}
+
+                {user?.tipo === "admin" && (
+                  <>
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
+                      prefetch={false}
+                    >
+                      <Home className="h-5 w-5 transition-all" />
+                      Início
+                    </Link>
+                    <Separator orientation="horizontal" />
+                    <Link
+                      href="/summons"
+                      className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
+                      prefetch={false}
+                    >
+                      <Tickets className="h-5 w-5 transition-all" />
+                      Tickets
+                    </Link>
+                    <Separator orientation="horizontal" />
+                    <Link
+                      href="/problems"
+                      className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
+                      prefetch={false}
+                    >
+                      <TriangleAlert className="h-5 w-5 transition-all" />
+                      Incidentes
+                    </Link>
+                    <Separator orientation="horizontal" />
+                    <Link
+                      href="/users"
+                      className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
+                      prefetch={false}
+                    >
+                      <Users className="h-5 w-5 transition-all" />
+                      Usuários
+                    </Link>
+                  </>
+                )}
+
+                {/* <Separator orientation="horizontal" />
                 <Link
                   href="/faq"
                   className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
@@ -347,10 +478,12 @@ export default function Sidebar() {
                 >
                   <HelpCircleIcon className="h-5 w-5 transition-all" />
                   FAQ
-                </Link>
+                </Link> */}
               </nav>
+
               <nav className="mt-auto flex flex-col items-start gap-4 px-2 py-5">
                 <Separator />
+
                 <AlertDialog>
                   <AlertDialogTrigger className="cursor-pointer pl-1">
                     <div className="w-auto flex gap-2 items-center">
@@ -376,7 +509,9 @@ export default function Sidebar() {
                         <AlertDialogCancel className="cursor-pointer p-2 rounded-lg bg-transparent border flex items-center justify-center">
                           Cancelar
                         </AlertDialogCancel>
-                        <AlertDialogAction className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center">
+                        <AlertDialogAction className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center"
+                        onClick={logout}
+                        >
                           Continuar
                         </AlertDialogAction>
                       </div>
@@ -397,12 +532,14 @@ export default function Sidebar() {
                   <button className=" cursor-pointer flex h-auto w-auto shrink-0 items-center justify-center bg-transparent border hover:bg-gray-100 hover:text-gray-600 rounded-full">
                     <Avatar className="w-9 h-9">
                       <AvatarImage
-                        src={"https://github.com/tenmenezes.png"}
-                        alt="Avatar"
+                        src={
+                          user?.foto_perfil
+                            ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/usuarios/${user.foto_perfil}`
+                            : undefined
+                        }
+                        alt={user?.nome ?? "U"}
                       />
-                      <AvatarFallback>
-                        <UserIcon className="h-5 w-5" />
-                      </AvatarFallback>
+                      <AvatarFallback>{user?.nome?.[0] ?? "U"}</AvatarFallback>
                     </Avatar>
                   </button>
                 </DropdownMenuTrigger>
