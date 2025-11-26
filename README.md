@@ -126,12 +126,15 @@ npm run dev      # ou yarn dev / pnpm dev
 
 ```
 /HelpDesk-System
-│
 ├── backend
 │   ├── config
 │   │   └── conn.php
 │   ├── controllers
 │   ├── routes
+│   │   ├── auth
+│   │   │   └── login.php
+│   │   ├── chamados
+│   │   ├── problemas
 │   │   └── usuarios
 │   │       ├── delete.php
 │   │       ├── edit.php
@@ -144,9 +147,14 @@ npm run dev      # ou yarn dev / pnpm dev
 ├── frontend
 │   ├── src
 │   │   ├── app
+│   │   │   ├── api
+│   │   │   │   └── login
+│   │   │   │       └── route.ts
 │   │   │   ├── dashboard
 │   │   │   │   └── page.tsx
 │   │   │   ├── faq
+│   │   │   │   └── page.tsx
+│   │   │   ├── mySummons
 │   │   │   │   └── page.tsx
 │   │   │   ├── problems
 │   │   │   │   └── page.tsx
@@ -176,6 +184,7 @@ npm run dev      # ou yarn dev / pnpm dev
 │   │   │   │   ├── columns.tsx
 │   │   │   │   ├── data-table.tsx
 │   │   │   │   ├── data.ts
+│   │   │   │   ├── mySummonsPage.tsx
 │   │   │   │   └── summonsPage.tsx
 │   │   │   ├── ui
 │   │   │   │   ├── alert-dialog.tsx
@@ -210,14 +219,18 @@ npm run dev      # ou yarn dev / pnpm dev
 │   │   │   │   ├── columns.tsx
 │   │   │   │   └── data-table.tsx
 │   │   │   ├── PasswordInput.tsx
+│   │   │   ├── ProtectedRoutes.tsx
 │   │   │   ├── Sidebar.tsx
 │   │   │   ├── actions-cells.tsx
 │   │   │   ├── chart-area-interactive.tsx
 │   │   │   ├── chart.tsx
 │   │   │   ├── comp-554.tsx
 │   │   │   └── view.tsx
+│   │   ├── context
+│   │   │   └── AuthContext.tsx
 │   │   ├── hooks
-│   │   │   └── use-file-upload.ts
+│   │   │   ├── use-file-upload.ts
+│   │   │   └── useLogin.ts
 │   │   ├── lib
 │   │   │   └── utils.ts
 │   │   └── types
@@ -232,6 +245,7 @@ npm run dev      # ou yarn dev / pnpm dev
 │   ├── package.json
 │   ├── postcss.config.mjs
 │   └── tsconfig.json
+├── HelpDeskPrint.jpg
 ├── README.md
 └── package-lock.json
 ```
