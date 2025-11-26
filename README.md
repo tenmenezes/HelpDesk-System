@@ -153,7 +153,7 @@ npm run dev      # ou yarn dev / pnpm dev
 
 > Agradecemos às seguintes pessoas que contribuíram para este projeto:
 
-<table>
+<table align="center">
   <tr>
     <td align="center">
       <a href="#" title="Yago Menezes">
@@ -183,7 +183,7 @@ npm run dev      # ou yarn dev / pnpm dev
 
 - 4. Abra um pull request descrevendo a mudança.
 
-
+- 5. Como alternativa, consulte a documentação do GitHub em [como criar uma solicitação pull](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
 
 > Se for bug fix, tente incluir testes (se aplicável). Se for feature, descreva o objetivo e o uso esperado.
 
