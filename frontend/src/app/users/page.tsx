@@ -1,9 +1,11 @@
-import UsersPable from "@/components/usersComponents/UsersPage";
+import Sidebar from "@/components/Sidebar";
+import UsersPage from "@/components/usersComponents/UsersPage";
 
 export default function Usuarios() {
   return (
     <>
-      <UsersPable />
+      <Sidebar />
+      <UsersPage />
     </>
   );
 }

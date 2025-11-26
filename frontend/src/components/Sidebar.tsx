@@ -168,12 +168,7 @@ export default function Sidebar() {
                     >
                       <Avatar className="w-9 h-9">
                         <AvatarImage
-                          src={
-                            /* caminho pro avatar do usuário */ typeof window !==
-                            "undefined"
-                              ? window.CURRENT_USER_AVATAR ?? ""
-                              : ""
-                          }
+                          src={"https://github.com/tenmenezes.png"}
                           alt="Avatar"
                         />
                         <AvatarFallback>
@@ -402,12 +397,7 @@ export default function Sidebar() {
                   <button className=" cursor-pointer flex h-auto w-auto shrink-0 items-center justify-center bg-transparent border hover:bg-gray-100 hover:text-gray-600 rounded-full">
                     <Avatar className="w-9 h-9">
                       <AvatarImage
-                        src={
-                          /* caminho pro avatar do usuário */ typeof window !==
-                          "undefined"
-                            ? window.CURRENT_USER_AVATAR ?? ""
-                            : ""
-                        }
+                        src={"https://github.com/tenmenezes.png"}
                         alt="Avatar"
                       />
                       <AvatarFallback>

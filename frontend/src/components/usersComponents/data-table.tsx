@@ -78,11 +78,13 @@ export function DataTable<TData, TValue>({
             </Button>
           </DialogTrigger>
 
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Novo Usuário</DialogTitle>
-              <DialogDescription>Formulário para adicionar novos usuários da empresa</DialogDescription>
-            </DialogHeader>
+          <DialogContent className="w-auto h-auto flex items-center flex-col justify-center">
+              <DialogHeader>
+                <DialogTitle>Novo Usuário</DialogTitle>
+                <DialogDescription>
+                  Formulário para adicionar novos usuários da empresa
+                </DialogDescription>
+              </DialogHeader>
 
             <ProfileForm />
           </DialogContent>

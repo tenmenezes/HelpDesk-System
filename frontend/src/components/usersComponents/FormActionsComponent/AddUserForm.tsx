@@ -93,7 +93,7 @@ export default function ProfileForm() {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-auto h-auto flex flex-col max-w-full">
           <FormField
             control={form.control}
             name="username"
@@ -191,7 +191,7 @@ export default function ProfileForm() {
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Setor</FormLabel>
+                  <FormLabel>Tipo de usuário</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}

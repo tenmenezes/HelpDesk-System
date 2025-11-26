@@ -25,7 +25,6 @@ export default function RootLayout({
           enableSystem
           enableColorScheme
         >
-          <Sidebar />
           {children}
           <Toaster />
         </ThemeProvider>

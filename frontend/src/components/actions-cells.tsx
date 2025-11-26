@@ -81,7 +81,7 @@ export function ActionsCell({ row }: { row: Row<Usuario> }) {
               </DialogHeader>
 
               <DeleteUser
-                id={user.id}
+                id={user.id_usuario}
                 nome={user.nome}
                 onClose={() => setOpenDelete(false)}
               />
