@@ -147,6 +147,24 @@ npm run dev      # ou yarn dev / pnpm dev
 
 > Essa estrutura separa claramente backend e frontend, facilitando manutenção e deploy modular.
 
+---
+
+# Colaboradores
+
+> Agradecemos às seguintes pessoas que contribuíram para este projeto:
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="#" title="Yago Menezes">
+        <img src="https://github.com/tenmenezes.png" width="100px;" alt="Foto do Yago Menezes no GitHub"/><br>
+        <sub>
+          <b>Yago Menezes</b>
+        </sub>
+      </a>
+    </td> 
+  </tr>
+</table>
 
 ---
 
@@ -175,7 +193,6 @@ npm run dev      # ou yarn dev / pnpm dev
 # Licença
 
 ## Este projeto está licenciado sob a MIT License — sinta-se livre para usar, modificar e distribuir.
-
 
 ---
 
