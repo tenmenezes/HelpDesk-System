@@ -127,22 +127,113 @@ npm run dev      # ou yarn dev / pnpm dev
 ```
 /HelpDesk-System
 │
-├── backend/           # código PHP + configuração do banco
-│   ├── public/        # (se aplicável) arquivos públicos
-│   ├── src/           # classes, controllers, rotas, etc.
-│   ├── config/        # configuração do banco e do app
-│   └── …              
-│
-├── frontend/          # código do Next.js + React
-│   ├── pages/         # páginas da aplicação
-│   ├── components/    # componentes React (formulário, tabela, etc.)
-│   ├── hooks/         # hooks customizados (ex: para SWR)
-│   ├── styles/        # estilos / CSS / SCSS
-│   └── …              
-│
-├── .gitignore  
-├── README.md          # este arquivo
-└── LICENSE            # licença do projeto
+├── backend
+│   ├── config
+│   │   └── conn.php
+│   ├── controllers
+│   ├── routes
+│   │   └── usuarios
+│   │       ├── delete.php
+│   │       ├── edit.php
+│   │       ├── insert.php
+│   │       ├── read.php
+│   │       └── upload_photo.php
+│   ├── uploads
+│   │   └── usuarios
+│   └── helpdesk.sql
+├── frontend
+│   ├── src
+│   │   ├── app
+│   │   │   ├── dashboard
+│   │   │   │   └── page.tsx
+│   │   │   ├── faq
+│   │   │   │   └── page.tsx
+│   │   │   ├── problems
+│   │   │   │   └── page.tsx
+│   │   │   ├── profile
+│   │   │   │   └── page.tsx
+│   │   │   ├── summons
+│   │   │   │   └── page.tsx
+│   │   │   ├── users
+│   │   │   │   └── page.tsx
+│   │   │   ├── favicon.ico
+│   │   │   ├── globals.css
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
+│   │   ├── components
+│   │   │   ├── IssuesComponents
+│   │   │   │   ├── columns.tsx
+│   │   │   │   ├── data-table.tsx
+│   │   │   │   ├── data.ts
+│   │   │   │   └── issuesPage.tsx
+│   │   │   ├── ProfileComponents
+│   │   │   │   └── ProfilePage.tsx
+│   │   │   ├── faqComponents
+│   │   │   │   └── faqCards.tsx
+│   │   │   ├── services
+│   │   │   │   └── users.ts
+│   │   │   ├── summonsComponents
+│   │   │   │   ├── columns.tsx
+│   │   │   │   ├── data-table.tsx
+│   │   │   │   ├── data.ts
+│   │   │   │   └── summonsPage.tsx
+│   │   │   ├── ui
+│   │   │   │   ├── alert-dialog.tsx
+│   │   │   │   ├── avatar.tsx
+│   │   │   │   ├── button.tsx
+│   │   │   │   ├── card.tsx
+│   │   │   │   ├── chart.tsx
+│   │   │   │   ├── cropper.tsx
+│   │   │   │   ├── dialog.tsx
+│   │   │   │   ├── dropdown-menu.tsx
+│   │   │   │   ├── field.tsx
+│   │   │   │   ├── form.tsx
+│   │   │   │   ├── input-group.tsx
+│   │   │   │   ├── input.tsx
+│   │   │   │   ├── label.tsx
+│   │   │   │   ├── scroll-area.tsx
+│   │   │   │   ├── select.tsx
+│   │   │   │   ├── separator.tsx
+│   │   │   │   ├── sheet.tsx
+│   │   │   │   ├── slider.tsx
+│   │   │   │   ├── sonner.tsx
+│   │   │   │   ├── table.tsx
+│   │   │   │   ├── tabs.tsx
+│   │   │   │   ├── textarea.tsx
+│   │   │   │   └── tooltip.tsx
+│   │   │   ├── usersComponents
+│   │   │   │   ├── FormActionsComponent
+│   │   │   │   │   ├── AddUserForm.tsx
+│   │   │   │   │   ├── DeleteUserModal.tsx
+│   │   │   │   │   └── EditUserForm.tsx
+│   │   │   │   ├── UsersPage.tsx
+│   │   │   │   ├── columns.tsx
+│   │   │   │   └── data-table.tsx
+│   │   │   ├── PasswordInput.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   ├── actions-cells.tsx
+│   │   │   ├── chart-area-interactive.tsx
+│   │   │   ├── chart.tsx
+│   │   │   ├── comp-554.tsx
+│   │   │   └── view.tsx
+│   │   ├── hooks
+│   │   │   └── use-file-upload.ts
+│   │   ├── lib
+│   │   │   └── utils.ts
+│   │   └── types
+│   │       └── globals.d.ts
+│   ├── .gitignore
+│   ├── README.md
+│   ├── components.json
+│   ├── eslint.config.mjs
+│   ├── next-env.d.ts
+│   ├── next.config.ts
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.mjs
+│   └── tsconfig.json
+├── README.md
+└── package-lock.json
 ```
 
 > Essa estrutura separa claramente backend e frontend, facilitando manutenção e deploy modular.
