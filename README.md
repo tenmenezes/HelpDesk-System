@@ -1,12 +1,10 @@
 # Help Desk Corp 🛠️
 
-<p align="center">
 ![GitHub repo size](https://img.shields.io/github/repo-size/iuricode/README-template?style=for-the-badge)
 ![GitHub language count](https://img.shields.io/github/languages/count/tenmenezes/HelpDesk-System?style=for-the-badge)
 ![GitHub forks](https://img.shields.io/github/forks/tenmenezes/HelpDesk-System?style=for-the-badge)
 ![Bitbucket open issues](https://img.shields.io/bitbucket/issues/tenmenezes/HelpDesk-System?style=for-the-badge)
 ![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/tenmenezes/HelpDesk-System?style=for-the-badge)
-</p>
 
 <img src="./HelpDeskPrint.jpg" alt="Print da tela principal do site">
 
