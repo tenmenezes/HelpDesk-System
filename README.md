@@ -7,9 +7,9 @@
 ![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/tenmenezes/HelpDesk-System?style=for-the-badge)
 
 <img src="./HelpDeskPrint.jpg" alt="Print da tela principal do site">
-
+---
 > Sistema de Help Desk para gestão de chamados internos — versão universitária, com backend em PHP e frontend em Next.js 16+.
-
+---
 ## Índice
 
 - [Sobre](#sobre)  
@@ -139,9 +139,10 @@ npm run dev      # ou yarn dev / pnpm dev
 ├── .gitignore  
 ├── README.md          # este arquivo
 └── LICENSE            # licença do projeto
-
-Essa estrutura separa claramente backend e frontend, facilitando manutenção e deploy modular.
 ```
+
+> Essa estrutura separa claramente backend e frontend, facilitando manutenção e deploy modular.
+
 
 ---
 
