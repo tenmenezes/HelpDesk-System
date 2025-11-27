@@ -21,21 +21,10 @@ CREATE TABLE usuario (
     FOREIGN KEY (id_setor) REFERENCES setor(id_setor)
 );
 
--- TABELA: tecnico
-CREATE TABLE tecnico (
-    id_tecnico INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    senha VARCHAR(255) NOT NULL,
-    telefone VARCHAR(20),
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 -- TABELA: chamado
 CREATE TABLE chamado (
     id_chamado INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
-    id_tecnico INT,
     titulo VARCHAR(100) NOT NULL,
     descricao TEXT NOT NULL,
     status ENUM('aberto', 'andamento', 'resolvido', 'cancelado') DEFAULT 'aberto',
@@ -43,7 +32,6 @@ CREATE TABLE chamado (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
-    FOREIGN KEY (id_tecnico) REFERENCES tecnico(id_tecnico)
 );
 
 -- TABELA: historico_chamado
