@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ActionsCell } from "./actions-cells";
+import { ActionsCell } from "../actions-cells";
 
 export type Usuario = {
   id_usuario: number;

@@ -19,9 +19,9 @@ import {
 } from "@/components/ui/dialog";
 import { Settings2, UserRoundPen, UserRoundX } from "lucide-react";
 import type { Row } from "@tanstack/react-table";
-import { Usuario } from "./columns";
-import { EditUserForm } from "./FormActionsComponent/EditUserForm";
-import { DeleteUser } from "./FormActionsComponent/DeleteUserModal";
+import { Usuario } from "./usersComponents/columns";
+import { EditUserForm } from "./usersComponents/FormActionsComponent/EditUserForm";
+import { DeleteUser } from "./usersComponents/FormActionsComponent/DeleteUserModal";
 
 export function ActionsCell({ row }: { row: Row<Usuario> }) {
   const [openEdit, setOpenEdit] = useState(false);

@@ -1,7 +1,8 @@
 "use client"
 
 import { columns } from "./columns";
-import { DataTable } from "./data-table";
+import { DataTable } from "../SummonsComponents/data-table";
+import { payments } from "./data";
 import {
   Card,
   CardContent,
@@ -11,10 +12,7 @@ import {
 } from "../ui/card";
 import { AlertCircle } from "lucide-react";
 
-import { useIssues } from "@/hooks/useIssues";
-
 export default function IssuesPage() {
-  const { issues, mutate } = useIssues();
 
   return (
     <>
@@ -33,7 +31,7 @@ export default function IssuesPage() {
           <CardTitle className="text-center">Tabela de ocorrências</CardTitle>
         </CardHeader>
         <CardContent className="m-2">
-          <DataTable columns={columns} data={issues} />
+          <DataTable columns={columns} data={payments} />
         </CardContent>
       </Card>
     </>

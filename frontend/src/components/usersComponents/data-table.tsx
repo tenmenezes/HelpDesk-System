@@ -143,7 +143,9 @@ export function DataTable<TData, TValue>({
                 >
                   <div className="w-auto flex items-center justify-center gap-2">
                     <SearchXIcon className="h-6 w-6 text-red-600" />
+                    <span className="text-red-600 font-bold">
                       Nenhum registro encontrado.
+                    </span>
                   </div>
                 </TableCell>
               </TableRow>
