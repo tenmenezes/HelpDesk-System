@@ -1,11 +1,6 @@
 <?php
-// backend/routes/usuarios/edit.php
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Methods: POST, OPTIONS, PUT");
-
-require_once __DIR__ . "/../../config/conn.php";
+require_once "../../cors.php";
+require_once __DIR__ . "../../conn.php";
 
 $raw = file_get_contents("php://input");
 $data = json_decode($raw, true);
@@ -15,7 +10,6 @@ if (!$data) {
     exit;
 }
 
-// Normalize fields - use the DB column names
 $id       = isset($data["id"]) ? intval($data["id"]) : (isset($data["id_usuario"]) ? intval($data["id_usuario"]) : 0);
 $username = $data["username"] ?? $data["nome"] ?? null;
 $email    = $data["email"] ?? null;

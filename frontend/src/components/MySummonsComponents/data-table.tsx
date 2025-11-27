@@ -1,15 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   SortingState,
   useReactTable,
-  getFilteredRowModel,
 } from "@tanstack/react-table";
 
+import useSWR from "swr";
+
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -19,40 +23,34 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import useSWR from "swr";
+import { Loader, SearchXIcon } from "lucide-react";
 
-import { Loader, SearchXIcon, UserPlusIcon } from "lucide-react";
-
-import { Dialog, DialogContent, DialogDescription, DialogHeader } from "@/components/ui/dialog";
-import { DialogTitle, DialogTrigger } from "@radix-ui/react-dialog";
-import ProfileForm from "./FormActionsComponent/AddUserForm";
-
-interface DataTableProps<TData, TValue> {
+interface Props<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
+  swrKey: string | null;
+  fetcher: (id: number) => Promise<TData[]>;
+  userId: number;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTableChamados<TData, TValue>({
   columns,
-}: DataTableProps<TData, TValue>) {
+  swrKey,
+  fetcher,
+  userId,
+}: Props<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
 
-  const fetcher = async () => {
-    const res = await fetch("http://localhost:8000/routes/usuarios/read.php");
-    return res.json();
-  };
-
-  const { data, isLoading } = useSWR("usuarios", fetcher);
+  const { data, isLoading } = useSWR(swrKey, () => fetcher(userId), {
+    revalidateOnFocus: false,
+  });
 
   const table = useReactTable({
     data: data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     state: {
@@ -63,6 +61,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
+      {/* Barra de busca igual do UsersPage */}
       <div className="w-full flex items-center justify-between gap-2 mb-2">
         <Input
           placeholder="Buscar..."
@@ -70,27 +69,9 @@ export function DataTable<TData, TValue>({
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
-
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="h-8 w-8 cursor-pointer">
-              <UserPlusIcon className="h-8 w-8 text-green-600" />
-            </Button>
-          </DialogTrigger>
-
-          <DialogContent className="w-auto h-auto flex items-center flex-col justify-center">
-              <DialogHeader>
-                <DialogTitle>Novo Usuário</DialogTitle>
-                <DialogDescription>
-                  Formulário para adicionar novos usuários da empresa
-                </DialogDescription>
-              </DialogHeader>
-
-            <ProfileForm />
-          </DialogContent>
-        </Dialog>
       </div>
 
+      {/* Tabela */}
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -117,9 +98,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  <div className="w-auto h-auto flex justify-center items-center">
-                    <Loader className="h-8 w-8 animate-spin transition" />
-                  </div>
+                  <Loader className="h-8 w-8 animate-spin mx-auto" />
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows.length > 0 ? (
@@ -143,7 +122,7 @@ export function DataTable<TData, TValue>({
                 >
                   <div className="w-auto flex items-center justify-center gap-2">
                     <SearchXIcon className="h-6 w-6 text-red-600" />
-                      Nenhum registro encontrado.
+                    Nenhum registro encontrado.
                   </div>
                 </TableCell>
               </TableRow>

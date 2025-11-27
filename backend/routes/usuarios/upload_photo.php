@@ -1,13 +1,7 @@
 <?php
-header("Content-Type: application/json");
-require_once "../../db.php"; // ou conn.php — ajuste conforme tua estrutura
+require_once "../../cors.php";
+require_once "../../conn.php";
 
-// Permite requests CORS durante desenvolvimento (ajuste para produção)
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
-// aceitar preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }

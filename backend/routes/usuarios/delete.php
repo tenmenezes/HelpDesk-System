@@ -1,11 +1,6 @@
 <?php
-// backend/routes/usuarios/delete.php
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Methods: POST, OPTIONS, DELETE");
-
-require_once __DIR__ . "/../../config/conn.php";
+require_once "../../cors.php";
+require_once __DIR__ . "../../conn.php";
 
 $raw = file_get_contents("php://input");
 $data = json_decode($raw, true);

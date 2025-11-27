@@ -1,4 +1,4 @@
-import SummonsPage from "@/components/summonsComponents/summonsPage";
+import SummonsPage from "@/components/SummonsComponents/summonsPage";
 import Sidebar from "@/components/Sidebar";
 import ProtectedRoute from "@/components/ProtectedRoutes";
 

@@ -1,10 +1,21 @@
+"use client"
+
 import { columns } from "./columns";
-import { payments } from "./data";
 import { DataTable } from "./data-table";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { AlertCircle } from "lucide-react";
 
-export default function UsersTable() {
+import { useIssues } from "@/hooks/useIssues";
+
+export default function IssuesPage() {
+  const { issues, mutate } = useIssues();
+
   return (
     <>
       <Card className="mt-4 ml-4 md:ml-18 lg:ml-18 sm:ml-18 mr-4">
@@ -22,7 +33,7 @@ export default function UsersTable() {
           <CardTitle className="text-center">Tabela de ocorrências</CardTitle>
         </CardHeader>
         <CardContent className="m-2">
-          <DataTable columns={columns} data={payments} />
+          <DataTable columns={columns} data={issues} />
         </CardContent>
       </Card>
     </>
