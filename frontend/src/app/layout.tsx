@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Sidebar from "@/components/Sidebar";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/context/AuthContext";

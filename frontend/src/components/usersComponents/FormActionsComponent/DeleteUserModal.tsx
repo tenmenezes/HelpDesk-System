@@ -15,13 +15,18 @@ export function DeleteUser({ id, nome, onClose }: DeleteUserProps) {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/routes/usuarios/delete.php`,
       {
-        method: "DELETE",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ id }),
       }
     );
+
+    if (!res) {
+      toast.warning("Aviso: Falha ao realizar o fetch de 'handleDelete'.");
+      return null;
+    }
 
     const data = await res.json();
 
@@ -30,29 +35,37 @@ export function DeleteUser({ id, nome, onClose }: DeleteUserProps) {
       toast.success("Usuário excluído.");
       onClose();
     } else {
-      toast.error("Erro ao excluir.");
+      return (
+        toast.error("Erro ao excluir usuário.")
+      );
     }
   }
 
   return (
-    <div className="space-y-4">
-      <p>
-        Deseja realmente excluir o usuário <b>{nome}</b>?
-        <span className="text-red-600"> Essa ação é irreversível.</span>
-      </p>
+    <>
+      <div className="space-y-4">
+        <p>
+          Deseja realmente excluir o usuário <b>{nome}</b>?
+          <span className="text-red-600 font-bold"> Essa ação é irreversível.</span>
+        </p>
 
-      <div className="flex gap-2 justify-between">
-        <Button variant="outline" onClick={onClose} className="cursor-pointer">
-          Cancelar
-        </Button>
+        <div className="flex gap-2 justify-between">
+          <Button
+            variant="outline"
+            onClick={onClose}
+            className="cursor-pointer"
+          >
+            Cancelar
+          </Button>
 
-        <Button
-          onClick={handleDelete}
-          className="cursor-pointer hover:bg-red-700 transition-colors border"
-        >
-          Excluir
-        </Button>
+          <Button
+            onClick={handleDelete}
+            className="cursor-pointer hover:bg-red-700 transition-colors border"
+          >
+            Excluir
+          </Button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

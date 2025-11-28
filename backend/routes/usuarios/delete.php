@@ -1,6 +1,6 @@
 <?php
-require_once "../../cors.php";
-require_once __DIR__ . "../../conn.php";
+require_once "../../config/cors.php";
+require_once "../../config/conn.php";
 
 $raw = file_get_contents("php://input");
 $data = json_decode($raw, true);
@@ -13,7 +13,7 @@ if (isset($data["id"])) {
 }
 
 if (!$id) {
-    echo json_encode(["success" => false, "error" => "ID não informado"]);
+    echo json_encode(["success" => false, "error" => "ID nao informado"]);
     exit;
 }
 
@@ -28,5 +28,5 @@ $stmt->bind_param("i", $id);
 if ($stmt->execute()) {
     echo json_encode(["success" => true]);
 } else {
-    echo json_encode(["success" => false, "error" => "Erro ao excluir usuário: " . $stmt->error]);
+    echo json_encode(["success" => false, "error" => "Erro ao excluir usuario: " . $stmt->error]);
 }

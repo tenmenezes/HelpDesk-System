@@ -1,5 +1,7 @@
 "use client"
 
+import "../../app/globals.css";
+
 import {
   CircleCheckIcon,
   InfoIcon,
@@ -34,7 +36,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }
       {...props}
     />
-  )
+  );
 }
 
 export { Toaster }

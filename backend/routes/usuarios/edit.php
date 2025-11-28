@@ -1,6 +1,6 @@
 <?php
-require_once "../../cors.php";
-require_once __DIR__ . "../../conn.php";
+require_once "../../config/cors.php";
+require_once "../../config/conn.php";
 
 $raw = file_get_contents("php://input");
 $data = json_decode($raw, true);

@@ -29,6 +29,7 @@ import { Loader, SearchXIcon, UserPlusIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from "@/components/ui/dialog";
 import { DialogTitle, DialogTrigger } from "@radix-ui/react-dialog";
 import ProfileForm from "./FormActionsComponent/AddUserForm";
+import { toast } from "sonner";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,7 +42,14 @@ export function DataTable<TData, TValue>({
   const [globalFilter, setGlobalFilter] = useState("");
 
   const fetcher = async () => {
-    const res = await fetch("http://localhost:8000/routes/usuarios/read.php");
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/routes/usuarios/read.php`
+    );
+
+    if (!res) {
+      toast.error("Falha ao realizar fetch, dados não salvos na varável 'res' em data-table.tsx 'fetcher'.")
+    }
+
     return res.json();
   };
 

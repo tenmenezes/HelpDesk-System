@@ -1,6 +1,6 @@
 <?php
 require_once "../../config/cors.php";
-require "../../config/conn.php";
+require_once "../../config/conn.php";
 
 $raw = file_get_contents("php://input");
 $data = json_decode($raw, true);
@@ -28,7 +28,7 @@ $stmt = $conn->prepare("
 $stmt->bind_param("issssss", $setor, $nome, $email, $senha, $telefone, $tipo, $foto);
 
 if ($stmt->execute()) {
-    echo json_encode(["success" => true, "message" => "Usuário criado com sucesso."]);
+    echo json_encode(["success" => true, "message" => "Usuario criado com sucesso."]);
 } else {
-    echo json_encode(["success" => false, "message" => "Erro ao criar usuário."]);
+    echo json_encode(["success" => false, "message" => "Erro ao criar usuario."]);
 }
