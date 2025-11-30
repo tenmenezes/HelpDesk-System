@@ -1,5 +1,5 @@
 import { columns } from "./columns";
-import { payments } from "./data";
+import { summons } from "./data";
 import { DataTable } from "./data-table";
 import {
   Card,
@@ -10,7 +10,7 @@ import {
 } from "../ui/card";
 import { TicketCheckIcon } from "lucide-react";
 
-export default function UsersTable() {
+export default function SummonsPage() {
   return (
     <>
       <Card className="mt-4 ml-4 md:ml-18 lg:ml-18 sm:ml-18 mr-4 mb-4">
@@ -27,14 +27,8 @@ export default function UsersTable() {
       </Card>
 
       <Card className="mt-4 ml-4 md:ml-18 lg:ml-18 sm:ml-18 mr-4 mb-4">
-        <CardHeader>
-          <div className="w-auto flex items-center justify-between">
-            <CardTitle>Tabela de Chamados</CardTitle>
-            <TicketCheckIcon className="h-6 w-6" />
-          </div>
-        </CardHeader>
         <CardContent className="m-2">
-          <DataTable columns={columns} data={payments} />
+          <DataTable columns={columns} data={summons} />
         </CardContent>
       </Card>
     </>

@@ -2,7 +2,6 @@
 
 import Chart from "@/components/chart";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import View from "@/components/view";
 import {
   Card,
   CardContent,
@@ -13,6 +12,7 @@ import {
 import { ArrowBigUpDash, Percent, TagIcon, Ticket, Users } from "lucide-react";
 import ProtectedRoute from "@/components/ProtectedRoutes";
 import Sidebar from "@/components/Sidebar";
+import TicketsPorSetor from "@/components/view";
 
 export default function Dashboard() {
   return (
@@ -21,67 +21,69 @@ export default function Dashboard() {
         <Sidebar />
         <main className="sm:ml-14 p-4">
           <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card>
+            <Card className="border border-blue-600">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl sm:text-2xl select-none">
-                    Total de tickets
+                    Total de Tickets
                   </CardTitle>
-                  <Ticket className="w-6 h-6" />
+                  <Ticket className="w-6 h-6 text-blue-600" />
                 </div>
-
-                <CardDescription>Total de tickets em 24h</CardDescription>
+                <CardDescription>Últimas 24h</CardDescription>
 
                 <CardContent>
-                  <p className="text-base sm:text-lg font-bold">200</p>
+                  <p className="text-base sm:text-lg font-bold text-blue-700">
+                    200
+                  </p>
                 </CardContent>
               </CardHeader>
             </Card>
 
-            <Card>
+            <Card className="border border-purple-600">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl sm:text-2xl select-none">
-                    Novos usuários
+                    Novos Usuários
                   </CardTitle>
-                  <Users className="w-6 h-6" />
+                  <Users className="w-6 h-6 text-purple-600" />
                 </div>
-
-                <CardDescription>Novos usuários em 24h</CardDescription>
+                <CardDescription>Últimas 24h</CardDescription>
 
                 <CardContent>
-                  <p className="text-base sm:text-lg font-bold">20</p>
+                  <p className="text-base sm:text-lg font-bold text-purple-700">
+                    20
+                  </p>
                 </CardContent>
               </CardHeader>
             </Card>
 
-            <Card>
+            <Card className="border border-yellow-500">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl sm:text-2xl select-none">
-                    Tickets hoje
+                    Tickets Hoje
                   </CardTitle>
-                  <TagIcon className="w-6 h-6" />
+                  <TagIcon className="w-6 h-6 text-yellow-600" />
                 </div>
-
-                <CardDescription>Total de tickets hoje</CardDescription>
+                <CardDescription>Total do dia</CardDescription>
 
                 <CardContent>
-                  <p className="text-base sm:text-lg font-bold">5</p>
+                  <p className="text-base sm:text-lg font-bold text-yellow-700">
+                    5
+                  </p>
                 </CardContent>
               </CardHeader>
             </Card>
 
-            <Card>
+            <Card className="border border-green-600">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl sm:text-2xl select-none">
-                    Tickets resolvidos
+                    Tickets Resolvidos
                   </CardTitle>
-                  <Percent className="w-6 h-6" />
+                  <Percent className="w-6 h-6 text-green-600" />
                 </div>
-
-                <CardDescription>Total de tickets resolvidos</CardDescription>
+                <CardDescription>Eficiência</CardDescription>
 
                 <CardContent className="w-full flex items-center gap-2 text-green-700">
                   <ArrowBigUpDash className="h-4 w-4" />
@@ -97,7 +99,7 @@ export default function Dashboard() {
 
           <section className="mt-4 flex flex-col md:flex-row gap-4">
             <Chart />
-            <View />
+            <TicketsPorSetor filtro="7d" />
           </section>
         </main>
       </ProtectedRoute>

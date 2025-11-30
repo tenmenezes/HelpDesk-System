@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import useSWR from "swr";
 
-import { Loader, SearchXIcon, UserPlusIcon } from "lucide-react";
+import { CircleFadingPlus, Loader, SearchXIcon, UserPlusIcon } from "lucide-react";
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from "@/components/ui/dialog";
 import { DialogTitle, DialogTrigger } from "@radix-ui/react-dialog";
@@ -81,8 +81,8 @@ export function DataTable<TData, TValue>({
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="h-8 w-8 cursor-pointer">
-              <UserPlusIcon className="h-8 w-8 text-green-600" />
+            <Button className="cursor-pointer" variant="ghost">
+              <CircleFadingPlus className="h-40 w-40 text-green-600" />
             </Button>
           </DialogTrigger>
 

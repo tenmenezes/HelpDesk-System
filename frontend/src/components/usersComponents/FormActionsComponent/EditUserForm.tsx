@@ -1,7 +1,7 @@
 "use client";
 
 import { z } from "zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PatternFormat } from "react-number-format";
 import { mutate } from "swr";
@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { Usuario } from "../columns";
 
 const formSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   username: z.string().min(2),
   email: z.string().email(),
   phone: z.string(),
@@ -41,7 +41,7 @@ interface EditUserProps {
 }
 
 type EditUserFormData = {
-  id: number;
+  id: string;
   username: string;
   email: string;
   phone: string;
@@ -57,15 +57,14 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
       username: user.nome,
       email: user.email,
       phone: user.telefone,
-      sector: String(user.id_setor ?? ""),
+      sector: user.id_setor,
       type: user.tipo,
     },
   });
 
   const onSubmit: SubmitHandler<EditUserFormData> = async (values) => {
-    console.log("submit chamado", values);
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/routes/usuarios/edit.php`,
+      `${process.env.NEXT_PUBLIC_API_URL}/routes/usuarios/update.php`,
       {
         method: "POST",
         headers: {
@@ -78,125 +77,121 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
     const data = await response.json();
 
     if (data.success) {
-      console.log(data);
       mutate("usuarios");
-      toast.success("Usuário atualizado!");
+      toast.success("Funcionário atualizado!");
       onClose();
     } else {
-      console.log(data);
       toast.error("Erro ao atualizar.");
     }
   };
 
   return (
-    <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nome</FormLabel>
+              <FormControl>
+                <Input placeholder="Nome..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="email@exemplo.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Telefone</FormLabel>
+              <FormControl>
+                <PatternFormat
+                  format="(##) #####-####"
+                  customInput={Input}
+                  value={field.value}
+                  onValueChange={(v) => field.onChange(v.formattedValue)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex gap-4">
           <FormField
             control={form.control}
-            name="username"
+            name="sector"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome</FormLabel>
+              <FormItem className="flex-1">
+                <FormLabel>Setor</FormLabel>
                 <FormControl>
-                  <Input placeholder="Nome..." {...field} />
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Setor" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Arquitetura</SelectItem>
+                      <SelectItem value="2">Contabilidade</SelectItem>
+                      <SelectItem value="3">Engenharia</SelectItem>
+                      <SelectItem value="4">Empreendedorismo</SelectItem>
+                      <SelectItem value="5">Tecnologia</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
 
           <FormField
             control={form.control}
-            name="email"
+            name="type"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
+              <FormItem className="flex-1">
+                <FormLabel>Tipo</FormLabel>
                 <FormControl>
-                  <Input placeholder="email@exemplo.com" {...field} />
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="comum">Comum</SelectItem>
+                      <SelectItem value="suporte">Suporte</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
+        </div>
 
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Telefone</FormLabel>
-                <FormControl>
-                  <PatternFormat
-                    format="(##) #####-####"
-                    customInput={Input}
-                    value={field.value}
-                    onValueChange={(v) => field.onChange(v.formattedValue)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="flex gap-4">
-            <FormField
-              control={form.control}
-              name="sector"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Setor</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Setor" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1">Arquitetura</SelectItem>
-                        <SelectItem value="2">Contabilidade</SelectItem>
-                        <SelectItem value="3">Engenharia</SelectItem>
-                        <SelectItem value="4">Empreendedorismo</SelectItem>
-                        <SelectItem value="5">Tecnologia</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Tipo</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Tipo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="comum">Comum</SelectItem>
-                        <SelectItem value="suporte">Suporte</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <Button type="submit" className="w-full cursor-pointer">
-            Salvar alterações
-          </Button>
-        </form>
-      </Form>
-    </>
+        <Button type="submit" className="w-full cursor-pointer">
+          Salvar alterações
+        </Button>
+      </form>
+    </Form>
   );
 }

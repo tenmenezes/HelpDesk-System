@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ActionsCell } from "../actions-cells";
 
 export type Usuario = {
-  id_usuario: number;
+  id_usuario: string;
   nome: string;
   email: string;
   telefone: string;

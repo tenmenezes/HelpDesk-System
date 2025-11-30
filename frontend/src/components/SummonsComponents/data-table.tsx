@@ -5,6 +5,8 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -17,9 +19,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -31,50 +35,60 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [filter, setFilter] = useState("");
 
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
     state: {
       sorting,
+      globalFilter: filter,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setFilter,
+
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+
+    initialState: {
+      pagination: {
+        pageSize: 10,
+      },
     },
   });
 
   return (
     <>
       <Input
-        placeholder="Buscar..."
-        value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-        onChange={(event) =>
-          table.getColumn("email")?.setFilterValue(event.target.value)
-        }
+        placeholder="Buscar por usuário..."
+        value={filter}
+        onChange={(event) => setFilter(event.target.value)}
         className="max-w-sm mb-4"
       />
+
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -96,29 +110,38 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Nenhum resultado encontrado.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+
+      <div className="flex items-center justify-center space-x-2 py-4 gap-10">
         <Button
           variant="outline"
+          className="cursor-pointer"
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          Anterior
+          <ArrowLeft className="h-5 w-5" />
         </Button>
+
+        <span>
+          Página {table.getState().pagination.pageIndex + 1} -{" "}
+          {table.getPageCount()}
+        </span>
+
         <Button
           variant="outline"
+          className="cursor-pointer"
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          Próximo
+          <ArrowRight className="h-5 w-5" />
         </Button>
       </div>
     </>

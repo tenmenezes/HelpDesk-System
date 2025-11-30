@@ -1,8 +1,8 @@
 "use client"
 
 import { columns } from "./columns";
-import { DataTable } from "../SummonsComponents/data-table";
-import { payments } from "./data";
+import { DataTable } from "./data-table";
+import { issues } from "./data";
 import {
   Card,
   CardContent,
@@ -27,11 +27,8 @@ export default function IssuesPage() {
       </Card>
 
       <Card className="mt-4 ml-4 md:ml-18 lg:ml-18 sm:ml-18 mr-4 mb-4">
-        <CardHeader>
-          <CardTitle className="text-center">Tabela de ocorrências</CardTitle>
-        </CardHeader>
         <CardContent className="m-2">
-          <DataTable columns={columns} data={payments} />
+          <DataTable columns={columns} data={issues} />
         </CardContent>
       </Card>
     </>
