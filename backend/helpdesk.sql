@@ -49,4 +49,3 @@ INSERT INTO setor (id_setor, nome) VALUES
 (3, 'Engenharia'),
 (4, 'Empreendedorismo'),
 (5, 'Tecnologia');
-

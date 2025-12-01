@@ -1,6 +1,12 @@
 <?php
+error_reporting(0); // Desabilita exibição de erros
+ini_set('display_errors', 0);
+
 require_once "../../config/cors.php";
 require_once "../../config/conn.php";
+
+// Garantir que apenas JSON seja retornado
+header("Content-Type: application/json; charset=UTF-8");
 
 $raw = file_get_contents("php://input");
 $data = json_decode($raw, true);
@@ -24,14 +30,21 @@ if (!$id || !$username || !$email || $sector === null || !$type) {
 
 $sql = "UPDATE usuario SET nome = ?, email = ?, telefone = ?, id_setor = ?, tipo = ? WHERE id_usuario = ?";
 $stmt = $conn->prepare($sql);
+
 if (!$stmt) {
     echo json_encode(["success" => false, "error" => "Erro no prepare: " . $conn->error]);
     exit;
 }
-$stmt->bind_param("sssssi", $username, $email, $phone, (string)$sector, $type, $id);
+
+// bind_param requer variáveis por referência e tipos corretos:
+// nome (s), email (s), telefone (s), id_setor (i), tipo (s), id_usuario (i)
+$stmt->bind_param("sssisi", $username, $email, $phone, $sector, $type, $id);
 
 if ($stmt->execute()) {
     echo json_encode(["success" => true]);
 } else {
     echo json_encode(["success" => false, "error" => "Erro ao executar: " . $stmt->error]);
 }
+
+$stmt->close();
+$conn->close();

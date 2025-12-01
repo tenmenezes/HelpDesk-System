@@ -7,16 +7,24 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ActionsCell } from "../actions-cells";
 
 export type Usuario = {
-  id_usuario: string;
+  id: number;
   nome: string;
   email: string;
   telefone: string;
-  id_setor: string;
+  id_setor: number;
+  setor: string;
   tipo: "comum" | "suporte" | "admin";
   foto_url: string | null;
 };
 
 export const columns: ColumnDef<Usuario>[] = [
+  {
+    accessorKey: "id",
+    header: () => null,
+    cell: () => null,
+    enableHiding: true,
+    meta: { hidden: true },
+  },
   {
     accessorKey: "foto_url",
     header: () => "Perfil",

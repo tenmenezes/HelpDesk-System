@@ -28,7 +28,7 @@ export function ActionsCell({ row }: { row: Row<Usuario> }) {
   const [openDelete, setOpenDelete] = useState(false);
 
   const user = row.original;
-
+  
   return (
     <div className="flex items-center">
       <DropdownMenu>
@@ -81,7 +81,7 @@ export function ActionsCell({ row }: { row: Row<Usuario> }) {
               </DialogHeader>
 
               <DeleteUser
-                id={user.id_usuario}
+                id={user.id}
                 nome={user.nome}
                 onClose={() => setOpenDelete(false)}
               />

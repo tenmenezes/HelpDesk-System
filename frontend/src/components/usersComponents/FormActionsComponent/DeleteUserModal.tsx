@@ -11,6 +11,7 @@ interface DeleteUserProps {
 }
 
 export function DeleteUser({ id, nome, onClose }: DeleteUserProps) {
+  console.log("ID recebido no DeleteUserModal:", id);
   async function handleDelete() {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/routes/usuarios/delete.php`,

@@ -28,15 +28,17 @@ import { mutate } from "swr";
 
 const formSchema = z.object({
   username: z.string().min(2, { message: "Min 2 caracteres." }).max(50),
-// validando email
+
+  // validando email
   email: z
-  .string()
-  .min(1, "O e-mail é obrigatório.")
-  .regex(
-    /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
-    "Digite um e-mail válido (ex: nome@dominio.com)."
-  ),
-// validando senha
+    .string()
+    .min(1, "O e-mail é obrigatório.")
+    .regex(
+      /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
+      "Digite um e-mail válido (ex: nome@dominio.com)."
+    ),
+
+  // validando senha
   password: z
     .string()
     .min(6, "Erro: Mínimo de 6 caracteres.")
@@ -44,12 +46,13 @@ const formSchema = z.object({
     .regex(/[a-z]/, "A senha deve conter uma letra minúscula.")
     .regex(/[0-9]/, "A senha deve conter um número.")
     .regex(/[^A-Za-z0-9]/, "A senha deve conter um caractere especial."),
+
   // validando telefone
   phone: z
     .string()
     .min(15, "O celular é obrigatório.")
     .regex(/^\(\d{2}\)\s\d{4,5}-\d{4}$/, "Formato inválido."),
-  
+
   sector: z.string().min(1, "Selecione um setor."),
   type: z.string().min(1, "Selecione o tipo de usuário."),
 });
@@ -82,17 +85,21 @@ export default function ProfileForm() {
     const data = await res.json();
 
     if (data.success) {
-       mutate("usuarios");
+      mutate("usuarios");
+      form.reset();
       toast.success("Usuário criado com sucesso!");
     } else {
-      toast.error("Erro ao criar usuário.");
+      toast.error(data.message || "Erro ao criar usuário.");
     }
   }
 
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-auto h-auto flex flex-col max-w-full">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 w-auto h-auto flex flex-col max-w-full"
+        >
           <FormField
             control={form.control}
             name="username"

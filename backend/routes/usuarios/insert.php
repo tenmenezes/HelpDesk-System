@@ -12,8 +12,34 @@ if (!$data) {
 
 $nome = $data["username"];
 $email = $data["email"];
-$senha = password_hash($data["password"], PASSWORD_DEFAULT);
 $telefone = $data["phone"];
+
+// Verificar se email ou telefone já existem
+$check = $conn->prepare("SELECT id_usuario FROM usuario WHERE email = ? OR telefone = ?");
+$check->bind_param("ss", $email, $telefone);
+$check->execute();
+$result = $check->get_result();
+
+if ($result->num_rows > 0) {
+    $existing = $result->fetch_assoc();
+    $checkUser = $conn->prepare("SELECT email, telefone FROM usuario WHERE id_usuario = ?");
+    $checkUser->bind_param("i", $existing["id_usuario"]);
+    $checkUser->execute();
+    $userData = $checkUser->get_result()->fetch_assoc();
+
+    $errors = [];
+    if ($userData["email"] === $email) {
+        $errors[] = "Email já cadastrado";
+    }
+    if ($userData["telefone"] === $telefone) {
+        $errors[] = "Telefone já cadastrado";
+    }
+
+    echo json_encode(["success" => false, "message" => implode(" e ", $errors)]);
+    exit();
+}
+
+$senha = password_hash($data["password"], PASSWORD_DEFAULT);
 $setor = $data["sector"];
 $tipo = $data["type"];
 $foto = "default-user.png";

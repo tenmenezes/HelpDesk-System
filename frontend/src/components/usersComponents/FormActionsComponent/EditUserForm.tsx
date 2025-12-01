@@ -1,7 +1,7 @@
 "use client";
 
 import { z } from "zod";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PatternFormat } from "react-number-format";
 import { mutate } from "swr";
@@ -27,61 +27,100 @@ import { toast } from "sonner";
 import { Usuario } from "../columns";
 
 const formSchema = z.object({
-  id: z.string(),
-  username: z.string().min(2),
-  email: z.string().email(),
-  phone: z.string(),
-  sector: z.string(),
-  type: z.string(),
+  id: z.string().min(1, "ID é obrigatório"),
+  username: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  email: z.string().email("Email inválido"),
+  phone: z.string().min(1, "Telefone é obrigatório"),
+  sector: z.string().min(1, "Setor é obrigatório"),
+  type: z.string().min(1, "Tipo é obrigatório"),
 });
+
+type EditUserFormData = z.infer<typeof formSchema>;
 
 interface EditUserProps {
   user: Usuario;
   onClose: () => void;
 }
 
-type EditUserFormData = {
-  id: string;
-  username: string;
-  email: string;
-  phone: string;
-  sector: string;
-  type: string;
-};
-
 export function EditUserForm({ user, onClose }: EditUserProps) {
   const form = useForm<EditUserFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: user.id_usuario,
+      id: String(user.id),
       username: user.nome,
       email: user.email,
       phone: user.telefone,
-      sector: user.id_setor,
+      sector: String(user.id_setor),
       type: user.tipo,
     },
   });
 
-  const onSubmit: SubmitHandler<EditUserFormData> = async (values) => {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/routes/usuarios/update.php`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+  const onSubmit = async (values: EditUserFormData) => {
+    try {
+      const payload = {
+        id: parseInt(values.id),
+        username: values.username,
+        email: values.email,
+        phone: values.phone,
+        sector: parseInt(values.sector),
+        type: values.type,
+      };
+
+      console.log("Enviando dados:", payload);
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/routes/usuarios/edit.php`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      // Verifica se a resposta está OK
+      if (!response.ok) {
+        const text = await response.text();
+        console.error("Resposta de erro:", response.status, text);
+        toast.error(
+          `Erro HTTP ${response.status}: ${text || "Erro ao atualizar"}`
+        );
+        return;
       }
-    );
 
-    const data = await response.json();
+      // Obtém o texto da resposta primeiro
+      const responseText = await response.text();
+      console.log("Resposta recebida:", responseText);
 
-    if (data.success) {
-      mutate("usuarios");
-      toast.success("Funcionário atualizado!");
-      onClose();
-    } else {
-      toast.error("Erro ao atualizar.");
+      // Verifica se a resposta está vazia
+      if (!responseText || responseText.trim() === "") {
+        console.error("Resposta vazia do servidor");
+        toast.error("Erro: Servidor retornou resposta vazia");
+        return;
+      }
+
+      // Tenta parsear o JSON
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error("Erro ao parsear JSON:", parseError);
+        console.error("Texto recebido:", responseText);
+        toast.error("Erro: Resposta inválida do servidor");
+        return;
+      }
+
+      if (data.success) {
+        mutate("usuarios");
+        toast.success("Funcionário atualizado!");
+        onClose();
+      } else {
+        toast.error(data.error || "Erro ao atualizar.");
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar usuário:", error);
+      toast.error("Erro ao atualizar usuário.");
     }
   };
 
@@ -143,10 +182,7 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
               <FormItem className="flex-1">
                 <FormLabel>Setor</FormLabel>
                 <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <SelectValue placeholder="Setor" />
                     </SelectTrigger>
@@ -159,6 +195,7 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
                     </SelectContent>
                   </Select>
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -170,19 +207,18 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
               <FormItem className="flex-1">
                 <FormLabel>Tipo</FormLabel>
                 <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <SelectValue placeholder="Tipo" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="comum">Comum</SelectItem>
                       <SelectItem value="suporte">Suporte</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />

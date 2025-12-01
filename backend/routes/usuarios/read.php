@@ -8,6 +8,7 @@ $sql = "
         u.nome,
         u.email,
         u.telefone,
+        u.id_setor,
         s.nome AS setor,
         u.tipo,
         u.foto_perfil AS foto

@@ -2,8 +2,15 @@
 require_once "../../config/cors.php";
 require_once "../../config/conn.php";
 
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    echo json_encode(["success" => false, "error" => "Método inválido"]);
+    exit;
+}
+
 $raw = file_get_contents("php://input");
 $data = json_decode($raw, true);
+
+file_put_contents("debug.txt", $raw ?? "nada recebido");
 
 $id = 0;
 if (isset($data["id"])) {
@@ -16,6 +23,7 @@ if (!$id) {
     echo json_encode(["success" => false, "error" => "ID nao informado"]);
     exit;
 }
+
 
 $sql = "DELETE FROM usuario WHERE id_usuario = ?";
 $stmt = $conn->prepare($sql);
