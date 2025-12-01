@@ -31,8 +31,8 @@ const formSchema = z.object({
   titulo: z.string().min(3, "Mínimo de 3 caracteres").max(100),
   descricao: z.string().min(10, "Mínimo de 10 caracteres"),
   id_setor: z.string().min(1, "Selecione um setor"),
-  status: z.enum(["aberto", "andamento", "resolvido", "cancelado"]),
-  prioridade: z.enum(["baixa", "media", "alta"]),
+  status: z.enum(["aberto", "andamento", "resolvido", "cancelado"]).optional(),
+  prioridade: z.enum(["baixa", "media", "alta"]).optional(),
 });
 
 interface ChamadoFormProps {
@@ -45,6 +45,10 @@ export function ChamadoForm({ chamado, onSuccess }: ChamadoFormProps) {
 
   console.log("Chamado feito pro usuário com id:", user?.id);
 
+  // Verifica se o usuário pode editar status e prioridade
+  const canEditStatusAndPriority =
+    user?.tipo === "admin" || user?.tipo === "suporte";
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,7 +57,7 @@ export function ChamadoForm({ chamado, onSuccess }: ChamadoFormProps) {
       id_setor:
         chamado?.id_setor.toString() || user?.id_setor?.toString() || "",
       status: chamado?.status || "aberto",
-      prioridade: chamado?.prioridade || "media",
+      prioridade: chamado?.prioridade || "baixa",
     },
   });
 
@@ -71,13 +75,19 @@ export function ChamadoForm({ chamado, onSuccess }: ChamadoFormProps) {
     try {
       if (chamado) {
         // Editar
-        const res = await updateChamado({
+        const updateData: any = {
           id_chamado: chamado.id_chamado,
           titulo: values.titulo,
           descricao: values.descricao,
-          status: values.status,
-          prioridade: values.prioridade,
-        });
+        };
+
+        // Apenas admin e suporte podem atualizar status e prioridade
+        if (canEditStatusAndPriority) {
+          updateData.status = values.status;
+          updateData.prioridade = values.prioridade;
+        }
+
+        const res = await updateChamado(updateData);
 
         if (res.success) {
           toast.success("Chamado atualizado com sucesso!");
@@ -86,14 +96,14 @@ export function ChamadoForm({ chamado, onSuccess }: ChamadoFormProps) {
           toast.error(res.message || "Erro ao atualizar chamado");
         }
       } else {
-        // Criar
+        // Criar - sempre com valores padrão mais baixos
         const res = await insertChamado({
           id_usuario: Number(user?.id),
           id_setor: Number(values.id_setor),
           titulo: values.titulo,
           descricao: values.descricao,
-          status: values.status,
-          prioridade: values.prioridade,
+          status: "aberto", // Sempre o mais baixo por padrão
+          prioridade: "baixa", // Sempre o mais baixo por padrão
         });
 
         if (res.success) {
@@ -180,58 +190,64 @@ export function ChamadoForm({ chamado, onSuccess }: ChamadoFormProps) {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Status</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="aberto">Aberto</SelectItem>
-                      <SelectItem value="andamento">Em Andamento</SelectItem>
-                      <SelectItem value="resolvido">Resolvido</SelectItem>
-                      <SelectItem value="cancelado">Cancelado</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Status - apenas para admin e suporte */}
+          {canEditStatusAndPriority && (
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Status</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="aberto">Aberto</SelectItem>
+                        <SelectItem value="andamento">Em Andamento</SelectItem>
+                        <SelectItem value="resolvido">Resolvido</SelectItem>
+                        <SelectItem value="cancelado">Cancelado</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
-          <FormField
-            control={form.control}
-            name="prioridade"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Prioridade</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="baixa">Baixa</SelectItem>
-                      <SelectItem value="media">Média</SelectItem>
-                      <SelectItem value="alta">Alta</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Prioridade - apenas para admin e suporte */}
+          {canEditStatusAndPriority && (
+            <FormField
+              control={form.control}
+              name="prioridade"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Prioridade</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="baixa">Baixa</SelectItem>
+                        <SelectItem value="media">Média</SelectItem>
+                        <SelectItem value="alta">Alta</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </div>
 
         <div className="flex justify-between gap-2">
