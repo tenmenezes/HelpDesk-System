@@ -54,16 +54,21 @@ export default function Home() {
         return;
       }
 
-      const user = data.user; // <-- vindo do backend
+      const userData = data.user; // <-- vindo do backend
 
-      // 2. salva no AuthContext e localStorage
+      const user = {
+        ...userData,
+        id: userData.id_usuario || userData.id, // mapeando id_usuario para id (caso eu troque sem querer)
+      }
+
+      // salvando no AuthContext e localStorage
       login(user);
 
-      // 3. redireciona por tipo
+      // redirecionando por tipo
       if (user.tipo === "comum") {
         router.push("/mySummons");
       } else if (user.tipo === "suporte") {
-        router.push("/problems");
+        router.push("/dashboard");
       } else {
         router.push("/dashboard");
       }

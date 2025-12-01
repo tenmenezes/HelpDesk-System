@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreVertical, AlertTriangle } from "lucide-react";
+import { ArrowUpDown, Settings2 } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -10,28 +10,34 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { Issue } from "./types";
+import { useState } from "react";
+import { ChamadoDetailsModal } from "../SummonDetailsModal";
+import { UpdateStatusModal } from "../UpdateStatusModal";
+import { toast } from "sonner";
 
-export type Issue = {
-  id_chamado: number;
-  titulo: string;
-  usuario: string;
-  setor: string;
-  status: "aberto" | "andamento" | "resolvido" | "cancelado";
-  prioridade: "baixa" | "media" | "alta";
-  criado_em: string;
-};
-
-export const columns: ColumnDef<Issue>[] = [
+export const createColumns = (onRefresh: () => void): ColumnDef<Issue>[] => [
   {
     accessorKey: "titulo",
-    header: "Título",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Título
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
-    accessorKey: "usuario",
+    accessorKey: "usuario_nome",
     header: "Usuário",
   },
   {
-    accessorKey: "setor",
+    accessorKey: "setor_nome",
     header: "Setor",
   },
   {
@@ -68,37 +74,70 @@ export const columns: ColumnDef<Issue>[] = [
   {
     accessorKey: "criado_em",
     header: "Criado em",
+    cell: ({ row }) => {
+      const date = new Date(row.original.criado_em);
+      return date.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    },
   },
   {
     id: "actions",
     header: "Ações",
     cell: ({ row }) => {
       const issue = row.original;
+      const [openDetails, setOpenDetails] = useState(false);
+      const [openUpdate, setOpenUpdate] = useState(false);
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer">
+                <span className="sr-only">Abrir menu</span>
+                <Settings2 className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Ações</DropdownMenuLabel>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(issue.id_chamado.toString())
-              }
-            >
-              Copiar ID
-            </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigator.clipboard.writeText(issue.id_chamado.toString());
+                  toast.success("ID copiado para a área de transferência!");
+                }}
+              >
+                Copiar ID
+              </DropdownMenuItem>
 
-            <DropdownMenuItem>Ver detalhes</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpenDetails(true)}>
+                Ver detalhes
+              </DropdownMenuItem>
 
-            <DropdownMenuItem>Atualizar status</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
+                Atualizar status
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <ChamadoDetailsModal
+            chamado={issue}
+            open={openDetails}
+            onOpenChange={setOpenDetails}
+          />
+
+          <UpdateStatusModal
+            chamado={issue}
+            open={openUpdate}
+            onOpenChange={setOpenUpdate}
+            onSuccess={onRefresh}
+          />
+        </>
       );
     },
   },

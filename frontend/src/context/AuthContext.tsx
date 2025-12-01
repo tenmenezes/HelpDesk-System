@@ -9,6 +9,7 @@ type User = {
   tipo: string;
   email: string;
   foto_perfil?: string;
+  id_setor?: number;
 };
 
 type AuthContextType = {
@@ -38,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Apenas define loading como false após montagem
+  // só definindo loading como false após montagem
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -46,6 +47,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = (userData: User) => {
+    // // Log temporário para debug (testes internos)
+    // console.log("Dados do usuário recebidos:", userData);
+    // console.log("ID do usuário:", userData.id);
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
   };

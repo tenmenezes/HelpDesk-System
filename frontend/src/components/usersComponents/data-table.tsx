@@ -8,6 +8,7 @@ import {
   SortingState,
   useReactTable,
   getFilteredRowModel,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -24,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import useSWR from "swr";
 
-import { CircleFadingPlus, Loader, SearchXIcon, UserPlusIcon, UserX } from "lucide-react";
+import { ArrowLeft, ArrowRight, CircleFadingPlus, Loader, SearchXIcon, UserPlusIcon, UserX } from "lucide-react";
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from "@/components/ui/dialog";
 import { DialogTitle, DialogTrigger } from "@radix-ui/react-dialog";
@@ -57,16 +58,24 @@ export function DataTable<TData, TValue>({
   const { data, isLoading } = useSWR("usuarios", fetcher);
 
   const table = useReactTable({
-    data: data || [],
+    data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
     state: {
       sorting,
       globalFilter,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
+
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+
+    initialState: {
+      pagination: {
+        pageSize: 10,
+      },
     },
   });
 
@@ -88,12 +97,12 @@ export function DataTable<TData, TValue>({
           </DialogTrigger>
 
           <DialogContent className="w-auto h-auto flex items-center flex-col justify-center">
-              <DialogHeader>
-                <DialogTitle>Novo Usuário</DialogTitle>
-                <DialogDescription>
-                  Formulário para adicionar novos usuários da empresa
-                </DialogDescription>
-              </DialogHeader>
+            <DialogHeader>
+              <DialogTitle>Novo Usuário</DialogTitle>
+              <DialogDescription>
+                Formulário para adicionar novos usuários da empresa
+              </DialogDescription>
+            </DialogHeader>
 
             <ProfileForm />
           </DialogContent>
@@ -156,6 +165,34 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+      </div>
+      <div className="flex items-center justify-center space-x-2 py-4 gap-10">
+        <Button
+          variant="outline"
+          className="cursor-pointer"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+
+        <span>
+          Página {table.getState().pagination.pageIndex + 1} de{" "}
+          {table.getPageCount() === 0
+            ? table.getPageCount() + 1
+            : table.getPageCount()}
+        </span>
+
+        <Button
+          variant="outline"
+          className="cursor-pointer"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          <ArrowRight className="h-5 w-5" />
+        </Button>
       </div>
     </>
   );

@@ -131,8 +131,10 @@ export function DataTable<TData, TValue>({
         </Button>
 
         <span>
-          Página {table.getState().pagination.pageIndex + 1} -{" "}
-          {table.getPageCount()}
+          Página {table.getState().pagination.pageIndex + 1} de{" "}
+          {table.getPageCount() === 0
+            ? table.getPageCount() + 1
+            : table.getPageCount()}
         </span>
 
         <Button

@@ -1,3 +1,4 @@
+import MySummonsPage from "@/components/MySummonsComponents/mySummonsPage";
 import ProtectedRoute from "@/components/ProtectedRoutes";
 import Sidebar from "@/components/Sidebar";
 
@@ -6,9 +7,7 @@ export default function MySummons() {
     <>
       <ProtectedRoute roles={["comum"]}>
         <Sidebar />
-        <div>
-          <h1>Pagina de meus chamados</h1>
-        </div>
+        <MySummonsPage />
       </ProtectedRoute>
     </>
   );

@@ -1,11 +1,10 @@
-
 const API = `${process.env.NEXT_PUBLIC_API_URL}/routes/chamados`;
 
 export async function getUserChamados(id_usuario: number) {
   const res = await fetch(`${API}/getUser.php?id_usuario=${id_usuario}`);
 
-  if (!res) {
-    return console.log("Dados invalidos");
+  if (!res.ok) {
+    throw new Error("Erro ao buscar chamados");
   }
 
   return res.json();
@@ -13,25 +12,55 @@ export async function getUserChamados(id_usuario: number) {
 
 export async function getAllChamados() {
   const res = await fetch(`${API}/read_all.php`);
+
+  if (!res.ok) {
+    throw new Error("Erro ao buscar chamados");
+  }
+
   return res.json();
 }
 
-export async function insertChamado(data: any) {
-  return fetch(`${API}/insert.php`, {
+export async function insertChamado(data: {
+  id_usuario: number;
+  id_setor: number;
+  titulo: string;
+  descricao: string;
+  status?: string;
+  prioridade?: string;
+}) {
+  const res = await fetch(`${API}/insert.php`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
   });
+
+  return res.json();
 }
 
-export async function updateChamado(data: any) {
-  return fetch(`${API}/routes/chamados/edit.php`, {
+export async function updateChamado(data: {
+  id_chamado: number;
+  status?: string;
+  prioridade?: string;
+  titulo?: string;
+  descricao?: string;
+}) {
+  const res = await fetch(`${API}/edit.php`, {
     method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
   });
+
+  return res.json();
 }
 
 export async function deleteChamado(id: number) {
-  return fetch(`${API}/routes/chamados/delete.php?id_chamado=${id}`, {
+  const res = await fetch(`${API}/delete.php?id_chamado=${id}`, {
     method: "DELETE",
   });
+
+  return res.json();
 }

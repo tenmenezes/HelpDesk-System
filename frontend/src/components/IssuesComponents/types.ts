@@ -1,4 +1,4 @@
-export type Chamado = {
+export type Issue = {
   id_chamado: number;
   titulo: string;
   descricao: string;

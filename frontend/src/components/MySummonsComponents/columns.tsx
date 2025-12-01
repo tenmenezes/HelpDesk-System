@@ -1,12 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  CircleCheck,
-  CircleDollarSignIcon,
-  MoreVerticalIcon,
-} from "lucide-react";
+import { MoreVertical, ArrowUpDown, Settings2 } from "lucide-react";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,40 +11,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { Chamado } from "./types";
+import { updateChamado } from "../services/chamados";
+import { toast } from "sonner";
+import { DeleteChamado } from "./DeleteSummonModal";
+import { useState } from "react";
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
-
-export const columns: ColumnDef<Payment>[] = [
+export const createColumns = (
+  onEdit: (chamado: Chamado) => void,
+  onRefresh: () => void
+): ColumnDef<Chamado>[] => [
   {
-    accessorKey: "status",
-    header: () => (
-      <div className="w-auto flex gap-2 items-center">
-        <CircleCheck className="h-3 w-3 text-gray-600" /> Status
-      </div>
-    ),
-    cell: ({ row }) => {
-      const status = row.original.status;
-      const statusColors: Record<string, string> = {
-        pending: "text-orange-600",
-        processing: "text-blue-600",
-        success: "text-green-600",
-        failed: "text-red-600",
-      };
-      return (
-        <span className={statusColors[status] || "text-gray-500"}>
-          {status}
-        </span>
-      );
-    },
-  },
-  {
-    accessorKey: "email",
+    accessorKey: "titulo",
     header: ({ column }) => {
       return (
         <Button
@@ -56,47 +44,164 @@ export const columns: ColumnDef<Payment>[] = [
           className="cursor-pointer"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Título
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "amount",
-    header: () => (
-      <div className="w-auto flex gap-2 items-center">
-        <CircleDollarSignIcon className="h-3 w-3 text-gray-600" /> Amount
-      </div>
-    ),
+    accessorKey: "setor_nome",
+    header: "Setor",
   },
   {
-    accessorKey: "actions",
-    header: "Ações",
-    id: "actions",
+    accessorKey: "status",
+    header: "Status",
     cell: ({ row }) => {
-      const payment = row.original;
+      const chamado = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer">
-              <span className="sr-only">Open menu</span>
-              <MoreVerticalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Select
+          value={chamado.status}
+          onValueChange={async (value) => {
+            try {
+              const res = await updateChamado({
+                id_chamado: chamado.id_chamado,
+                status: value as Chamado["status"],
+              });
+
+              if (res.success) {
+                toast.success("Status atualizado com sucesso!");
+                onRefresh();
+              } else {
+                toast.error(res.message || "Erro ao atualizar status");
+              }
+            } catch (error) {
+              toast.error("Erro ao atualizar status");
+            }
+          }}
+        >
+          <SelectTrigger className="w-[140px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="aberto">Aberto</SelectItem>
+            <SelectItem value="andamento">Em Andamento</SelectItem>
+            <SelectItem value="resolvido">Resolvido</SelectItem>
+            <SelectItem value="cancelado">Cancelado</SelectItem>
+          </SelectContent>
+        </Select>
+      );
+    },
+  },
+  {
+    accessorKey: "prioridade",
+    header: "Prioridade",
+    cell: ({ row }) => {
+      const chamado = row.original;
+
+      return (
+        <Select
+          value={chamado.prioridade}
+          onValueChange={async (value) => {
+            try {
+              const res = await updateChamado({
+                id_chamado: chamado.id_chamado,
+                prioridade: value as Chamado["prioridade"],
+              });
+
+              if (res.success) {
+                toast.success("Prioridade atualizada com sucesso!");
+                onRefresh();
+              } else {
+                toast.error(res.message || "Erro ao atualizar prioridade");
+              }
+            } catch (error) {
+              toast.error("Erro ao atualizar prioridade");
+            }
+          }}
+        >
+          <SelectTrigger className="w-[140px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="baixa">Baixa</SelectItem>
+            <SelectItem value="media">Média</SelectItem>
+            <SelectItem value="alta">Alta</SelectItem>
+          </SelectContent>
+        </Select>
+      );
+    },
+  },
+  {
+    accessorKey: "criado_em",
+    header: "Criado em",
+    cell: ({ row }) => {
+      const date = new Date(row.original.criado_em);
+      return date.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    },
+  },
+  {
+    id: "actions",
+    header: "Ações",
+    cell: ({ row }) => {
+      const chamado = row.original;
+      const [openDelete, setOpenDelete] = useState(false);
+
+      return (
+        <div className="flex items-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer">
+                <span className="sr-only">Abrir menu</span>
+                <Settings2 className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Ações</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigator.clipboard.writeText(chamado.id_chamado.toString())
+                }
+              >
+                Copiar ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => onEdit(chamado)}>
+                Editar chamado
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+
+              <Dialog open={openDelete} onOpenChange={setOpenDelete}>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem
+                    onSelect={(e) => e.preventDefault()}
+                    className="cursor-pointer text-red-600"
+                  >
+                    Deletar chamado
+                  </DropdownMenuItem>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Confirmar exclusão</DialogTitle>
+                  </DialogHeader>
+                  <DeleteChamado
+                    id_chamado={chamado.id_chamado}
+                    titulo={chamado.titulo}
+                    onClose={() => setOpenDelete(false)}
+                    onSuccess={onRefresh}
+                  />
+                </DialogContent>
+              </Dialog>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
   },

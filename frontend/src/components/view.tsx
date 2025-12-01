@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import {
   BarChart,
@@ -12,7 +12,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { TicketsPlane } from "lucide-react";
+import { TicketsPlane, LoaderCircle } from "lucide-react";
+import { getAllChamados } from "./services/chamados";
 
 export default function TicketsPorSetor({
   filtro = "7d",
@@ -20,55 +21,53 @@ export default function TicketsPorSetor({
   filtro?: string;
 }) {
   const { theme } = useTheme();
+  const [chamados, setChamados] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const isDark = theme === "dark";
 
-  // --- Dados simulados (grande volume) ---
-  const dataset = {
-    "24h": [
-      { setor: "Suporte", total: 42 },
-      { setor: "Redes", total: 15 },
-      { setor: "Financeiro", total: 4 },
-      { setor: "RH", total: 6 },
-      { setor: "Infra", total: 18 },
-      { setor: "Dev", total: 27 },
-      { setor: "Compras", total: 2 },
-    ],
-    "7d": [
-      { setor: "Suporte", total: 240 },
-      { setor: "Redes", total: 110 },
-      { setor: "Financeiro", total: 60 },
-      { setor: "RH", total: 45 },
-      { setor: "Infra", total: 170 },
-      { setor: "Dev", total: 200 },
-      { setor: "Compras", total: 30 },
-    ],
-    "14d": [
-      { setor: "Suporte", total: 480 },
-      { setor: "Redes", total: 260 },
-      { setor: "Financeiro", total: 150 },
-      { setor: "RH", total: 110 },
-      { setor: "Infra", total: 350 },
-      { setor: "Dev", total: 410 },
-      { setor: "Compras", total: 70 },
-    ],
-    "30d": [
-      { setor: "Suporte", total: 1050 },
-      { setor: "Redes", total: 530 },
-      { setor: "Financeiro", total: 350 },
-      { setor: "RH", total: 300 },
-      { setor: "Infra", total: 720 },
-      { setor: "Dev", total: 980 },
-      { setor: "Compras", total: 150 },
-    ],
-  };
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const data = await getAllChamados();
+        setChamados(data || []);
+      } catch (error) {
+        console.error("Erro ao carregar chamados:", error);
+        setChamados([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // --- Escolher dados conforme filtro ---
-  const data = useMemo(() => dataset[filtro] || dataset["7d"], [filtro]);
+    loadData();
+    const interval = setInterval(loadData, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const axisColor = isDark ? "#e5e7eb" : "#374151"; // texto dos eixos
+  const data = useMemo(() => {
+    const agora = new Date();
+    const ultimos7dias = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+    const chamadosFiltrados = chamados.filter(
+      (c: any) => new Date(c.criado_em) >= ultimos7dias
+    );
+
+    const porSetor: Record<string, number> = {};
+
+    chamadosFiltrados.forEach((c: any) => {
+      const setor = c.setor_nome || "Sem setor";
+      porSetor[setor] = (porSetor[setor] || 0) + 1;
+    });
+
+    return Object.entries(porSetor)
+      .map(([setor, total]) => ({ setor, total }))
+      .sort((a, b) => b.total - a.total);
+  }, [chamados, filtro]);
+
+  const axisColor = isDark ? "#e5e7eb" : "#374151";
   const gridColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
-  const barColor = isDark ? "#3b82f6" : "#2563eb"; // azul tema neutro
+  const barColor = isDark ? "#3b82f6" : "#2563eb";
   const tooltipBg = isDark ? "#1f2937" : "#ffffff";
   const tooltipText = isDark ? "#f3f4f6" : "#111827";
 
@@ -82,25 +81,34 @@ export default function TicketsPorSetor({
       </CardHeader>
 
       <CardContent>
-        <div className="h-72 w-full">
-          <ResponsiveContainer>
-            <BarChart data={data}>
-              <CartesianGrid stroke={gridColor} strokeDasharray="3 3" />
-              <XAxis dataKey="setor" tick={{ fill: axisColor, fontSize: 12 }} />
-              <YAxis tick={{ fill: axisColor }} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: tooltipBg,
-                  borderRadius: 8,
-                  border: "1px solid rgba(0,0,0,0.1)",
-                }}
-                labelStyle={{ color: tooltipText }}
-                itemStyle={{ color: tooltipText }}
-              />
-              <Bar dataKey="total" radius={[6, 6, 0, 0]} fill={barColor} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        {loading ? (
+          <div className="flex items-center justify-center h-72">
+            <LoaderCircle className="h-8 w-8 animate-spin" />
+          </div>
+        ) : (
+          <div className="h-72 w-full">
+            <ResponsiveContainer>
+              <BarChart data={data}>
+                <CartesianGrid stroke={gridColor} strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="setor"
+                  tick={{ fill: axisColor, fontSize: 12 }}
+                />
+                <YAxis tick={{ fill: axisColor }} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: tooltipBg,
+                    borderRadius: 8,
+                    border: "1px solid rgba(0,0,0,0.1)",
+                  }}
+                  labelStyle={{ color: tooltipText }}
+                  itemStyle={{ color: tooltipText }}
+                />
+                <Bar dataKey="total" radius={[6, 6, 0, 0]} fill={barColor} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
