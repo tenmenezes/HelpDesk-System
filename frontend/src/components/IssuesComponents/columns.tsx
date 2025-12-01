@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "../ui/dropdown-menu";
 import { Issue } from "./types";
 import { useState } from "react";
@@ -115,9 +116,13 @@ export const createColumns = (onRefresh: () => void): ColumnDef<Issue>[] => [
                 Copiar ID
               </DropdownMenuItem>
 
+              <DropdownMenuSeparator />
+
               <DropdownMenuItem onClick={() => setOpenDetails(true)}>
                 Ver detalhes
               </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
 
               <DropdownMenuItem onClick={() => setOpenUpdate(true)}>
                 Atualizar status

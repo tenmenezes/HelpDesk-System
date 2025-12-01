@@ -25,9 +25,19 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import useSWR from "swr";
 
-import { ArrowLeft, ArrowRight, CircleFadingPlus, Loader, SearchXIcon, UserPlusIcon, UserX } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CircleFadingPlus,
+  Loader,
+} from "lucide-react";
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+} from "@/components/ui/dialog";
 import { DialogTitle, DialogTrigger } from "@radix-ui/react-dialog";
 import ProfileForm from "./FormActionsComponent/AddUserForm";
 import { toast } from "sonner";
@@ -49,7 +59,9 @@ export function DataTable<TData, TValue>({
     );
 
     if (!res) {
-      toast.error("Falha ao realizar fetch, dados não salvos na varável 'res' em data-table.tsx 'fetcher'.")
+      toast.error(
+        "Falha ao realizar fetch, dados não salvos na varável 'res' em data-table.tsx 'fetcher'."
+      );
     }
 
     return res.json();
@@ -58,7 +70,7 @@ export function DataTable<TData, TValue>({
   const { data, isLoading } = useSWR("usuarios", fetcher);
 
   const table = useReactTable({
-    data,
+    data: data ?? [],
     columns,
     state: {
       sorting,
@@ -91,7 +103,7 @@ export function DataTable<TData, TValue>({
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="cursor-pointer" variant="ghost">
+            <Button className="cursor-pointer" variant="outline">
               <CircleFadingPlus className="h-40 w-40 text-green-600" />
             </Button>
           </DialogTrigger>
@@ -179,9 +191,11 @@ export function DataTable<TData, TValue>({
 
         <span>
           Página {table.getState().pagination.pageIndex + 1} de{" "}
-          {table.getPageCount() === 0
+          {
+            table.getPageCount() === 0
             ? table.getPageCount() + 1
-            : table.getPageCount()}
+              : table.getPageCount()
+          }
         </span>
 
         <Button

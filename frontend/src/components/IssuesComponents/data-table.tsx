@@ -89,7 +89,7 @@ export function DataTable<TData, TValue>({
           <TooltipTrigger asChild>
             <Button
               className="cursor-pointer"
-              variant="ghost"
+              variant="outline"
               onClick={handleExportPDF}
             >
               <DownloadIcon className="h-8 w-8 text-green-700" />

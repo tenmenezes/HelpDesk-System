@@ -8,6 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -132,6 +133,8 @@ export const createColumns = (onRefresh: () => void): ColumnDef<Summon>[] => [
               >
                 Copiar ID
               </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
 
               <DropdownMenuItem onClick={() => setOpenDetails(true)}>
                 Ver detalhes
