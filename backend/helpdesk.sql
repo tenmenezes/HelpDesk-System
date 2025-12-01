@@ -43,9 +43,39 @@ CREATE TABLE historico_chamado (
     FOREIGN KEY (id_chamado) REFERENCES chamado(id_chamado)
 );
 
-INSERT INTO setor (id_setor, nome) VALUES
-(1, 'Arquitetura'),
-(2, 'Contabilidade'),
-(3, 'Engenharia'),
-(4, 'Empreendedorismo'),
-(5, 'Tecnologia');
+INSERT INTO setor (nome) VALUES
+('Recursos Humanos'),
+('Financeiro'),
+('Atendimento ao Cliente'),
+('Comercial / Vendas'),
+('Logística'),
+('Tecnologia da Informação'),
+('Infraestrutura'),
+('Marketing'),
+('Compras'),
+('Jurídico');
+
+-- Reset de dados das tabelas
+
+-- 1) Desliga checagem de FK (temporário)
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- 2) Limpa tabelas filhas primeiro
+DELETE FROM historico_chamado;
+DELETE FROM chamado;
+
+-- 3) Agora limpa as outras tabelas que dependem (se for o caso)
+DELETE FROM usuario;
+DELETE FROM setor;
+
+-- 4) Reseta AUTO_INCREMENT para 1
+ALTER TABLE historico_chamado AUTO_INCREMENT = 1;
+ALTER TABLE chamado AUTO_INCREMENT = 1;
+ALTER TABLE usuario AUTO_INCREMENT = 1;
+ALTER TABLE setor AUTO_INCREMENT = 1;
+
+-- 5) Reabilita checagem de FK
+SET FOREIGN_KEY_CHECKS = 1;
+
+--6) Exibe os IDs em ordem
+SELECT * FROM setor ORDER BY id_setor;

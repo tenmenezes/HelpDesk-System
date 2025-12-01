@@ -20,6 +20,8 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
+import { SearchXIcon, TicketXIcon } from "lucide-react";
+import NotFound from "../NotFound";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -96,7 +98,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  <NotFound />
                 </TableCell>
               </TableRow>
             )}

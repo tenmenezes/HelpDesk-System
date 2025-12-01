@@ -17,7 +17,7 @@ import TicketsPorSetor from "@/components/view";
 export default function Dashboard() {
   return (
     <>
-      <ProtectedRoute roles={["suporte", "admin", "comum"]}>
+      <ProtectedRoute roles={["suporte", "admin"]}>
         <Sidebar />
         <main className="sm:ml-14 p-4">
           <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">

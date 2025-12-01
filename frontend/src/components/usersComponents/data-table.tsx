@@ -24,12 +24,13 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import useSWR from "swr";
 
-import { CircleFadingPlus, Loader, SearchXIcon, UserPlusIcon } from "lucide-react";
+import { CircleFadingPlus, Loader, SearchXIcon, UserPlusIcon, UserX } from "lucide-react";
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from "@/components/ui/dialog";
 import { DialogTitle, DialogTrigger } from "@radix-ui/react-dialog";
 import ProfileForm from "./FormActionsComponent/AddUserForm";
 import { toast } from "sonner";
+import NotFound from "../NotFound";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -149,12 +150,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  <div className="w-auto flex items-center justify-center gap-2">
-                    <SearchXIcon className="h-6 w-6 text-red-600" />
-                    <span className="text-red-600 font-bold">
-                      Nenhum registro encontrado.
-                    </span>
-                  </div>
+                  <NotFound />
                 </TableCell>
               </TableRow>
             )}

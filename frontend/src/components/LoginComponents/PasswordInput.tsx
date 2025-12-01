@@ -10,7 +10,6 @@ interface FormValues {
   password: string;
   phone: string;
   sector: string;
-  type: string;
 }
 
 interface PasswordInputProps {

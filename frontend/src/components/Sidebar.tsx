@@ -91,21 +91,6 @@ export default function Sidebar() {
                   <TooltipTrigger asChild>
                     <Link
                       className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
-                      href="/dashboard"
-                    >
-                      <Home className="h-5 w-5" />
-                      <span className="sr-only">Início</span>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">Início</TooltipContent>
-                </Tooltip>
-
-                <Separator />
-
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Link
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
                       href="/mySummons"
                     >
                       <TicketsIcon className="h-5 w-5" />
@@ -234,7 +219,7 @@ export default function Sidebar() {
                 <TooltipTrigger asChild>
                   <DropdownMenuTrigger asChild>
                     <button
-                      className="flex h-9 w-9 items-center justify-center rounded-full cursor-pointer"
+                      className="flex h-9 w-9 items-center justify-center rounded-full cursor-pointer border border-red-900/50"
                       aria-label="Preferências"
                     >
                       <Avatar className="w-9 h-9">
@@ -529,7 +514,7 @@ export default function Sidebar() {
             <div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className=" cursor-pointer flex h-auto w-auto shrink-0 items-center justify-center bg-transparent border hover:bg-gray-100 hover:text-gray-600 rounded-full">
+                  <button className="cursor-pointer flex h-auto w-auto shrink-0 items-center justify-center bg-transparent border hover:bg-gray-100 hover:text-gray-600 rounded-full">
                     <Avatar className="w-9 h-9">
                       <AvatarImage
                         src={

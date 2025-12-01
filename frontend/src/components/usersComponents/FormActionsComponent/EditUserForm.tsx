@@ -187,11 +187,18 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
                       <SelectValue placeholder="Setor" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="1">Arquitetura</SelectItem>
-                      <SelectItem value="2">Contabilidade</SelectItem>
-                      <SelectItem value="3">Engenharia</SelectItem>
-                      <SelectItem value="4">Empreendedorismo</SelectItem>
-                      <SelectItem value="5">Tecnologia</SelectItem>
+                      <SelectItem value="1">Recursos Humanos</SelectItem>
+                      <SelectItem value="2">Financeiro</SelectItem>
+                      <SelectItem value="3">Atendimento ao Cliente</SelectItem>
+                      <SelectItem value="4">Comercial / Vendas</SelectItem>
+                      <SelectItem value="5">Logística</SelectItem>
+                      <SelectItem value="6">
+                        Tecnologia da Informação
+                      </SelectItem>
+                      <SelectItem value="7">Infraestrutura</SelectItem>
+                      <SelectItem value="8">Marketing</SelectItem>
+                      <SelectItem value="9">Compras</SelectItem>
+                      <SelectItem value="10">Jurídico</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>

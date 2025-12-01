@@ -10,8 +10,6 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 $raw = file_get_contents("php://input");
 $data = json_decode($raw, true);
 
-file_put_contents("debug.txt", $raw ?? "nada recebido");
-
 $id = 0;
 if (isset($data["id"])) {
     $id = intval($data["id"]);
