@@ -246,7 +246,7 @@ export default function Sidebar() {
                           }
                           alt={user?.nome ?? "U"}
                         />
-                        <AvatarFallback>
+                        <AvatarFallback className="text-center font-bold">
                           {user?.nome?.[0] ?? "U"}
                         </AvatarFallback>
                       </Avatar>

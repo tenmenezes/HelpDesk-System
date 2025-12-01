@@ -21,17 +21,28 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("user");
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (error) {
+          localStorage.removeItem("user");
+          return null;
+        }
+      }
+    }
+    return null;
+  });
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // carrega user salvo NO INÍCIO
+  // Apenas define loading como false após montagem
   useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      setUser(JSON.parse(stored));
-    }
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 200);
   }, []);
 
   const login = (userData: User) => {

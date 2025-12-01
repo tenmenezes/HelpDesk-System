@@ -17,6 +17,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileUserIcon, Loader } from "lucide-react";
 import { useAuth } from "@/context/AuthContext"; // ajuste o path se necessário
 import { toast } from "sonner";
+import ChangePasswordForm from "@/components/LoginComponents/ChangePasswordForm";
+import RegisterForm from "@/components/LoginComponents/RegisterForm";
+import { Separator } from "@/components/ui/separator";
 
 export default function Home() {
   const { login } = useAuth();
@@ -31,14 +34,17 @@ export default function Home() {
 
     try {
       // 1. Faz a requisição ao backend PHP
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/routes/auth/login.php`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          senha,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/routes/auth/login.php`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            senha,
+          }),
+        }
+      );
 
       const data = await res.json();
 
@@ -61,28 +67,16 @@ export default function Home() {
       } else {
         router.push("/dashboard");
       }
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao logar");
+    } catch (err: unknown) {
+      console.error("Erro ao logar:", err);
+      toast.error((err as Error).message || "Erro ao logar");
     } finally {
       setLoading(false);
     }
   }
 
-
   return (
-    <div className="w-screen h-screen flex items-center justify-center flex-col gap-5 p-2">
-      <Card className="w-full sm:w-1/2">
-        <CardHeader>
-          <div className="w-auto flex items-center justify-between">
-            <CardTitle>Login do usuário</CardTitle>
-            <FileUserIcon className="w-8 h-8" />
-          </div>
-          <CardDescription>
-            Realize o login para prosseguir para o site.
-          </CardDescription>
-        </CardHeader>
-      </Card>
-
+    <div className="w-auto h-auto flex items-center justify-center flex-col gap-5 p-2 ">
       <div className="flex w-full max-w-lg flex-col gap-6 items-center justify-center">
         <Tabs defaultValue="account" className="w-full">
           <TabsList>
@@ -92,6 +86,9 @@ export default function Home() {
             <TabsTrigger value="password" className="cursor-pointer">
               Mudança de Senha
             </TabsTrigger>
+            <TabsTrigger value="register" className="cursor-pointer">
+              Cadastro
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="account">
@@ -99,6 +96,7 @@ export default function Home() {
               <Card>
                 <CardHeader>
                   <CardTitle>Conta</CardTitle>
+                  <Separator className="my-2" />
                   <CardDescription>
                     Faça login aqui. Clique em logar e entre na sua conta, caso
                     exista.
@@ -148,28 +146,11 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="password">
-            <Card>
-              <CardHeader>
-                <CardTitle>Alterar senha</CardTitle>
-                <CardDescription>
-                  Mude sua senha aqui. Depois de salva-la, você precisará logar
-                  novamente.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-6 p-4">
-                <div className="grid gap-3">
-                  <Label htmlFor="tabs-demo-current">E-mail</Label>
-                  <Input id="tabs-demo-current" type="password" placeholder="exemplo@gamil.com" />
-                </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="tabs-demo-new">Nova senha</Label>
-                  <Input id="tabs-demo-new" type="password" placeholder="senha forte" />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full cursor-pointer">Salvar senha</Button>
-              </CardFooter>
-            </Card>
+            <ChangePasswordForm />
+          </TabsContent>
+
+          <TabsContent value="register">
+            <RegisterForm />
           </TabsContent>
         </Tabs>
       </div>

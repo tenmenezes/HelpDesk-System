@@ -10,11 +10,25 @@ if (!$data) {
     exit();
 }
 
+// Verificar quantos usuários existem no sistema
+$countQuery = $conn->query("SELECT COUNT(*) as total FROM usuario");
+$countResult = $countQuery->fetch_assoc();
+$totalUsuarios = (int)$countResult["total"];
+
+// Se já existem usuários, não permitir cadastro
+if ($totalUsuarios > 0) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Cadastro de novos usuários está desabilitado. Contate um administrador."
+    ]);
+    exit();
+}
+
 $nome = $data["username"];
 $email = $data["email"];
 $telefone = $data["phone"];
 
-// Verificar se email ou telefone já existem
+// Verificar se email ou telefone já existem (deve estar vazio, mas por segurança)
 $check = $conn->prepare("SELECT id_usuario FROM usuario WHERE email = ? OR telefone = ?");
 $check->bind_param("ss", $email, $telefone);
 $check->execute();
@@ -41,7 +55,8 @@ if ($result->num_rows > 0) {
 
 $senha = password_hash($data["password"], PASSWORD_DEFAULT);
 $setor = $data["sector"];
-$tipo = $data["type"];
+// Primeiro usuário sempre será admin
+$tipo = "admin";
 $foto = "default-user.png";
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
@@ -54,7 +69,7 @@ $stmt = $conn->prepare("
 $stmt->bind_param("issssss", $setor, $nome, $email, $senha, $telefone, $tipo, $foto);
 
 if ($stmt->execute()) {
-    echo json_encode(["success" => true, "message" => "Usuario criado com sucesso."]);
+    echo json_encode(["success" => true, "message" => "Administrador criado com sucesso!"]);
 } else {
     echo json_encode(["success" => false, "message" => "Erro ao criar usuario."]);
 }
