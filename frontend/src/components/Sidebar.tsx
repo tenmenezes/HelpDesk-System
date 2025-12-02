@@ -74,16 +74,15 @@ export default function Sidebar() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link
-                  className="flex h-9 w-9 shrink-0 items-center justify-center bg-primary text-primary-foreground rounded-full"
-                  href="/dashboard"
-                >
+                <div className="w-auto iflex items-center  justify-center cursor-pointer">
                   <CpuIcon className="h-6 w-6 text-red-700" />
                   <span className="sr-only">HelpDesk - Corp logo</span>
-                </Link>
+                </div>
               </TooltipTrigger>
               <TooltipContent side="right">HelpDesk Corp</TooltipContent>
             </Tooltip>
+
+            <Separator />
 
             {user?.tipo === "comum" && (
               <>
@@ -324,8 +323,9 @@ export default function Sidebar() {
                   <AlertDialogCancel className="cursor-pointer p-2 rounded-lg bg-transparent border flex items-center justify-center">
                     Cancelar
                   </AlertDialogCancel>
-                  <AlertDialogAction className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center"
-                  onClick={logout}
+                  <AlertDialogAction
+                    className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center"
+                    onClick={logout}
                   >
                     Continuar
                   </AlertDialogAction>
@@ -355,31 +355,13 @@ export default function Sidebar() {
               </SheetDescription>
               <nav className="grid gap-6 text-lg font-medium p-2">
                 <div className="w-auto h-auto flex gap-2 items-center">
-                  <Link
-                    href="/dashboard"
-                    className="flex h-10 w-10 bg-primary rounded-full text-lg items-center justify-center text-primary-foreground md:text-base gap-5"
-                    prefetch={false}
-                  >
-                    <CpuIcon className="h-5 w-5 transition-all" />
-                    <span className="sr-only">HelpDesk - Corp Logo</span>
-                  </Link>
-
+                  <CpuIcon className="h-6 w-6 transition-all text-red-700" />
+                  <span className="sr-only">HelpDesk - Corp Logo</span>
                   <span>HelpDesk Corp</span>
                 </div>
 
                 {user?.tipo === "comum" && (
                   <>
-                    <Link
-                      href="/dashboard"
-                      className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
-                      prefetch={false}
-                    >
-                      <Home className="h-5 w-5 transition-all" />
-                      Início
-                    </Link>
-
-                    <Separator />
-
                     <Link
                       href="/mySummons"
                       className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
@@ -494,8 +476,9 @@ export default function Sidebar() {
                         <AlertDialogCancel className="cursor-pointer p-2 rounded-lg bg-transparent border flex items-center justify-center">
                           Cancelar
                         </AlertDialogCancel>
-                        <AlertDialogAction className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center"
-                        onClick={logout}
+                        <AlertDialogAction
+                          className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center"
+                          onClick={logout}
                         >
                           Continuar
                         </AlertDialogAction>
@@ -524,7 +507,9 @@ export default function Sidebar() {
                         }
                         alt={user?.nome ?? "U"}
                       />
-                      <AvatarFallback>{user?.nome?.[0] ?? "U"}</AvatarFallback>
+                      <AvatarFallback className="font-bold text-center">
+                        {user?.nome?.[0] ?? "U"}
+                      </AvatarFallback>
                     </Avatar>
                   </button>
                 </DropdownMenuTrigger>

@@ -5,7 +5,7 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 
-require_once __DIR__ . "/../../config/conn.php";
+require_once "../../config/conn.php";
 
 $raw = file_get_contents("php://input");
 $data = json_decode($raw, true);

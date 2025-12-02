@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreVertical, ArrowUpDown, Settings2 } from "lucide-react";
+import { ArrowUpDown, Settings2 } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -30,7 +30,6 @@ import { updateChamado } from "../services/chamados";
 import { toast } from "sonner";
 import { DeleteChamado } from "./DeleteSummonModal";
 import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
 
 export const createColumns = (
   onEdit: (chamado: Chamado) => void,
@@ -212,9 +211,10 @@ export const createColumns = (
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Ações</DropdownMenuLabel>
                 <DropdownMenuItem
-                  onClick={() =>
-                    navigator.clipboard.writeText(chamado.id_chamado.toString())
-                  }
+                  onClick={() =>{
+                    navigator.clipboard.writeText(chamado.id_chamado.toString());
+                    toast.success("ID copiado para a área de transfrência!");
+                  }}
                 >
                   Copiar ID
                 </DropdownMenuItem>

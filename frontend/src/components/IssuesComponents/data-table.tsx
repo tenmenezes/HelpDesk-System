@@ -24,8 +24,8 @@ import { Input } from "../ui/input";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, DownloadIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import NotFound from "../NotFound";
 import { exportTableToPDF } from "@/utils/exportPDF";
+import NotFound from "../NotFound";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

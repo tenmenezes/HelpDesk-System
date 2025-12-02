@@ -21,24 +21,20 @@ import {
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Plus } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import NotFound from "../NotFound";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { ChamadoForm } from "./ChamadoForm";
-import { Chamado } from "./types";
-import { createColumns } from "./columns";
-import { getUserChamados } from "../services/chamados";
-import { useAuth } from "@/context/AuthContext";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  headerActions?: React.ReactNode; // prop do botão de novo chamado
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  headerActions, // instanciando aqui também, é obrigatório
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -63,77 +59,25 @@ export function DataTable<TData, TValue>({
     },
   });
 
-    const { user } = useAuth();
-    const userId = Number(user?.id);
-    const [chamados, setChamados] = useState<Chamado[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [editingChamado, setEditingChamado] = useState<Chamado | null>(null);
-    const [open, setOpen] = useState(false);
-
-    const loadChamados = async () => {
-      if (!user?.id) return;
-
-      try {
-        setLoading(true);
-        const data = await getUserChamados(user.id);
-        setChamados(data);
-      } catch (error) {
-        console.error("Erro ao carregar chamados:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    useEffect(() => {
-      if (user?.id) {
-        loadChamados();
-      } else {
-        setLoading(false);
-      }
-    }, [user?.id]);
-
-    const handleEdit = (chamado: Chamado) => {
-      setEditingChamado(chamado);
-      setOpen(true);
-    };
-
-    const handleClose = () => {
-      setOpen(false);
-      setEditingChamado(null);
-      loadChamados();
-    };
-
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center mb-4 gap-4">
         <Input
           placeholder="Buscar por título..."
           value={globalFilter ?? ""}
           onChange={(e) => setGlobalFilter(e.target.value)}
-          className="max-w-sm mb-4"
+          className="max-w-sm"
         />
+        
+        {/* Botão de novo chamado instaciado aqui como prop */}
+        {headerActions && (
+          <div>
+            {headerActions}
+          </div>
+        )}
 
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button className="cursor-pointer" variant="outline">
-              <Plus className="h-4 w-4" />
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {editingChamado ? "Editar Chamado" : "Novo Chamado"}
-              </DialogTitle>
-              <DialogDescription>
-                {editingChamado
-                  ? "Edite as informações do chamado"
-                  : "Preencha os dados para criar um novo chamado"}
-              </DialogDescription>
-            </DialogHeader>
-            <ChamadoForm chamado={editingChamado} onSuccess={handleClose} />
-          </DialogContent>
-        </Dialog>
       </div>
+
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>

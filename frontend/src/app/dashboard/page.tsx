@@ -14,8 +14,8 @@ import {
   Percent,
   TagIcon,
   Ticket,
-  Users,
-  LoaderCircle,
+  AlertCircle,
+  Loader,
 } from "lucide-react";
 import ProtectedRoute from "@/components/ProtectedRoutes";
 import Sidebar from "@/components/Sidebar";
@@ -26,7 +26,7 @@ import { useEffect, useState } from "react";
 export default function Dashboard() {
   const [stats, setStats] = useState({
     totalTickets: 0,
-    novosUsuarios: 0,
+    prioridadeAlta: 0,
     ticketsHoje: 0,
     ticketsResolvidos: 0,
     eficiencia: 0,
@@ -43,6 +43,13 @@ export default function Dashboard() {
       hoje.setHours(0, 0, 0, 0);
 
       const ultimas24h = new Date(agora.getTime() - 24 * 60 * 60 * 1000);
+
+      const altaPrioridade = chamados.filter(
+        (c: any) => 
+          c.prioridade === "alta" &&
+          c.status !== "resolvido" &&
+          c.status !== "cancelado"
+      ).length
 
       const ticketsHoje = chamados.filter(
         (c: any) => new Date(c.criado_em) >= hoje
@@ -63,7 +70,7 @@ export default function Dashboard() {
 
       setStats({
         totalTickets: tickets24h,
-        novosUsuarios: 0, // Implementar busca de usuários se necessário
+        prioridadeAlta: altaPrioridade,
         ticketsHoje,
         ticketsResolvidos: resolvidos,
         eficiencia,
@@ -77,7 +84,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadStats();
-    // Atualizar a cada 30 segundos
+    // Atualiza a cada 30 segundos
     const interval = setInterval(loadStats, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -88,42 +95,42 @@ export default function Dashboard() {
         <Sidebar />
         <main className="sm:ml-14 p-4">
           <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card className="border border-blue-600">
+            <Card className="border border-red-600">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl sm:text-2xl select-none">
-                    Total de Tickets
+                    Alta Prioridade
                   </CardTitle>
-                  <Ticket className="w-6 h-6 text-blue-600" />
+                  <AlertCircle className="hidden md:block md:w-8 md:h-8 text-red-600 animate-pulse" />
                 </div>
                 <CardDescription>Últimas 24h</CardDescription>
                 <CardContent>
                   {loading ? (
-                    <LoaderCircle className="h-5 w-5 animate-spin" />
+                    <Loader className="h-5 w-5 animate-spin" />
                   ) : (
-                    <p className="text-base sm:text-lg font-bold text-blue-700">
-                      {stats.totalTickets}
+                    <p className="text-base sm:text-lg font-bold text-red-700">
+                      {stats.prioridadeAlta}
                     </p>
                   )}
                 </CardContent>
               </CardHeader>
             </Card>
 
-            <Card className="border border-purple-600">
+            <Card className="border border-blue-600">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl sm:text-2xl select-none">
-                    Novos Usuários
+                    Total de Tickets
                   </CardTitle>
-                  <Users className="w-6 h-6 text-purple-600" />
+                  <Ticket className="hidden md:block md:w-8 md:h-8 text-blue-600 animate-pulse" />
                 </div>
                 <CardDescription>Últimas 24h</CardDescription>
                 <CardContent>
                   {loading ? (
-                    <LoaderCircle className="h-5 w-5 animate-spin" />
+                    <Loader className="h-5 w-5 animate-spin" />
                   ) : (
-                    <p className="text-base sm:text-lg font-bold text-purple-700">
-                      {stats.novosUsuarios}
+                    <p className="text-base sm:text-lg font-bold text-blue-700">
+                      {stats.totalTickets}
                     </p>
                   )}
                 </CardContent>
@@ -134,14 +141,14 @@ export default function Dashboard() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-xl sm:text-2xl select-none">
-                    Tickets Hoje
+                    Tickets de Hoje
                   </CardTitle>
-                  <TagIcon className="w-6 h-6 text-yellow-600" />
+                  <TagIcon className="hidden md:block md:w-8 md:h-8 text-yellow-600 animate-pulse" />
                 </div>
                 <CardDescription>Total do dia</CardDescription>
                 <CardContent>
                   {loading ? (
-                    <LoaderCircle className="h-5 w-5 animate-spin" />
+                    <Loader className="h-5 w-5 animate-spin" />
                   ) : (
                     <p className="text-base sm:text-lg font-bold text-yellow-700">
                       {stats.ticketsHoje}
@@ -157,12 +164,12 @@ export default function Dashboard() {
                   <CardTitle className="text-xl sm:text-2xl select-none">
                     Tickets Resolvidos
                   </CardTitle>
-                  <Percent className="w-6 h-6 text-green-600" />
+                  <Percent className="hidden md:block md:w-8 md:h-8 text-green-600 animate-pulse" />
                 </div>
                 <CardDescription>Eficiência</CardDescription>
                 <CardContent className="w-full flex items-center gap-2 text-green-700">
                   {loading ? (
-                    <LoaderCircle className="h-5 w-5 animate-spin" />
+                    <Loader className="h-5 w-5 animate-spin" />
                   ) : (
                     <>
                       <ArrowBigUpDash className="h-4 w-4" />

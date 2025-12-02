@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import {
   Card,
@@ -17,13 +16,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { getAllChamados } from "./services/chamados";
 import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
@@ -44,10 +36,10 @@ export function ChartAreaInteractive() {
       try {
         setLoading(true);
         const chamados = await getAllChamados();
-        const agora = new Date();
-        const ultimas24h = new Date(agora.getTime() - 24 * 60 * 60 * 1000);
+        const horaAtual = new Date();
+        const ultimas24h = new Date(horaAtual.getTime() - 24 * 60 * 60 * 1000);
 
-        // Agrupar por hora
+        // Agrupando por hora
         const hourlyData: Record<string, { opened: number; closed: number }> =
           {};
 
@@ -83,7 +75,7 @@ export function ChartAreaInteractive() {
     };
 
     loadData();
-    const interval = setInterval(loadData, 60000); // Atualizar a cada minuto
+    const interval = setInterval(loadData, 60000); // Atualiza a cada minuto
     return () => clearInterval(interval);
   }, []);
 

@@ -50,12 +50,12 @@ export default function TicketsPorSetor({
     const ultimos7dias = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
 
     const chamadosFiltrados = chamados.filter(
-      (c: any) => new Date(c.criado_em) >= ultimos7dias
+      (c) => new Date(c.criado_em) >= ultimos7dias
     );
 
     const porSetor: Record<string, number> = {};
 
-    chamadosFiltrados.forEach((c: any) => {
+    chamadosFiltrados.forEach((c) => {
       const setor = c.setor_nome || "Sem setor";
       porSetor[setor] = (porSetor[setor] || 0) + 1;
     });

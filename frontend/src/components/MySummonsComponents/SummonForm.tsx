@@ -26,6 +26,7 @@ import { insertChamado, updateChamado } from "../services/chamados";
 import { Chamado } from "./types";
 import { useAuth } from "@/context/AuthContext";
 import { FileWarning } from "lucide-react";
+import { mutate } from "swr";
 
 const formSchema = z.object({
   titulo: z.string().min(3, "Mínimo de 3 caracteres").max(100),
@@ -90,8 +91,9 @@ export function ChamadoForm({ chamado, onSuccess }: ChamadoFormProps) {
         const res = await updateChamado(updateData);
 
         if (res.success) {
-          toast.success("Chamado atualizado com sucesso!");
+          mutate("chamados");
           onSuccess();
+          toast.success("Chamado atualizado com sucesso!");
         } else {
           toast.error(res.message || "Erro ao atualizar chamado");
         }
@@ -102,8 +104,8 @@ export function ChamadoForm({ chamado, onSuccess }: ChamadoFormProps) {
           id_setor: Number(values.id_setor),
           titulo: values.titulo,
           descricao: values.descricao,
-          status: "aberto", // Sempre o mais baixo por padrão
-          prioridade: "baixa", // Sempre o mais baixo por padrão
+          status: "aberto",
+          prioridade: "baixa",
         });
 
         if (res.success) {
