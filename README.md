@@ -65,14 +65,14 @@ Este projeto utiliza as seguintes tecnologias:
 - **Frontend**  
   - Next.js 16+  
   - React
+  - Tailwind CSS
   - Shadcn UI | Origin UI (componentes)
   - TanStack Table (para tabelas)
   - React Hook Form (para formulários)
   - SWR (para fetch e mutação de dados)  
-  - TypeScript
+  - Typescript
 - **Outros**  
   - fetch para chamadas HTTP
-  - TailwindCSS
 
 ---
 
