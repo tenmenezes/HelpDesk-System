@@ -137,3 +137,10 @@
     @apply bg-background text-foreground;
   }
 }
+@layer utilities {
+  .text-stroke {
+    -webkit-text-stroke: 4px white;
+    color: transparent;
+  }
+}
+

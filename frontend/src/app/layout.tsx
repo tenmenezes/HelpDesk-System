@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/context/AuthContext";
+import AosInit from "@/components/aos-init";
 
 export const metadata: Metadata = {
   title: "HelpDeskp - Corp",
@@ -26,6 +27,7 @@ export default function RootLayout({
         >
           <Toaster />
           <AuthProvider>{children}</AuthProvider>
+          <AosInit />
         </ThemeProvider>
       </body>
     </html>
