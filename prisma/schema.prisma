@@ -1,0 +1,91 @@
+// prisma/schema.prisma
+// Stack: Prisma + Supabase Postgres
+// Migrado do schema MySQL legado (helpdesk.sql)
+// Correção aplicada: o schema original referenciava 'usuarios' e 'setores' (plural) como FK
+// mas as tabelas reais eram 'usuario' e 'setor' (singular). Aqui usamos nomes Prisma padronizados.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum TipoUsuario {
+  comum
+  suporte
+  admin
+}
+
+enum StatusChamado {
+  aberto
+  andamento
+  resolvido
+  cancelado
+}
+
+enum PrioridadeChamado {
+  baixa
+  media
+  alta
+}
+
+model Setor {
+  id        Int       @id @default(autoincrement())
+  nome      String    @unique @db.VarChar(50)
+  usuarios  Usuario[]
+  chamados  Chamado[]
+
+  @@map("setor")
+}
+
+model Usuario {
+  id          Int         @id @default(autoincrement())
+  id_setor    Int
+  nome        String      @db.VarChar(100)
+  email       String      @unique @db.VarChar(100)
+  senha       String      @db.VarChar(255)
+  telefone    String?     @db.VarChar(20)
+  foto_perfil String?     @db.VarChar(500)
+  tipo        TipoUsuario @default(comum)
+  criado_em   DateTime    @default(now())
+
+  setor    Setor     @relation(fields: [id_setor], references: [id])
+  chamados Chamado[]
+
+  @@map("usuario")
+}
+
+model Chamado {
+  id_chamado    Int               @id @default(autoincrement())
+  id_usuario    Int
+  id_setor      Int
+  titulo        String            @db.VarChar(100)
+  descricao     String            @db.Text
+  status        StatusChamado     @default(aberto)
+  prioridade    PrioridadeChamado @default(media)
+  criado_em     DateTime          @default(now())
+  atualizado_em DateTime          @updatedAt
+
+  usuario   Usuario           @relation(fields: [id_usuario], references: [id])
+  setor     Setor             @relation(fields: [id_setor], references: [id])
+  historico HistoricoChamado[]
+
+  @@map("chamado")
+}
+
+model HistoricoChamado {
+  id_historico  Int            @id @default(autoincrement())
+  id_chamado    Int
+  status_antigo StatusChamado?
+  status_novo   StatusChamado?
+  obs           String?        @db.Text
+  criado_em     DateTime       @default(now())
+
+  chamado Chamado @relation(fields: [id_chamado], references: [id_chamado])
+
+  @@map("historico_chamado")
+}
