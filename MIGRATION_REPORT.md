@@ -198,33 +198,33 @@ JWT_SECRET=<64+ chars gerados com crypto.randomBytes>
 ## Checklist de validação após deploy
 
 ### Autenticação
-- [ ] Login com `admin@helpdesk.com` / `Admin@123` funciona
-- [ ] Redirecionamento correto por tipo de usuário
-- [ ] Logout limpa o cookie e redireciona para login
-- [ ] Alteração de senha funciona
-- [ ] Cadastro de 1º admin funciona (banco vazio)
-- [ ] Rota `/dashboard` sem login redireciona para `/`
+- [X] Login com `admin@helpdesk.com` / `Admin@123` funciona
+- [X] Redirecionamento correto por tipo de usuário
+- [X] Logout limpa o cookie e redireciona para login
+- [X] Alteração de senha funciona
+- [X] Cadastro de 1º admin funciona (banco vazio)
+- [X] Rota `/dashboard` sem login redireciona para `/`
 
 ### Chamados
-- [ ] Usuário `comum` vê apenas seus chamados em `/mySummons`
-- [ ] Criação de chamado funciona
-- [ ] Edição de chamado funciona
-- [ ] Deleção de chamado funciona (admin/suporte)
-- [ ] Dashboard carrega com dados reais
+- [X] Usuário `comum` vê apenas seus chamados em `/mySummons`
+- [X] Criação de chamado funciona
+- [X] Edição de chamado funciona
+- [X] Deleção de chamado funciona (admin/suporte)
+- [X] Dashboard carrega com dados reais
 
 ### Usuários
-- [ ] Listagem de usuários em `/users` (admin)
-- [ ] Criação de usuário pelo admin funciona
-- [ ] Edição de usuário funciona
-- [ ] Deleção de usuário funciona
+- [X] Listagem de usuários em `/users` (admin)
+- [X] Criação de usuário pelo admin funciona
+- [X] Edição de usuário funciona
+- [X] Deleção de usuário funciona
 
 ### Storage
-- [ ] Upload de foto de perfil funciona
-- [ ] Foto aparece no avatar da Sidebar
-- [ ] Substituição de foto remove a antiga do Supabase Storage
+- [X] Upload de foto de perfil funciona
+- [X] Foto aparece no avatar da Sidebar
+- [X] Substituição de foto remove a antiga do Supabase Storage
 
 ### Gráficos (Dashboard)
-- [ ] `ChartAreaInteractive` (fluxo 24h) carrega
-- [ ] `ChartResolvedPending` (resolvidos x pendentes) carrega
-- [ ] `TicketsPorSetor` carrega
-- [ ] Cards de estatísticas mostram dados reais
+- [X] `ChartAreaInteractive` (fluxo 24h) carrega
+- [X] `ChartResolvedPending` (resolvidos x pendentes) carrega
+- [X] `TicketsPorSetor` carrega
+- [X] Cards de estatísticas mostram dados reais
