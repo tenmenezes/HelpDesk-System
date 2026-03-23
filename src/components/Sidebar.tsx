@@ -285,51 +285,51 @@ export default function Sidebar() {
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
               </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel>Opcoes do sistema</DropdownMenuLabel>
+              <DropdownMenuGroup>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem
+                      className="cursor-pointer text-red-700 focus:text-red-700"
+                      onSelect={(event) => event.preventDefault()}
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sair da conta
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Voce tem certeza disso?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Esta acao nao podera ser desfeita. Voce precisara{" "}
+                        <span className="font-bold text-red-700">
+                          fazer login novamente
+                        </span>{" "}
+                        para voltar a usar esta conta.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <div className="w-full flex items-center justify-between">
+                        <AlertDialogCancel className="cursor-pointer p-2 rounded-lg bg-transparent border flex items-center justify-center">
+                          Cancelar
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center"
+                          onClick={logout}
+                        >
+                          Continuar
+                        </AlertDialogAction>
+                      </div>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-
-          <Separator />
-
-          {/* Botão de log out */}
-
-          <AlertDialog>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <AlertDialogTrigger className="cursor-pointer">
-                    <LogOut className="h-4 w-4 text-red-700 hover:text-red-500" />
-                  </AlertDialogTrigger>
-                </TooltipTrigger>
-                <TooltipContent side="right">Sair da conta</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Você tem certeza disso?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Esta ação não poderá ser desfeita, você terá que{" "}
-                  <span className="font-bold text-red-700">
-                    logar novamente nesta conta
-                  </span>{" "}
-                  após o logout.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <div className="w-full flex items-center justify-between">
-                  <AlertDialogCancel className="cursor-pointer p-2 rounded-lg bg-transparent border flex items-center justify-center">
-                    Cancelar
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center"
-                    onClick={logout}
-                  >
-                    Continuar
-                  </AlertDialogAction>
-                </div>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </nav>
       </aside>
 
@@ -444,46 +444,6 @@ export default function Sidebar() {
                   FAQ
                 </Link> */}
               </nav>
-
-              <nav className="mt-auto flex flex-col items-start gap-4 px-2 py-5">
-                <Separator />
-
-                <AlertDialog>
-                  <AlertDialogTrigger className="cursor-pointer pl-1">
-                    <div className="w-auto flex gap-2 items-center">
-                      <LogOut className="h-4 w-4 text-red-700 hover:text-red-500" />{" "}
-                      Sair
-                    </div>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Você tem certeza disso?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Esta ação não poderá ser desfeita, você terá que{" "}
-                        <span className="font-bold text-red-700">
-                          logar novamente nesta conta
-                        </span>{" "}
-                        após o logout.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <div className="w-full flex items-center justify-between">
-                        <AlertDialogCancel className="cursor-pointer p-2 rounded-lg bg-transparent border flex items-center justify-center">
-                          Cancelar
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                          className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center"
-                          onClick={logout}
-                        >
-                          Continuar
-                        </AlertDialogAction>
-                      </div>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </nav>
             </SheetContent>
           </Sheet>
           <Separator orientation="vertical" />
@@ -508,7 +468,6 @@ export default function Sidebar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="start">
                   <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem asChild className="cursor-pointer">
                       <Link href="/profile" className="flex items-center gap-2">
@@ -546,8 +505,50 @@ export default function Sidebar() {
                           </DropdownMenuItem>
                         </DropdownMenuSubContent>
                       </DropdownMenuPortal>
-                    </DropdownMenuSub>
-                  </DropdownMenuGroup>
+                      </DropdownMenuSub>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel>Opcoes do sistema</DropdownMenuLabel>
+                    <DropdownMenuGroup>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <DropdownMenuItem
+                            className="cursor-pointer text-red-700 focus:text-red-700"
+                            onSelect={(event) => event.preventDefault()}
+                          >
+                            <LogOut className="h-4 w-4" />
+                            Sair da conta
+                          </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Voce tem certeza disso?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Esta acao nao podera ser desfeita. Voce precisara{" "}
+                              <span className="font-bold text-red-700">
+                                fazer login novamente
+                              </span>{" "}
+                              para voltar a usar esta conta.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <div className="w-full flex items-center justify-between">
+                              <AlertDialogCancel className="cursor-pointer p-2 rounded-lg bg-transparent border flex items-center justify-center">
+                                Cancelar
+                              </AlertDialogCancel>
+                              <AlertDialogAction
+                                className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center"
+                                onClick={logout}
+                              >
+                                Continuar
+                              </AlertDialogAction>
+                            </div>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

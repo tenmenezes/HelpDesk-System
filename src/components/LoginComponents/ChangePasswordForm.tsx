@@ -10,15 +10,21 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Separator } from "../ui/separator";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ChangePasswordForm() {
+  const { user } = useAuth();
   const [email, setEmail] = useState("");
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setEmail(user?.email ?? "");
+  }, [user?.email]);
 
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();
@@ -35,7 +41,6 @@ export default function ChangePasswordForm() {
 
       if (data.success) {
         toast.success("Senha alterada com sucesso! Faça login novamente.");
-        setEmail("");
         setSenhaAtual("");
         setNovaSenha("");
       } else {
