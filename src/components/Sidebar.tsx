@@ -13,6 +13,7 @@ import Link from "next/link";
 import {
   AlertTriangle,
   CpuIcon,
+  HelpCircle,
   Home,
   LogOut,
   MoonIcon,
@@ -99,6 +100,21 @@ export default function Sidebar() {
                   </TooltipTrigger>
                   <TooltipContent side="right">Meus Tickets</TooltipContent>
                 </Tooltip>
+
+                <Separator />
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
+                      href="/faq"
+                    >
+                      <HelpCircle className="h-5 w-5" />
+                      <span className="sr-only">Ajuda</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">FAQ</TooltipContent>
+                </Tooltip>
               </>
             )}
 
@@ -130,6 +146,21 @@ export default function Sidebar() {
                     </Link>
                   </TooltipTrigger>
                   <TooltipContent side="right">Incidentes</TooltipContent>
+                </Tooltip>
+
+                <Separator />
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
+                      href="/faq"
+                    >
+                      <HelpCircle className="h-5 w-5" />
+                      <span className="sr-only">Ajuda</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">FAQ</TooltipContent>
                 </Tooltip>
               </>
             )}
@@ -193,22 +224,23 @@ export default function Sidebar() {
                   </TooltipTrigger>
                   <TooltipContent side="right">Usuários</TooltipContent>
                 </Tooltip>
+
+                <Separator />
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
+                      href="/faq"
+                    >
+                      <HelpCircle className="h-5 w-5" />
+                      <span className="sr-only">Ajuda</span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">FAQ</TooltipContent>
+                </Tooltip>
               </>
             )}
-
-            {/* <Separator />
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors hover:text-muted-foreground"
-                  href="/faq"
-                >
-                  <HelpCircle className="h-5 w-5" />
-                  <span className="sr-only">Ajuda</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">FAQ</TooltipContent>
-            </Tooltip> */}
           </TooltipProvider>
         </nav>
 
@@ -367,6 +399,17 @@ export default function Sidebar() {
                       <Tickets className="h-5 w-5 transition-all" />
                       My Tickets
                     </Link>
+
+                    <Separator />
+
+                    <Link
+                      href="/faq"
+                      className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
+                      prefetch={false}
+                    >
+                      <HelpCircle className="h-5 w-5 transition-all" />
+                      FAQ
+                    </Link>
                   </>
                 )}
 
@@ -390,6 +433,17 @@ export default function Sidebar() {
                     >
                       <TriangleAlert className="h-5 w-5 transition-all" />
                       Incidentes
+                    </Link>
+
+                    <Separator />
+
+                    <Link
+                      href="/faq"
+                      className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
+                      prefetch={false}
+                    >
+                      <HelpCircle className="h-5 w-5 transition-all" />
+                      FAQ
                     </Link>
                   </>
                 )}
@@ -431,18 +485,19 @@ export default function Sidebar() {
                       <Users className="h-5 w-5 transition-all" />
                       Usuários
                     </Link>
+
+                    <Separator orientation="horizontal" />
+
+                    <Link
+                      href="/faq"
+                      className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
+                      prefetch={false}
+                    >
+                      <HelpCircle className="h-5 w-5 transition-all" />
+                      FAQ
+                    </Link>
                   </>
                 )}
-
-                {/* <Separator orientation="horizontal" />
-                <Link
-                  href="/faq"
-                  className="flex items-center gap-4 px-2.5 text-foreground hover:text-muted-foreground"
-                  prefetch={false}
-                >
-                  <HelpCircleIcon className="h-5 w-5 transition-all" />
-                  FAQ
-                </Link> */}
               </nav>
             </SheetContent>
           </Sheet>
@@ -505,50 +560,50 @@ export default function Sidebar() {
                           </DropdownMenuItem>
                         </DropdownMenuSubContent>
                       </DropdownMenuPortal>
-                      </DropdownMenuSub>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuLabel>Opcoes do sistema</DropdownMenuLabel>
-                    <DropdownMenuGroup>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <DropdownMenuItem
-                            className="cursor-pointer text-red-700 focus:text-red-700"
-                            onSelect={(event) => event.preventDefault()}
-                          >
-                            <LogOut className="h-4 w-4" />
-                            Sair da conta
-                          </DropdownMenuItem>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Voce tem certeza disso?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Esta acao nao podera ser desfeita. Voce precisara{" "}
-                              <span className="font-bold text-red-700">
-                                fazer login novamente
-                              </span>{" "}
-                              para voltar a usar esta conta.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <div className="w-full flex items-center justify-between">
-                              <AlertDialogCancel className="cursor-pointer p-2 rounded-lg bg-transparent border flex items-center justify-center">
-                                Cancelar
-                              </AlertDialogCancel>
-                              <AlertDialogAction
-                                className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center"
-                                onClick={logout}
-                              >
-                                Continuar
-                              </AlertDialogAction>
-                            </div>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </DropdownMenuGroup>
+                    </DropdownMenuSub>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel>Opcoes do sistema</DropdownMenuLabel>
+                  <DropdownMenuGroup>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <DropdownMenuItem
+                          className="cursor-pointer text-red-700 focus:text-red-700"
+                          onSelect={(event) => event.preventDefault()}
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Sair da conta
+                        </DropdownMenuItem>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Voce tem certeza disso?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Esta acao nao podera ser desfeita. Voce precisara{" "}
+                            <span className="font-bold text-red-700">
+                              fazer login novamente
+                            </span>{" "}
+                            para voltar a usar esta conta.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <div className="w-full flex items-center justify-between">
+                            <AlertDialogCancel className="cursor-pointer p-2 rounded-lg bg-transparent border flex items-center justify-center">
+                              Cancelar
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              className="cursor-pointer p-2 rounded-lg border bg-gray-900 text-white flex items-center justify-center"
+                              onClick={logout}
+                            >
+                              Continuar
+                            </AlertDialogAction>
+                          </div>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

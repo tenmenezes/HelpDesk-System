@@ -22,10 +22,11 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, DownloadIcon } from "lucide-react";
+import { DownloadIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { exportTableToPDF } from "@/utils/exportPDF";
 import NotFound from "../NotFound";
+import Pagination from "../Pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -63,16 +64,29 @@ export function DataTable<TData, TValue>({
 
   const handleExportPDF = () => {
     const columnDefs = columns
-      .filter((col) => col.id !== "actions" && col.accessorKey)
+      .filter(
+        (
+          col
+        ): col is typeof col & {
+          accessorKey: string;
+        } =>
+          col.id !== "actions" &&
+          "accessorKey" in col &&
+          typeof col.accessorKey === "string"
+      )
       .map((col) => ({
-        key: col.accessorKey as string,
+        key: col.accessorKey,
         label:
           typeof col.header === "function"
             ? "Coluna"
-            : (col.header as string) || (col.accessorKey as string),
+            : (col.header as string) || col.accessorKey,
       }));
-
-    exportTableToPDF(data as any[], columnDefs, "Relatório de Incidentes");
+  
+    exportTableToPDF(
+      data as Record<string, unknown>[],
+      columnDefs,
+      "Relatorio de Incidentes"
+    );
   };
 
   return (
@@ -146,34 +160,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      <div className="flex items-center justify-center space-x-2 py-4 gap-10">
-        <Button
-          variant="outline"
-          className="cursor-pointer"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-
-        <span>
-          Página {table.getState().pagination.pageIndex + 1} de{" "}
-          {table.getPageCount() === 0
-            ? table.getPageCount() + 1
-            : table.getPageCount()}
-        </span>
-
-        <Button
-          variant="outline"
-          className="cursor-pointer"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <ArrowRight className="h-5 w-5" />
-        </Button>
-      </div>
+      <Pagination table={table} />
     </>
   );
 }

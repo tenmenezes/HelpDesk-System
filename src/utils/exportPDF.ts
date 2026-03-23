@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-export function exportTableToPDF<T extends Record<string, any>>(
+export function exportTableToPDF<T extends Record<string, unknown>>(
   data: T[],
   columns: { key: string; label: string }[],
   title: string

@@ -19,11 +19,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import React, { useState } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import NotFound from "../NotFound";
+import Pagination from "../Pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -68,14 +67,7 @@ export function DataTable<TData, TValue>({
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
-        
-        {/* Botão de novo chamado instaciado aqui como prop */}
-        {headerActions && (
-          <div>
-            {headerActions}
-          </div>
-        )}
-
+        {headerActions && <div>{headerActions}</div>}
       </div>
 
       <div className="overflow-hidden rounded-md border">
@@ -126,32 +118,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-center space-x-2 py-4 gap-10">
-        <Button
-          variant="outline"
-          className="cursor-pointer"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <span>
-          Página {table.getState().pagination.pageIndex + 1} de{" "}
-          {table.getPageCount() === 0
-            ? table.getPageCount() + 1
-            : table.getPageCount()}
-        </span>
-        <Button
-          variant="outline"
-          className="cursor-pointer"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <ArrowRight className="h-5 w-5" />
-        </Button>
-      </div>
+      <Pagination table={table} />
     </>
   );
 }
