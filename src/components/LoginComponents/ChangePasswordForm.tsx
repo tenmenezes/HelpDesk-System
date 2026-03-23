@@ -13,18 +13,20 @@ import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Separator } from "../ui/separator";
-import { useAuth } from "@/context/AuthContext";
 
-export default function ChangePasswordForm() {
-  const { user } = useAuth();
+export default function ChangePasswordForm({
+  initialEmail = "",
+}: {
+  initialEmail?: string;
+}) {
   const [email, setEmail] = useState("");
   const [senhaAtual, setSenhaAtual] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setEmail(user?.email ?? "");
-  }, [user?.email]);
+    setEmail(initialEmail);
+  }, [initialEmail]);
 
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();

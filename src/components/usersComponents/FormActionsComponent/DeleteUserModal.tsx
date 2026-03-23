@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { mutate } from "swr";
 import { toast } from "sonner";
+import { Loader } from "lucide-react";
+import { useState } from "react";
 
 interface DeleteUserProps {
   id: number;
@@ -11,27 +13,32 @@ interface DeleteUserProps {
 }
 
 export function DeleteUser({ id, nome, onClose }: DeleteUserProps) {
+  const [loading, setLoading] = useState(false);
   console.log("ID recebido no DeleteUserModal:", id);
   async function handleDelete() {
-    const res = await fetch(`/api/usuarios/${id}`, {
-      method: "DELETE",
-    });
+    try {
+      setLoading(true);
 
-    if (!res) {
-      toast.warning("Aviso: Falha ao realizar o fetch de 'handleDelete'.");
-      return null;
-    }
+      const res = await fetch(`/api/usuarios/${id}`, {
+        method: "DELETE",
+      });
 
-    const data = await res.json();
+      if (!res) {
+        toast.warning("Aviso: Falha ao realizar o fetch de 'handleDelete'.");
+        return null;
+      }
 
-    if (data.success) {
-      mutate("usuarios");
-      toast.success("Usuário excluído.");
-      onClose();
-    } else {
-      return (
-        toast.error("Erro ao excluir usuário.")
-      );
+      const data = await res.json();
+
+      if (data.success) {
+        mutate("usuarios");
+        toast.success("Usuário excluído.");
+        onClose();
+      } else {
+        return toast.error("Erro ao excluir usuário.");
+      }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -48,15 +55,24 @@ export function DeleteUser({ id, nome, onClose }: DeleteUserProps) {
             variant="outline"
             onClick={onClose}
             className="cursor-pointer"
+            disabled={loading}
           >
             Cancelar
           </Button>
 
           <Button
             onClick={handleDelete}
+            disabled={loading}
             className="cursor-pointer hover:bg-red-700 transition-colors border"
           >
-            Excluir
+            {loading ? (
+              <div className="flex items-center gap-3">
+                <Loader className="h-4 w-4 animate-spin transition" />
+                <span>Excluindo...</span>
+              </div>
+            ) : (
+              "Excluir"
+            )}
           </Button>
         </div>
       </div>

@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Usuario } from "../columns";
+import { Loader } from "lucide-react";
+import { useState } from "react";
 
 const formSchema = z.object({
   id: z.string().min(1, "ID é obrigatório"),
@@ -43,6 +45,7 @@ interface EditUserProps {
 }
 
 export function EditUserForm({ user, onClose }: EditUserProps) {
+  const [loading, setLoading] = useState(false);
   const form = useForm<EditUserFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,6 +60,7 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
 
   const onSubmit = async (values: EditUserFormData) => {
     try {
+      setLoading(true);
       const payload = {
         id: parseInt(values.id),
         username: values.username,
@@ -116,6 +120,8 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
     } catch (error) {
       console.error("Erro ao atualizar usuário:", error);
       toast.error("Erro ao atualizar usuário.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -226,8 +232,15 @@ export function EditUserForm({ user, onClose }: EditUserProps) {
           />
         </div>
 
-        <Button type="submit" className="w-full cursor-pointer">
-          Salvar alterações
+        <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
+          {loading ? (
+            <div className="flex items-center gap-3">
+              <Loader className="h-4 w-4 animate-spin transition" />
+              <span>Salvando...</span>
+            </div>
+          ) : (
+            "Salvar alterações"
+          )}
         </Button>
       </form>
     </Form>

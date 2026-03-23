@@ -102,7 +102,7 @@ export default function Profile() {
           </StaggerItem>
 
           <StaggerItem>
-            <ChangePasswordForm />
+            <ChangePasswordForm initialEmail={user?.email ?? ""} />
           </StaggerItem>
         </StaggerContainer>
       </StaggerContainer>

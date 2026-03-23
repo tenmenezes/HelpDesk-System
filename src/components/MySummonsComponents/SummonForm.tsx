@@ -25,8 +25,9 @@ import { toast } from "sonner";
 import { insertChamado, updateChamado } from "../services/chamados";
 import { Chamado } from "./types";
 import { useAuth } from "@/context/AuthContext";
-import { FileWarning } from "lucide-react";
+import { FileWarning, Loader } from "lucide-react";
 import { mutate } from "swr";
+import { useState } from "react";
 
 const formSchema = z.object({
   titulo: z.string().min(3, "Mínimo de 3 caracteres").max(100),
@@ -41,8 +42,17 @@ interface ChamadoFormProps {
   onSuccess: () => void;
 }
 
+type UpdateChamadoPayload = {
+  id_chamado: number;
+  titulo: string;
+  descricao: string;
+  status?: "aberto" | "andamento" | "resolvido" | "cancelado";
+  prioridade?: "baixa" | "media" | "alta";
+};
+
 export function ChamadoForm({ chamado, onSuccess }: ChamadoFormProps) {
   const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   console.log("Chamado feito pro usuário com id:", user?.id);
 
@@ -74,9 +84,10 @@ export function ChamadoForm({ chamado, onSuccess }: ChamadoFormProps) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      setLoading(true);
       if (chamado) {
         // Editar
-        const updateData: any = {
+        const updateData: UpdateChamadoPayload = {
           id_chamado: chamado.id_chamado,
           titulo: values.titulo,
           descricao: values.descricao,
@@ -116,8 +127,10 @@ export function ChamadoForm({ chamado, onSuccess }: ChamadoFormProps) {
           toast.error(res.message || "Erro ao criar chamado.");
         }
       }
-    } catch (error) {
+    } catch {
       toast.error("Erro ao processar chamado");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -256,6 +269,7 @@ export function ChamadoForm({ chamado, onSuccess }: ChamadoFormProps) {
           <Button
             type="button"
             variant="outline"
+            disabled={loading}
             onClick={() => {
               form.reset();
               onSuccess();
@@ -263,7 +277,18 @@ export function ChamadoForm({ chamado, onSuccess }: ChamadoFormProps) {
           >
             Cancelar
           </Button>
-          <Button type="submit">{chamado ? "Atualizar" : "Criar"}</Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? (
+              <div className="flex items-center gap-3">
+                <Loader className="h-4 w-4 animate-spin transition" />
+                <span>{chamado ? "Atualizando..." : "Criando..."}</span>
+              </div>
+            ) : chamado ? (
+              "Atualizar"
+            ) : (
+              "Criar"
+            )}
+          </Button>
         </div>
       </form>
     </Form>

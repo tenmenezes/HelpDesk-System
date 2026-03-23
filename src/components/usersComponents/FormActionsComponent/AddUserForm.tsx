@@ -25,6 +25,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { PasswordInput } from "../../PasswordInput";
 import { mutate } from "swr";
+import { Loader } from "lucide-react";
+import { useState } from "react";
 
 const formSchema = z.object({
   username: z.string().min(2, { message: "Min 2 caracteres." }).max(50),
@@ -58,6 +60,7 @@ const formSchema = z.object({
 });
 
 export default function ProfileForm() {
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -71,27 +74,35 @@ export default function ProfileForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const res = await fetch("/api/usuarios/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: values.username,
-        email: values.email,
-        password: values.password,
-        phone: values.phone,
-        sector: parseInt(values.sector),
-        type: values.type,
-      }),
-    });
+    try {
+      setLoading(true);
 
-    const data = await res.json();
+      const res = await fetch("/api/usuarios/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: values.username,
+          email: values.email,
+          password: values.password,
+          phone: values.phone,
+          sector: parseInt(values.sector),
+          type: values.type,
+        }),
+      });
 
-    if (data.success) {
-      mutate("usuarios");
-      form.reset();
-      toast.success("Usuário criado com sucesso!");
-    } else {
-      toast.error(data.message || "Erro ao criar usuário.");
+      const data = await res.json();
+
+      if (data.success) {
+        mutate("usuarios");
+        form.reset();
+        toast.success("Usuário criado com sucesso!");
+      } else {
+        toast.error(data.message || "Erro ao criar usuário.");
+      }
+    } catch {
+      toast.error("Erro ao criar usuário.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -234,13 +245,21 @@ export default function ProfileForm() {
               type="button"
               variant="outline"
               className="cursor-pointer"
+              disabled={loading}
               onClick={() => form.reset()}
             >
               Resetar
             </Button>
 
-            <Button type="submit" className="cursor-pointer">
-              Enviar
+            <Button type="submit" className="cursor-pointer" disabled={loading}>
+              {loading ? (
+                <div className="flex items-center gap-3">
+                  <Loader className="h-4 w-4 animate-spin transition" />
+                  <span>Enviando...</span>
+                </div>
+              ) : (
+                "Enviar"
+              )}
             </Button>
           </div>
         </form>
