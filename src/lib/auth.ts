@@ -23,12 +23,18 @@ export function signToken(payload: SessionPayload): string {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "8h" });
 }
 
-function base64UrlToUint8Array(input: string): Uint8Array {
+function base64UrlToArrayBuffer(input: string): ArrayBuffer {
   const base64 = input.replace(/-/g, "+").replace(/_/g, "/");
   const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
   const binary = atob(padded);
+  const buffer = new ArrayBuffer(binary.length);
+  const bytes = new Uint8Array(buffer);
 
-  return Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+
+  return buffer;
 }
 
 async function getJwtVerificationKey() {
@@ -48,13 +54,13 @@ export async function verifyToken(token: string): Promise<SessionPayload | null>
     if (!encodedHeader || !encodedPayload || !encodedSignature) return null;
 
     const header = JSON.parse(
-      new TextDecoder().decode(base64UrlToUint8Array(encodedHeader))
+      new TextDecoder().decode(base64UrlToArrayBuffer(encodedHeader))
     ) as { alg?: string; typ?: string };
 
     if (header.alg !== "HS256") return null;
 
     const payload = JSON.parse(
-      new TextDecoder().decode(base64UrlToUint8Array(encodedPayload))
+      new TextDecoder().decode(base64UrlToArrayBuffer(encodedPayload))
     ) as SessionPayload & { exp?: number };
 
     if (payload.exp && payload.exp * 1000 <= Date.now()) return null;
@@ -63,7 +69,7 @@ export async function verifyToken(token: string): Promise<SessionPayload | null>
     const isValid = await crypto.subtle.verify(
       "HMAC",
       key,
-      base64UrlToUint8Array(encodedSignature),
+      base64UrlToArrayBuffer(encodedSignature),
       new TextEncoder().encode(`${encodedHeader}.${encodedPayload}`)
     );
 
