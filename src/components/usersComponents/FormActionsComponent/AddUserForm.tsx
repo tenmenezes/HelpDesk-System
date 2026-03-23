@@ -111,7 +111,7 @@ export default function ProfileForm() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-auto h-auto flex flex-col max-w-full"
+          className="flex h-auto w-full max-w-full flex-col space-y-8"
         >
           <FormField
             control={form.control}
@@ -176,19 +176,19 @@ export default function ProfileForm() {
             )}
           />
 
-          <div className="w-auto flex items-center justify-between gap-2">
+          <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <FormField
               control={form.control}
               name="sector"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="w-full min-w-0">
                   <FormLabel>Setor</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Selecione um setor" />
                       </SelectTrigger>
                       <SelectContent>
@@ -218,14 +218,14 @@ export default function ProfileForm() {
               control={form.control}
               name="type"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="w-full min-w-0">
                   <FormLabel>Tipo de usuário</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Selecione o tipo de suário" />
                       </SelectTrigger>
                       <SelectContent>
@@ -240,7 +240,7 @@ export default function ProfileForm() {
             />
           </div>
 
-          <div className="w-full flex justify-between items-center">
+          <div className="flex w-full items-center justify-between gap-2">
             <Button
               type="button"
               variant="outline"

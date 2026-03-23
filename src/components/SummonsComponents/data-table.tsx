@@ -65,7 +65,7 @@ export function DataTable<TData, TValue>({
         placeholder="Buscar por usuário..."
         value={filter}
         onChange={(event) => setFilter(event.target.value)}
-        className="max-w-sm mb-4"
+        className="max-w-sm mb-2"
       />
 
       <div className="overflow-hidden rounded-md border">

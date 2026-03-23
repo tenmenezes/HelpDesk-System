@@ -91,12 +91,12 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="w-full flex items-center justify-between gap-2">
+      <div className="w-full flex items-center justify-between gap-2 mb-2">
         <Input
           placeholder="Buscar por nome..."
           value={globalFilter ?? ""}
           onChange={(e) => setGlobalFilter(e.target.value)}
-          className="max-w-sm mb-4"
+          className="max-w-sm"
         />
 
         <Tooltip>

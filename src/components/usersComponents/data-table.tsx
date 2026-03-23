@@ -98,7 +98,7 @@ export function DataTable<TData, TValue>({
             </Button>
           </DialogTrigger>
 
-          <DialogContent className="w-auto h-auto flex items-center flex-col justify-center">
+          <DialogContent className="flex h-auto w-[calc(100vw-2rem)] max-w-lg flex-col items-center justify-center">
             <DialogHeader>
               <DialogTitle>Novo Usuário</DialogTitle>
               <DialogDescription>
