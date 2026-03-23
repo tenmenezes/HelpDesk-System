@@ -57,7 +57,14 @@ Esta versão do projeto representa a **migração completa do backend legado em 
 
 O objetivo da migração foi manter a **mesma interface visual e experiência de uso** da aplicação original, trocando apenas a infraestrutura de backend para algo mais robusto, compatível com **deploy 100% online na Vercel** e mais alinhado com práticas atuais de desenvolvimento full-stack.
 
-### Demo: [Demonstração](https://help-desk-system-jet.vercel.app)
+### Demo: [HelpDesk](https://help-desk-system-jet.vercel.app)
+
+- Usuário comum:
+  - user-comum@gmail.com
+  - UserCom.123
+- Usuário Suporte:
+  - user-suporte@gmail.com
+  - UserSup.123
 
 ---
 
