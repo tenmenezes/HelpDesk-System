@@ -22,7 +22,7 @@ import RegisterForm from "@/components/LoginComponents/RegisterForm";
 import { Separator } from "@/components/ui/separator";
 
 export default function Home() {
-  const { login } = useAuth();
+  const { login, refreshUser } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -36,12 +36,13 @@ export default function Home() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
         body: JSON.stringify({ email, senha }),
       });
 
       const data = await res.json();
 
-      if (!data.success) {
+      if (!res.ok || !data.success) {
         toast.error(data.message || "Credenciais inválidas");
         setLoading(false);
         return;
@@ -55,12 +56,11 @@ export default function Home() {
 
       // Salva no AuthContext (cookie já foi setado pelo servidor)
       login(user);
+      await refreshUser();
 
-      if (user.tipo === "comum") {
-        router.push("/mySummons");
-      } else {
-        router.push("/dashboard");
-      }
+      const destino = user.tipo === "comum" ? "/mySummons" : "/dashboard";
+      router.replace(destino);
+      router.refresh();
     } catch (err: unknown) {
       console.error("Erro ao logar:", err);
       toast.error((err as Error).message || "Erro ao logar");

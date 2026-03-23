@@ -1,5 +1,5 @@
-// src/middleware.ts
-// Proteção de rotas no edge (middleware Next.js)
+// src/proxy.ts
+// Proteção de rotas no edge (proxy Next.js)
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
@@ -24,13 +24,13 @@ const ADMIN_SUPORTE_PATHS = ["/dashboard", "/summons", "/problems"];
 // Rota raiz (login) — redireciona usuário já logado
 const PUBLIC_PATH = "/";
 
-export function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
   const isPublic = pathname === PUBLIC_PATH;
 
-  const session = getSessionFromRequest(request);
+  const session = await getSessionFromRequest(request);
 
   // Redireciona para login se não autenticado numa rota protegida
   if (isProtected && !session) {
@@ -60,7 +60,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|public).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|public).*)"],
 };

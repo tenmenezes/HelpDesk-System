@@ -23,10 +23,60 @@ export function signToken(payload: SessionPayload): string {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "8h" });
 }
 
-// Verifica e decodifica o JWT
-export function verifyToken(token: string): SessionPayload | null {
+function base64UrlToUint8Array(input: string): Uint8Array {
+  const base64 = input.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
+  const binary = atob(padded);
+
+  return Uint8Array.from(binary, (char) => char.charCodeAt(0));
+}
+
+async function getJwtVerificationKey() {
+  return crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(JWT_SECRET),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["verify"]
+  );
+}
+
+// Verifica e decodifica o JWT de forma compatível com middleware/edge runtime
+export async function verifyToken(token: string): Promise<SessionPayload | null> {
   try {
-    return jwt.verify(token, JWT_SECRET) as SessionPayload;
+    const [encodedHeader, encodedPayload, encodedSignature] = token.split(".");
+    if (!encodedHeader || !encodedPayload || !encodedSignature) return null;
+
+    const header = JSON.parse(
+      new TextDecoder().decode(base64UrlToUint8Array(encodedHeader))
+    ) as { alg?: string; typ?: string };
+
+    if (header.alg !== "HS256") return null;
+
+    const payload = JSON.parse(
+      new TextDecoder().decode(base64UrlToUint8Array(encodedPayload))
+    ) as SessionPayload & { exp?: number };
+
+    if (payload.exp && payload.exp * 1000 <= Date.now()) return null;
+
+    const key = await getJwtVerificationKey();
+    const isValid = await crypto.subtle.verify(
+      "HMAC",
+      key,
+      base64UrlToUint8Array(encodedSignature),
+      new TextEncoder().encode(`${encodedHeader}.${encodedPayload}`)
+    );
+
+    if (!isValid) return null;
+
+    return {
+      id: payload.id,
+      email: payload.email,
+      tipo: payload.tipo,
+      nome: payload.nome,
+      id_setor: payload.id_setor,
+      foto_perfil: payload.foto_perfil ?? null,
+    };
   } catch {
     return null;
   }
@@ -50,14 +100,16 @@ export async function getSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(COOKIE_NAME)?.value;
   if (!token) return null;
-  return verifyToken(token);
+  return await verifyToken(token);
 }
 
 // Extrai sessão de um NextRequest (para uso em middleware)
-export function getSessionFromRequest(req: NextRequest): SessionPayload | null {
+export async function getSessionFromRequest(
+  req: NextRequest
+): Promise<SessionPayload | null> {
   const token = req.cookies.get(COOKIE_NAME)?.value;
   if (!token) return null;
-  return verifyToken(token);
+  return await verifyToken(token);
 }
 
 // Nome do cookie para uso em route handlers (logout)
