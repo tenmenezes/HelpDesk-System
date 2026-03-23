@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import {
   Clock3,
   HelpCircleIcon,
@@ -18,6 +19,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { StaggerContainer, StaggerItem } from "@/components/motion-primitives";
 
 const faqSections = [
   {
@@ -129,79 +131,96 @@ const quickTips = [
 ];
 
 export default function Ajuda() {
+  useEffect(() => {
+    const previousScrollRestoration = window.history.scrollRestoration;
+
+    window.history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+
+    return () => {
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, []);
+
   return (
     <main className="sm:ml-14 p-4">
-      <section className="flex flex-col gap-4">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <CardTitle>FAQ e ajuda rapida</CardTitle>
-                <CardDescription>
-                  Orientacoes para acesso, uso do sistema e duvidas frequentes
-                  do dia a dia.
-                </CardDescription>
+      <StaggerContainer className="flex flex-col gap-4">
+        <StaggerItem>
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <CardTitle>FAQ e ajuda rapida</CardTitle>
+                  <CardDescription>
+                    Orientacoes para acesso, uso do sistema e duvidas frequentes
+                    do dia a dia.
+                  </CardDescription>
+                </div>
+                <HelpCircleIcon className="h-6 w-6" />
               </div>
-              <HelpCircleIcon className="h-6 w-6" />
-            </div>
-          </CardHeader>
-        </Card>
+            </CardHeader>
+          </Card>
+        </StaggerItem>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <StaggerContainer className="grid gap-4 md:grid-cols-3">
           {quickTips.map((tip) => {
             const Icon = tip.icon;
 
             return (
-              <Card key={tip.title}>
-                <CardHeader>
-                  <div className="flex items-center justify-between gap-3">
-                    <CardTitle className="text-lg">{tip.title}</CardTitle>
-                    <Icon className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <CardDescription>{tip.description}</CardDescription>
-                </CardHeader>
-              </Card>
+              <StaggerItem key={tip.title}>
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between gap-3">
+                      <CardTitle className="text-lg">{tip.title}</CardTitle>
+                      <Icon className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <CardDescription>{tip.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </StaggerItem>
             );
           })}
-        </div>
+        </StaggerContainer>
 
-        <div className="grid gap-4 xl:grid-cols-2">
+        <StaggerContainer className="grid gap-4 xl:grid-cols-2">
           {faqSections.map((section) => {
             const Icon = section.icon;
 
             return (
-              <Card key={section.title}>
-                <CardHeader>
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <CardTitle>{section.title}</CardTitle>
-                      <CardDescription>{section.description}</CardDescription>
-                    </div>
-                    <Icon className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {section.items.map((item, index) => (
-                    <div key={item.question}>
-                      <div className="space-y-2">
-                        <h3 className="text-sm font-semibold leading-6">
-                          {item.question}
-                        </h3>
-                        <p className="text-sm text-muted-foreground leading-6">
-                          {item.answer}
-                        </p>
+              <StaggerItem key={section.title}>
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <CardTitle>{section.title}</CardTitle>
+                        <CardDescription>{section.description}</CardDescription>
                       </div>
-                      {index < section.items.length - 1 && (
-                        <Separator className="mt-4" />
-                      )}
+                      <Icon className="h-5 w-5 text-muted-foreground" />
                     </div>
-                  ))}
-                </CardContent>
-              </Card>
+                  </CardHeader>
+                  <CardContent className="space-y-4 p-4">
+                    {section.items.map((item, index) => (
+                      <div key={item.question}>
+                        <div className="space-y-2">
+                          <h3 className="text-sm font-semibold leading-6">
+                            {item.question}
+                          </h3>
+                          <p className="text-sm text-muted-foreground leading-6">
+                            {item.answer}
+                          </p>
+                        </div>
+                        {index < section.items.length - 1 && (
+                          <Separator className="mt-4" />
+                        )}
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </StaggerItem>
             );
           })}
-        </div>
-      </section>
+        </StaggerContainer>
+      </StaggerContainer>
     </main>
   );
 }

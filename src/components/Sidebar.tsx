@@ -66,7 +66,7 @@ import { useAuth } from "@/context/AuthContext";
 export default function Sidebar() {
   const { setTheme } = useTheme();
 
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
 
   return (
     <div className="flex flex-col w-full bg-muted/40">
@@ -86,7 +86,7 @@ export default function Sidebar() {
 
             <Separator />
 
-            {user?.tipo === "comum" && (
+            {user?.tipo === "comum" ? (
               <>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -116,9 +116,7 @@ export default function Sidebar() {
                   <TooltipContent side="right">FAQ</TooltipContent>
                 </Tooltip>
               </>
-            )}
-
-            {user?.tipo === "suporte" && (
+            ) : user?.tipo === "suporte" ? (
               <>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -163,9 +161,7 @@ export default function Sidebar() {
                   <TooltipContent side="right">FAQ</TooltipContent>
                 </Tooltip>
               </>
-            )}
-
-            {user?.tipo === "admin" && (
+            ) : user?.tipo === "admin" ? (
               <>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -240,7 +236,7 @@ export default function Sidebar() {
                   <TooltipContent side="right">FAQ</TooltipContent>
                 </Tooltip>
               </>
-            )}
+            ) : loading ? null : null}
           </TooltipProvider>
         </nav>
 
@@ -389,7 +385,7 @@ export default function Sidebar() {
                   <span>HelpDesk Corp</span>
                 </div>
 
-                {user?.tipo === "comum" && (
+                {user?.tipo === "comum" ? (
                   <>
                     <Link
                       href="/mySummons"
@@ -411,9 +407,7 @@ export default function Sidebar() {
                       FAQ
                     </Link>
                   </>
-                )}
-
-                {user?.tipo === "suporte" && (
+                ) : user?.tipo === "suporte" ? (
                   <>
                     <Link
                       href="/dashboard"
@@ -446,9 +440,7 @@ export default function Sidebar() {
                       FAQ
                     </Link>
                   </>
-                )}
-
-                {user?.tipo === "admin" && (
+                ) : user?.tipo === "admin" ? (
                   <>
                     <Link
                       href="/dashboard"
@@ -497,7 +489,7 @@ export default function Sidebar() {
                       FAQ
                     </Link>
                   </>
-                )}
+                ) : loading ? null : null}
               </nav>
             </SheetContent>
           </Sheet>
@@ -563,7 +555,7 @@ export default function Sidebar() {
                     </DropdownMenuSub>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuLabel>Opcoes do sistema</DropdownMenuLabel>
+                  <DropdownMenuLabel>Opções do sistema</DropdownMenuLabel>
                   <DropdownMenuGroup>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>

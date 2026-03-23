@@ -145,6 +145,7 @@ export default function ComponentProfileCrop({
   const [finalImageUrl, setFinalImageUrl] = useState<string | null>(
     currentImageUrl ?? null
   );
+  const [mounted, setMounted] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -156,10 +157,16 @@ export default function ComponentProfileCrop({
 
   // State for zoom level
   const [zoom, setZoom] = useState(1);
+  const safeImageUrl = mounted ? finalImageUrl : null;
+  const triggerAriaLabel = safeImageUrl ? "Trocar foto" : "Enviar foto";
 
   // Callback for Cropper to provide crop data - Wrap with useCallback
   const handleCropChange = useCallback((pixels: Area | null) => {
     setCroppedAreaPixels(pixels);
+  }, []);
+
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
   const handleApply = async () => {
@@ -240,7 +247,7 @@ export default function ComponentProfileCrop({
     <div className="flex w-full flex-col items-center gap-4">
       <div className="relative inline-flex">
         <button
-          aria-label={finalImageUrl ? "Trocar foto" : "Enviar foto"}
+          aria-label={triggerAriaLabel}
           className="group relative flex size-32 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-input border-dashed bg-muted/30 outline-none transition-colors hover:bg-accent/50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[dragging=true]:bg-accent/50"
           data-dragging={isDragging || undefined}
           onClick={openFileDialog}
@@ -250,13 +257,13 @@ export default function ComponentProfileCrop({
           onDrop={handleDrop}
           type="button"
         >
-          {finalImageUrl ? (
+          {safeImageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               alt={`Foto de perfil de ${userName ?? "usuario"}`}
               className="size-full object-cover"
               height={128}
-              src={finalImageUrl}
+              src={safeImageUrl}
               style={{ objectFit: "cover" }}
               width={128}
             />
@@ -270,7 +277,7 @@ export default function ComponentProfileCrop({
             </div>
           )}
 
-          <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/55 via-black/10 to-transparent p-3 opacity-0 transition-opacity group-hover:opacity-100">
+          <div className="absolute inset-0 flex items-end justify-center from-black/55 via-black/10 to-transparent p-3 opacity-0 transition-opacity group-hover:opacity-100">
             <span className="inline-flex items-center gap-2 rounded-full bg-background/95 px-3 py-1 text-xs font-medium text-foreground">
               <CameraIcon className="h-3.5 w-3.5" />
               Alterar foto
