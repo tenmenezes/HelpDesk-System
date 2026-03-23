@@ -1,6 +1,6 @@
 "use client";
 
-import { UserRound } from "lucide-react";
+import { BadgeCheck, KeyRound, Mail, Shield, UserRound } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -9,46 +9,96 @@ import {
   CardTitle,
 } from "../ui/card";
 import ComponentProfileCrop from "../comp-554";
-import { Button } from "../ui/button";
 import { useAuth } from "@/context/AuthContext";
+import ChangePasswordForm from "../LoginComponents/ChangePasswordForm";
+import { Separator } from "../ui/separator";
 
 export default function Profile() {
   const { user } = useAuth();
 
+  const tipoLabel =
+    user?.tipo === "admin"
+      ? "Administrador"
+      : user?.tipo === "suporte"
+        ? "Suporte"
+        : "Usuario comum";
+
   return (
-    <>
-      <div className="mt-4 ml-4 md:ml-18 lg:ml-18 sm:ml-18 mr-4 mb-4 flex flex-col gap-2">
+    <main className="sm:ml-14 p-4">
+      <section className="flex flex-col gap-4">
         <Card>
           <CardHeader>
-            <div className="w-auto flex items-center justify-between">
-              <CardTitle>Perfil do usuário</CardTitle>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <CardTitle>Perfil do usuario</CardTitle>
+                <CardDescription>
+                  Gerencie sua foto, visualize seus dados atuais e mantenha sua
+                  conta atualizada.
+                </CardDescription>
+              </div>
               <UserRound className="h-6 w-6" />
             </div>
-            <CardDescription>
-              Perfil com dados sensíveis do usuário.
-            </CardDescription>
           </CardHeader>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-center">
-              Alterar foto de perfil
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="w-auto h-auto flex flex-col gap-5 items-center ">
-              <ComponentProfileCrop userId={user?.id} />
-              <ul>
-                <li>Nome: {user?.nome ?? "—"}</li>
-                <li>E-mail: {user?.email ?? "—"}</li>
-                <li>Senha: **********</li>
-              </ul>
-              <Button className="w-auto cursor-pointer">Alterar senha</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </>
+        <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+          <Card>
+            <CardHeader>
+              <CardTitle>Informacoes da conta</CardTitle>
+              <CardDescription>
+                Esta area exibe os dados principais usados pela aplicacao.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex flex-col items-center gap-4 rounded-xl border border-border/60 bg-muted/20 p-5">
+                <ComponentProfileCrop
+                  userId={user?.id}
+                  currentImageUrl={user?.foto_url}
+                  userName={user?.nome}
+                />
+                <Separator />
+                <div className="grid w-full gap-3 sm:grid-cols-2">
+                  <div className="rounded-lg border bg-card p-4">
+                    <div className="mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                      <BadgeCheck className="h-4 w-4" />
+                      Nome
+                    </div>
+                    <p className="text-base font-semibold">{user?.nome ?? "—"}</p>
+                  </div>
+
+                  <div className="rounded-lg border bg-card p-4">
+                    <div className="mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                      <Mail className="h-4 w-4" />
+                      E-mail
+                    </div>
+                    <p className="break-all text-base font-semibold">
+                      {user?.email ?? "—"}
+                    </p>
+                  </div>
+
+                  <div className="rounded-lg border bg-card p-4">
+                    <div className="mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                      <Shield className="h-4 w-4" />
+                      Perfil de acesso
+                    </div>
+                    <p className="text-base font-semibold">{tipoLabel}</p>
+                  </div>
+
+                  <div className="rounded-lg border bg-card p-4">
+                    <div className="mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                      <KeyRound className="h-4 w-4" />
+                      Senha
+                    </div>
+                    <p className="text-base font-semibold">Protegida por seguranca</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <ChangePasswordForm />
+        </div>
+      </section>
+    </main>
   );
 }

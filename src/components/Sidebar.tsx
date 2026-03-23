@@ -22,6 +22,7 @@ import {
   Tickets,
   TicketsIcon,
   TriangleAlert,
+  UserRound,
   Users,
 } from "lucide-react";
 import {
@@ -240,15 +241,15 @@ export default function Sidebar() {
             <DropdownMenuContent className="w-56" align="start">
               <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {/* <DropdownMenuGroup>
-                <Link href="/profile">
-                  <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuGroup>
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link href="/profile" className="flex items-center gap-2">
+                    <UserRound className="h-4 w-4" />
                     Perfil
-                    <DropdownMenuShortcut>⇧ + P</DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                </Link>
+                  </Link>
+                </DropdownMenuItem>
               </DropdownMenuGroup>
-                 */}
+              <DropdownMenuSeparator />
               <DropdownMenuLabel>Acessibilidade</DropdownMenuLabel>
               <DropdownMenuGroup>
                 <DropdownMenuSub>
@@ -507,12 +508,15 @@ export default function Sidebar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="start">
                   <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
-                  {/* <DropdownMenuGroup>
-                     <DropdownMenuItem className="cursor-pointer">
-                      Perfil
-                      <DropdownMenuShortcut>⇧ + P</DropdownMenuShortcut>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild className="cursor-pointer">
+                      <Link href="/profile" className="flex items-center gap-2">
+                        <UserRound className="h-4 w-4" />
+                        Perfil
+                      </Link>
                     </DropdownMenuItem>
-                  </DropdownMenuGroup> */}
+                  </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuLabel>Acessibilidade</DropdownMenuLabel>
                   <DropdownMenuGroup>

@@ -2,13 +2,14 @@
 
 import {
   ArrowLeftIcon,
+  CameraIcon,
   UserIcon,
-  XIcon,
   ZoomInIcon,
   ZoomOutIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useAuth } from "@/context/AuthContext";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +27,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
+import { toast } from "sonner";
 import { mutate } from "swr";
 
 // Define type for pixel crop area
@@ -98,9 +100,30 @@ async function uploadAvatarToServer(blob: Blob, userId: number) {
   return res.json();
 }
 
-export default function ComponentProfileCrop({ userId }: { userId?: number }) {
+function getUploadErrorMessage(error: string) {
+  if (error.includes("exceeds the maximum size")) {
+    return "O arquivo selecionado excede o limite de 4 MB.";
+  }
+
+  if (error.includes("is not an accepted file type")) {
+    return "Formato invalido. Use JPG, PNG ou WEBP.";
+  }
+
+  return error;
+}
+
+export default function ComponentProfileCrop({
+  userId,
+  currentImageUrl,
+  userName,
+}: {
+  userId?: number;
+  currentImageUrl?: string | null;
+  userName?: string;
+}) {
+  const { refreshUser } = useAuth();
   const [
-    { files, isDragging },
+    { files, isDragging, errors },
     {
       handleDragEnter,
       handleDragLeave,
@@ -108,17 +131,22 @@ export default function ComponentProfileCrop({ userId }: { userId?: number }) {
       handleDrop,
       openFileDialog,
       removeFile,
+      clearErrors,
       getInputProps,
     },
   ] = useFileUpload({
-    accept: "image/*",
+    accept: "image/jpeg,image/png,image/webp",
+    maxSize: 4 * 1024 * 1024,
   });
 
   const previewUrl = files[0]?.preview || null;
   const fileId = files[0]?.id;
 
-  const [finalImageUrl, setFinalImageUrl] = useState<string | null>(null);
+  const [finalImageUrl, setFinalImageUrl] = useState<string | null>(
+    currentImageUrl ?? null
+  );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   // Ref to track the previous file ID to detect new uploads
   const previousFileIdRef = useRef<string | undefined | null>(null);
@@ -149,53 +177,49 @@ export default function ComponentProfileCrop({ userId }: { userId?: number }) {
     }
 
     try {
+      setIsUploading(true);
       const croppedBlob = await getCroppedImg(previewUrl, croppedAreaPixels);
       if (!croppedBlob)
-        throw new Error("Failed to generate cropped image blob.");
+        throw new Error("Nao foi possivel preparar a imagem para envio.");
 
-      // opcional: mostrar preview local
-      const newFinalUrl = URL.createObjectURL(croppedBlob);
-      if (finalImageUrl) URL.revokeObjectURL(finalImageUrl);
-      setFinalImageUrl(newFinalUrl);
-      setIsDialogOpen(false);
-
-      // ---------- UPLOAD para o backend ----------
       if (!userId) {
-        console.warn("userId não definido. Faça login para atualizar sua foto.");
+        toast.error("Usuario nao identificado para atualizar a foto.");
         return;
       }
 
       const uploadResp = await uploadAvatarToServer(croppedBlob, userId);
 
       if (uploadResp && uploadResp.success && uploadResp.url) {
-        // url já é a URL pública do Supabase Storage
-        if (finalImageUrl) URL.revokeObjectURL(finalImageUrl);
         setFinalImageUrl(uploadResp.url);
+        setIsDialogOpen(false);
+        if (fileId) removeFile(fileId);
+        clearErrors();
 
         try {
+          await refreshUser();
           mutate("usuarios");
         } catch (e) {
           console.error("Erro ao atualizar cache:", e);
         }
+
+        toast.success("Foto de perfil atualizada com sucesso.");
       } else {
-        console.error("Upload falhou", uploadResp);
+        toast.error(uploadResp?.message || "Nao foi possivel atualizar a foto.");
       }
     } catch (error) {
       console.error("Error during apply:", error);
-      setIsDialogOpen(false);
+      toast.error("Erro ao processar a imagem selecionada.");
+    } finally {
+      setIsUploading(false);
     }
-  };
-
-  const handleRemoveFinalImage = () => {
-    if (finalImageUrl) {
-      URL.revokeObjectURL(finalImageUrl);
-    }
-    setFinalImageUrl(null);
   };
 
   useEffect(() => {
+    setFinalImageUrl(currentImageUrl ?? null);
+  }, [currentImageUrl]);
+
+  useEffect(() => {
     const currentFinalUrl = finalImageUrl;
-    // Cleanup function
     return () => {
       if (currentFinalUrl?.startsWith("blob:")) {
         URL.revokeObjectURL(currentFinalUrl);
@@ -203,25 +227,21 @@ export default function ComponentProfileCrop({ userId }: { userId?: number }) {
     };
   }, [finalImageUrl]);
 
-  // Effect to open dialog when a *new* file is ready
   useEffect(() => {
-    // Check if fileId exists and is different from the previous one
     if (fileId && fileId !== previousFileIdRef.current) {
-      setIsDialogOpen(true); // Open dialog for the new file
-      setCroppedAreaPixels(null); // Reset crop area for the new file
-      setZoom(1); // Reset zoom for the new file
+      setIsDialogOpen(true);
+      setCroppedAreaPixels(null);
+      setZoom(1);
     }
-    // Update the ref to the current fileId for the next render
     previousFileIdRef.current = fileId;
-  }, [fileId]); // Depend only on fileId
+  }, [fileId]);
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex w-full flex-col items-center gap-4">
       <div className="relative inline-flex">
-        {/* Drop area - uses finalImageUrl */}
         <button
-          aria-label={finalImageUrl ? "Change image" : "Upload image"}
-          className="cursor-pointer relative flex size-16 items-center justify-center overflow-hidden rounded-full border border-input border-dashed outline-none transition-colors hover:bg-accent/50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-disabled:pointer-events-none has-[img]:border-none has-disabled:opacity-50 data-[dragging=true]:bg-accent/50"
+          aria-label={finalImageUrl ? "Trocar foto" : "Enviar foto"}
+          className="group relative flex size-32 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-input border-dashed bg-muted/30 outline-none transition-colors hover:bg-accent/50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[dragging=true]:bg-accent/50"
           data-dragging={isDragging || undefined}
           onClick={openFileDialog}
           onDragEnter={handleDragEnter}
@@ -231,50 +251,63 @@ export default function ComponentProfileCrop({ userId }: { userId?: number }) {
           type="button"
         >
           {finalImageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
-              alt="User avatar"
+              alt={`Foto de perfil de ${userName ?? "usuario"}`}
               className="size-full object-cover"
-              height={100}
+              height={128}
               src={finalImageUrl}
               style={{ objectFit: "cover" }}
-              width={100}
+              width={128}
             />
           ) : (
-            <div aria-hidden="true">
-              <UserIcon className="size-10 opacity-60" />
+            <div
+              aria-hidden="true"
+              className="flex flex-col items-center gap-2 text-muted-foreground"
+            >
+              <UserIcon className="size-12 opacity-70" />
+              <span className="text-xs font-medium">Sem foto</span>
             </div>
           )}
+
+          <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/55 via-black/10 to-transparent p-3 opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="inline-flex items-center gap-2 rounded-full bg-background/95 px-3 py-1 text-xs font-medium text-foreground">
+              <CameraIcon className="h-3.5 w-3.5" />
+              Alterar foto
+            </span>
+          </div>
         </button>
-        {/* Remove button - depends on finalImageUrl */}
-        {finalImageUrl && (
-          <Button
-            aria-label="Remove image"
-            className="cursor-pointer -top-1 -right-1 absolute size-6 rounded-full border-2 border-background shadow-none focus-visible:border-background"
-            onClick={handleRemoveFinalImage}
-            size="icon"
-          >
-            <XIcon className="size-3.5" />
-          </Button>
-        )}
         <input
           {...getInputProps()}
-          aria-label="Upload image file"
+          aria-label="Selecionar foto de perfil"
           className="sr-only"
           tabIndex={-1}
         />
       </div>
 
-      {/* Cropper Dialog - Use isDialogOpen for open prop */}
+      <div className="space-y-1 text-center">
+        <p className="text-sm font-medium">Foto de perfil</p>
+        <p className="text-xs text-muted-foreground">
+          Envie uma imagem JPG, PNG ou WEBP com ate 4 MB.
+        </p>
+      </div>
+
+      {errors.length > 0 && (
+        <div className="w-full rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+          {getUploadErrorMessage(errors[0])}
+        </div>
+      )}
+
       <Dialog onOpenChange={setIsDialogOpen} open={isDialogOpen}>
         <DialogContent className="gap-0 p-0 sm:max-w-140 *:[button]:hidden">
           <DialogDescription className="sr-only">
-            Crop image dialog
+            Ajustar recorte da foto de perfil
           </DialogDescription>
           <DialogHeader className="contents space-y-0 text-left">
             <DialogTitle className="flex items-center justify-between border-b p-4 text-base">
               <div className="flex items-center gap-2">
                 <Button
-                  aria-label="Cancel"
+                  aria-label="Cancelar"
                   className="-my-1 opacity-60 cursor-pointer"
                   onClick={() => setIsDialogOpen(false)}
                   size="icon"
@@ -283,15 +316,15 @@ export default function ComponentProfileCrop({ userId }: { userId?: number }) {
                 >
                   <ArrowLeftIcon aria-hidden="true" />
                 </Button>
-                <span>Crop image</span>
+                <span>Ajustar foto</span>
               </div>
               <Button
                 autoFocus
                 className="-my-1 cursor-pointer"
-                disabled={!previewUrl}
+                disabled={!previewUrl || isUploading}
                 onClick={handleApply}
               >
-                Apply
+                {isUploading ? "Salvando..." : "Salvar foto"}
               </Button>
             </DialogTitle>
           </DialogHeader>
@@ -316,7 +349,7 @@ export default function ComponentProfileCrop({ userId }: { userId?: number }) {
                 size={16}
               />
               <Slider
-                aria-label="Zoom slider"
+                aria-label="Controle de zoom"
                 defaultValue={[1]}
                 max={3}
                 min={1}
@@ -339,7 +372,7 @@ export default function ComponentProfileCrop({ userId }: { userId?: number }) {
         className="mt-2 text-muted-foreground text-xs"
         role="region"
       >
-        Realizar Upload de foto de perfil
+        Clique na imagem para escolher um arquivo e ajustar o recorte.
       </p>
     </div>
   );
