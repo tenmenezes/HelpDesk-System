@@ -6,7 +6,7 @@
 ![GitHub issues](https://img.shields.io/github/issues/tenmenezes/HelpDesk-System?style=for-the-badge)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/tenmenezes/HelpDesk-System?style=for-the-badge)
 
-<img src="./HelpDeskPrint.png" width="1000" alt="Print da tela principal do sistema Help Desk Corp">
+<!-- <img src="./HelpDeskPrint.png" width="1000" alt="Print da tela principal do sistema Help Desk Corp"> -->
 
 ---
 
