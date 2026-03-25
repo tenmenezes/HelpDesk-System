@@ -1,30 +1,68 @@
 "use client";
 
-import { useMemo, useEffect, useState } from "react";
-import { useTheme } from "next-themes";
+import { useEffect, useMemo, useState } from "react";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { TicketsPlane, LoaderCircle } from "lucide-react";
 import { getAllChamados } from "./services/chamados";
+
+type TimeFilter = "24h" | "7d" | "1m";
+
+type TicketBySectorItem = {
+  criado_em: string;
+  setor_nome?: string | null;
+};
+
+const chartConfig = {
+  total: {
+    label: "Tickets",
+    color: "#2563eb",
+  },
+} satisfies ChartConfig;
+
+const FILTER_LABELS: Record<TimeFilter, string> = {
+  "24h": "24 horas",
+  "7d": "7 dias",
+  "1m": "30 dias",
+};
+
+function getFilterStart(filter: TimeFilter, now: Date) {
+  if (filter === "24h") {
+    return new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  }
+
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  start.setDate(start.getDate() - (filter === "7d" ? 6 : 29));
+  return start;
+}
+
+function truncateSectorLabel(value: string) {
+  if (value.length <= 12) {
+    return value;
+  }
+
+  return `${value.slice(0, 12)}...`;
+}
 
 export default function TicketsPorSetor({
   filtro = "7d",
 }: {
-  filtro?: string;
+  filtro?: TimeFilter;
 }) {
-  const { theme } = useTheme();
-  const [chamados, setChamados] = useState<any[]>([]);
+  const [chamados, setChamados] = useState<TicketBySectorItem[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const isDark = theme === "dark";
 
   useEffect(() => {
     const loadData = async () => {
@@ -46,17 +84,17 @@ export default function TicketsPorSetor({
   }, []);
 
   const data = useMemo(() => {
-    const agora = new Date();
-    const ultimos7dias = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
-
-    const chamadosFiltrados = chamados.filter(
-      (c) => new Date(c.criado_em) >= ultimos7dias
-    );
-
+    const rangeStart = getFilterStart(filtro, new Date());
     const porSetor: Record<string, number> = {};
 
-    chamadosFiltrados.forEach((c) => {
-      const setor = c.setor_nome || "Sem setor";
+    chamados.forEach((c) => {
+      const createdAt = new Date(c.criado_em);
+
+      if (Number.isNaN(createdAt.getTime()) || createdAt < rangeStart) {
+        return;
+      }
+
+      const setor = c.setor_nome?.trim() || "Sem setor";
       porSetor[setor] = (porSetor[setor] || 0) + 1;
     });
 
@@ -65,49 +103,54 @@ export default function TicketsPorSetor({
       .sort((a, b) => b.total - a.total);
   }, [chamados, filtro]);
 
-  const axisColor = isDark ? "#e5e7eb" : "#374151";
-  const gridColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
-  const barColor = isDark ? "#3b82f6" : "#2563eb";
-  const tooltipBg = isDark ? "#1f2937" : "#ffffff";
-  const tooltipText = isDark ? "#f3f4f6" : "#111827";
-
   return (
-    <Card className="w-full md:w-1/2 md:max-w[600px]">
-      <CardHeader>
-        <div className="w-full flex items-center justify-between">
-          <CardTitle>Tickets por setor ({filtro})</CardTitle>
-          <TicketsPlane className="h-8 w-8 text-blue-800" />
+    <Card className="flex min-w-0 flex-1">
+      <CardHeader className="gap-3 px-6 pb-0">
+        <div className="flex w-full items-start justify-between gap-4">
+          <div className="space-y-1">
+            <CardTitle className="text-base sm:text-lg">
+              Tickets por setor
+            </CardTitle>
+            <CardDescription>
+              Distribuição de chamados nos últimos {FILTER_LABELS[filtro]}
+            </CardDescription>
+          </div>
+          <TicketsPlane className="h-8 w-8 shrink-0 text-blue-700" />
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="px-6">
         {loading ? (
-          <div className="flex items-center justify-center h-72">
+          <div className="flex h-[280px] items-center justify-center">
             <LoaderCircle className="h-8 w-8 animate-spin" />
           </div>
         ) : (
-          <div className="h-72 w-full">
-            <ResponsiveContainer>
-              <BarChart data={data}>
-                <CartesianGrid stroke={gridColor} strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="setor"
-                  tick={{ fill: axisColor, fontSize: 12 }}
-                />
-                <YAxis tick={{ fill: axisColor }} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: tooltipBg,
-                    borderRadius: 8,
-                    border: "1px solid rgba(0,0,0,0.1)",
-                  }}
-                  labelStyle={{ color: tooltipText }}
-                  itemStyle={{ color: tooltipText }}
-                />
-                <Bar dataKey="total" radius={[6, 6, 0, 0]} fill={barColor} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-[280px] w-full"
+          >
+            <BarChart accessibilityLayer data={data} barCategoryGap="24%">
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="setor"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                minTickGap={18}
+                tickFormatter={truncateSectorLabel}
+              />
+              <YAxis tickLine={false} axisLine={false} allowDecimals={false} />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    indicator="dot"
+                    labelFormatter={(value) => String(value)}
+                  />
+                }
+              />
+              <Bar dataKey="total" radius={[6, 6, 0, 0]} fill="var(--color-total)" />
+            </BarChart>
+          </ChartContainer>
         )}
       </CardContent>
     </Card>
